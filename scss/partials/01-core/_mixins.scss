@@ -1,0 +1,73 @@
+// --------------------------------------------------------------
+// Mixins
+// --------------------------------------------------------------
+
+/// Clearfix for floated containers, used as a bugfix
+/// @group utility
+@mixin clearfix {
+  content: '';
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  height: 0;
+  clear: both;
+}
+
+/// Shorthand for the position property
+/// includes quick option to make the element cover its parent
+/// @group utility
+/// @param {string | keyword(cover)} $position - value for position property
+/// @param {number} $top - value for top property
+/// @param {number} $right [$top] - value for right property
+/// @param {number} $bottom [$top] - value for bottom property
+/// @param {number} $left [$right] - value for the left property
+@mixin position($position, $top: null, $right: $top, $bottom: $top, $left: $right) {
+  @if $position == cover {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+  @else {
+    position: $position;
+    @if $top != null {
+      top: $top;
+    }
+    @if $right != null {
+      right: $right;
+    }
+    @if $bottom != null {
+      bottom: $bottom;
+    }
+    @if $left != null {
+      left: $left;
+    }
+  }
+}
+
+// ----------------------------------------------------
+// MEDIA QUERIES
+// ----------------------------------------------------
+
+/// Screen sizes to use for break points
+/// @group responsive
+/// @type map | number(px)
+$breakpoints: (
+  xxl: 2560px,
+  xl: 1440px,
+  lg: 1024px,
+  md: 761px,
+  sm: 760px,
+  xs: 300px
+) !default;
+
+/// Media Query Mixin
+/// @group responsive
+/// @requires $breakpoints
+/// @param {string} $size - key from $breakpoints map
+@mixin breakpoint($size) {
+  @media all and (min-width: map-get($breakpoints, $size)) {
+    @content;
+  }
+}
