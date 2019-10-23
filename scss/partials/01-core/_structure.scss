@@ -9,11 +9,15 @@ $space-unit: $line-height !default;
 /// function to create a general unit of measurement for spacing
 /// @requires $space-unit
 /// @group spacing
-/// @param {number} $value
+/// @param {number(with-unit)} $value
 /// @return number(rem) = `$space-unit` times `$value`
 @function s($value) {
-  @return ($space-unit * $value) + 0rem;
+  @return ($space-unit * $value);
 }
 
 $block-padding: s(1);
 $block-margin: s(1);
+
+@mixin block-margin {
+  margin: 0 0 s(1);
+}
