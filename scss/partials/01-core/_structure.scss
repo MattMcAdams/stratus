@@ -4,7 +4,7 @@
 
 /// base unit of measurement for spacing
 /// @type number
-$space-unit: $line-height !default;
+$space-unit: map-get($type-values, line-height) !default;
 
 /// function to create a general unit of measurement for spacing
 /// @requires $space-unit

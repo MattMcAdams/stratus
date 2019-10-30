@@ -58,27 +58,3 @@ $color-scale: (
     @return $color;
   }
 }
-
-// ----------------------------------------------------
-// COLORS
-// ----------------------------------------------------
-
-/// Sets the primary brand color
-/// @group color
-$c-primary: $c-light-blue !default;
-/// Sets the accent brand color
-/// @group color
-$c-accent: $c-teal !default;
-/// Color used for success information
-/// @group color
-$c-green: green !default;
-/// Color used for caution information
-/// @group color
-$c-yellow: yellow !default;
-/// Color used for warning information
-/// @group color
-$c-red: red !default;
-
-/// Color used for backgrounds
-/// @group color
-$c-background: $c-light-grey !default;
