@@ -1,3 +1,9 @@
+// ==========================================================================
+// SECTION GRID
+// WARNING: This is an experimental proof-of-concept
+// This file should not be included in a production environment
+// ==========================================================================
+
 $min-column-width: 200px;
 
 .grid {
@@ -83,3 +89,5 @@ $min-column-width: 200px;
 // .flex > *.span-all {
 //   flex-basis: 100%;
 // }
+
+// END !SECTION GRID

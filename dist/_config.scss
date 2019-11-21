@@ -1,0 +1,55 @@
+$stratus-default: (
+  'config': (
+    'global': (
+      'use-dynamic-scale': false,
+      'color-map': 'stratus'
+    ),
+    'type': (
+      'text-size': 16,
+      'line-height': 1.6,
+      'rem-size': 16
+    ),
+    'space-unit': 'auto'
+  ),
+  'type': (
+    'scale': (
+      'xlarge': 3,
+      'large': 2,
+      'medium': 1,
+      'normal': 0,
+      'small': -1,
+      'xsmall': -2
+    ),
+    'ratio': $major-third
+  ),
+  'font': (
+    'body': $font-stack-georgia,
+    'head': $font-stack-helvetica,
+    'mono': $font-stack-monaco,
+    'icon': null
+  ),
+  'breakpoints': (
+    'xxlarge': 2560px,
+    'xlarge': 1440px,
+    'large': 1024px,
+    'medium': 761px,
+    'small': 760px,
+    'xsmall': 300px
+  ),
+  'color': (
+    'status': (
+      'info': #1273e6,
+      'notice': #da7b12,
+      'negative': #d7373f,
+      'positive': #258f6c
+    )
+  ),
+  'debug': false
+);
+
+$stratus: () !default;
+
+@function stratus($setting) {
+  $settings: map-merge($stratus-default, $stratus);
+  @return get($settings, $setting);
+}

@@ -1,0 +1,34 @@
+// ==========================================================================
+// SECTION STRUCTURE
+// Custom measurement unit, set to 1 line height by default to help
+// establish vertical rhythm
+// ==========================================================================
+
+// If the space unit is set to auto, use line height
+// Else, use the value provided for space-unit in stratus config
+@if (stratus('config.space-unit') == 'auto') {
+  $stratus-space-unit: type-get('line-height');
+} @else if (type-of(stratus('config.space-unit')) != number ) {
+  @error 'stratus.config.space-unit: #{stratus("config.space-unit")} is not a valid value. Must be either a number with CSS unit or "auto".';
+} @else {
+  $stratus-space-unit: stratus('config.space-unit');
+}
+
+@if (stratus('debug') == true) { @debug "space-unit: #{$stratus-space-unit}"; }
+
+/// Custom Space Unit
+/// function to create a general unit of measurement for spacing
+/// @name space
+/// @group structure
+/// @author Matthew McAdams
+///
+/// @param {number(unitless)} $input
+/// @return {number(rem)} `space-unit` times `$input`
+///
+/// @requires _typography.scss
+
+@function s($input) {
+  @return ($stratus-space-unit * $input);
+}
+
+// END !SECTION STRUCTURE

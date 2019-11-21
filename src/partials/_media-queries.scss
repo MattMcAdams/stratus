@@ -1,0 +1,46 @@
+// ==========================================================================
+// SECTION MEDIA QUERIES
+// Utility mixins to help you write cleaner, easier to read CSS
+// ==========================================================================
+
+/// Media Query Mixin
+/// @name breakpoint
+/// @group utility
+/// @author Matthew McAdams
+///
+/// @param {key[$stratus.breakpoints] | keyword[landscape, portrait] | number } $input
+/// Sets the media query orientation or width
+/// @param {keyword[min, max]} $direction [min] - used as #{$direction}-width to detect screen size
+
+@mixin breakpoint($input, $direction: min) {
+  // See if the breakpoint pertains to orientation
+  @if $input == 'portrait' {
+    @media (orientation: portrait) { @content; }
+  } @else if $input == 'landscape' {
+    @media (orientation: landscape) { @content; }
+  } @else {
+    // if neither orientations match, assume the value resolves to a number.
+
+    // Detect direction of the query, warn if input is invalid
+    @if ($direction != min) or ($direction != max) {
+      @warn '"#{$direction}" is not a valid value for `$direction` expected "min" or "max".';
+    }
+
+    // After confirming the validity of $direction, resolve the value of $input
+    @if (type-of($input) == string){
+      // If the value is a string, assume it is a key on the stratus map
+      $query-size: stratus('breakpoints.#{$input}');
+    }
+    @else if (type-of($input) == number) {
+      $query-size: $input;
+    } @else {
+      // If its not a string, make sure it is a number. Throw an error if it is not
+      @error '"#{$input}" is not a valid value for `$input`. Expected breakpoint key from stratus map, the keyword "landscape" or "portrait", or a number (with or without css unit)';
+    }
+
+    // Return the fully resolved media query
+    @media (#{$direction}-width: $query-size) { @content; }
+  }
+}
+
+// END !SECTION MEDIA QUERIES
