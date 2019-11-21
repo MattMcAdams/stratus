@@ -25,15 +25,15 @@
     "typography"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "sass": "sass --load-path=node_modules dist/_stratus.scss test/comp.css"
+    "test": "jest",
+    "sass": "node-sass --include-path=node_modules test/stratus.spec.scss test/comp.css"
   },
   "dependencies": {
     "bourbon": "^6.0.0"
   },
   "devDependencies": {
-    "dart-sass": "^1.23.7",
     "jest": "^24.9.0",
+    "node-sass": "^4.13.0",
     "sass-true": "^5.0.0"
   }
 }

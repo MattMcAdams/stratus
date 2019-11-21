@@ -1,0 +1,38 @@
+@include test-module('line-height [function]') {
+  // Test 1
+  @include test('$x == $y when $y is a multiple of $x') {
+
+    $test: line-height(16, 8);
+    $expected: 16;
+
+    @include assert-equal( $test, $expected );
+
+  }
+
+  // Test 2
+  @include test('$x > $y when $y is not a multiple of $x/2') {
+
+    $test: line-height(10, 8);
+    $expected: 12rem;
+
+    @include assert-equal( $test, $expected );
+  }
+
+  // Test 3
+  @include test('$x is a multiple of $x/2') {
+
+    $value-a: line-height(10, 8);
+    $value-b: line-height(16, 8);
+    $value-c: line-height(13, 8);
+
+    $test-a: $value-a / 4;
+    $test-b: $value-b / 4;
+    $test-c: $value-c / 4;
+
+    @if round($test-a) == $test-a and round($test-b) == $test-b and round($test-c) == $test-c {
+      $expected: true;
+    }
+
+    @include assert-equal($expected, true);
+  }
+}

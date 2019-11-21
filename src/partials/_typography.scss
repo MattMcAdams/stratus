@@ -35,18 +35,20 @@ $bourbon: (
 ///
 /// @return {number(rem)}
 
-@function line-height( $input: type-get('text-size') ) {
-  $base-line-height: strip-unit( type-get('line-height') );
-  $text-size: strip-unit( $input );
-
-  $line-height: 0;
+@function line-height( $input-text-size: type-get('text-size'), $input-line-height: type-get('line-height') ) {
+  @if unit($input-text-size) != unit($input-line-height) {
+    @warn "Both text size and line height must be of the same measurement type. The unit of the input test size is `#{unit($input-text-size)}`, while the unit of the input line height is `#{unit($input-line-height)}`."
+  }
+  $_start-line-height: strip-unit($input-line-height);
+  $_text-size: strip-unit( $input-text-size );
+  $_end-line-height: 0;
   $i: 1;
 
-  @while $line-height < $text-size {
-    $line-height: $base-line-height * $i;
+  @while $_end-line-height < $_text-size {
+    $_end-line-height: $_end-line-height * $i;
     $i: $i + 0.5;
   }
-  @return $line-height + 0rem;
+  @return $_end-line-height + 0rem;
 }
 
 // END !SECTION Line Height
