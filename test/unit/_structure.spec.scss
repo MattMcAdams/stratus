@@ -1,12 +1,9 @@
-@import 'sass-true/sass/true';
-@import 'dist/_stratus.scss';
-$_test-environment: true;
-
 $stratus-type-values: (
   'text-size': 2rem,
   'line-height': 2.5rem,
   'rem-size': 10px
 );
+$stratus-space-unit: _space-unit();
 
 @include test-module('structure calculation - auto') {
   @include test('_space-unit pulls correct base measurement') {
@@ -26,6 +23,7 @@ $stratus: (
     'space-unit': 7px
   )
 );
+$stratus-space-unit: _space-unit();
 
 @include test-module('structure calculation - custom') {
   @include test('_space-unit pulls correct base measurement') {
@@ -45,11 +43,12 @@ $stratus: (
     'space-unit': bad-value
   )
 );
+$stratus-space-unit: _space-unit();
 
 @include test-module('structure calculation - error handling') {
-  @include test('_space-unit throws an error when a bad value is put through') {
+  @include test('_space-unit throws an error when a value with invalid type is passed through') {
     $test: _space-unit();
-    $expected: 'ERROR [$stratus configuration] stratus.config.space-unit: `bad-value` is not a valid value. Must be either a number with CSS unit or "auto".';
+    $expected: 'ERROR [$stratus configuration] stratus.config.space-unit: `bad-value` is not a valid value. Must be either a number or "auto".';
     @include assert-equal($test, $expected);
   }
 }

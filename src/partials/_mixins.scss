@@ -3,8 +3,12 @@
 // Utility mixins to help you write cleaner, easier to read CSS
 // ==========================================================================
 
-@mixin cover {
-  @include position(absolute, 0, 0, 0, 0);
+@mixin position-cover {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left:0;
 }
 
 // END !SECTION MIXINS
