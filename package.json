@@ -26,7 +26,7 @@
   ],
   "scripts": {
     "test": "jest",
-    "sass": "node-sass --include-path=node_modules test/stratus.spec.scss test/comp.css"
+    "sass": "node-sass --include-path=node_modules dist/_stratus.scss test/comp.css"
   },
   "dependencies": {
     "bourbon": "^6.0.0"

@@ -30,25 +30,30 @@ $bourbon: (
 /// @name line-height
 /// @group typography
 /// @author Matthew McAdams
+/// @access private
 ///
-/// @param {number} $input - text size to calculate line height for
+/// @param {number(rem)} $input-text-size - text size to calculate line height for
+/// @param {number(rem)} $base-line-height - Line height to use as the base for calculation
 ///
 /// @return {number(rem)}
 
-@function line-height( $input-text-size: type-get('text-size'), $input-line-height: type-get('line-height') ) {
-  @if unit($input-text-size) != unit($input-line-height) {
-    @warn "Both text size and line height must be of the same measurement type. The unit of the input test size is `#{unit($input-text-size)}`, while the unit of the input line height is `#{unit($input-line-height)}`."
-  }
-  $_start-line-height: strip-unit($input-line-height);
-  $_text-size: strip-unit( $input-text-size );
-  $_end-line-height: 0;
-  $i: 1;
+@function line-height( $input-text-size: type-get('text-size'), $base-line-height: type-get('line-height') ) {
 
-  @while $_end-line-height < $_text-size {
-    $_end-line-height: $_end-line-height * $i;
-    $i: $i + 0.5;
+  @if unit($input-text-size) != 'rem' or unit($base-line-height) != 'rem' {
+    @warn "Both text size and line height are expected as 'rem' units. `$input-text-size`: `#{unit($input-text-size)}`, `$base-line-height`: `#{unit($base-line-height)}`.";
   }
-  @return $_end-line-height + 0rem;
+
+  $_start-line-height: strip-unit($base-line-height);
+  $_text-size: strip-unit( $input-text-size );
+
+  $_line-height: 0;
+  $_i: 1;
+
+  @while $_line-height < $_text-size {
+    $_line-height: $_start-line-height * $_i;
+    $_i: $_i + 0.5;
+  }
+  @return $_line-height + 0rem;
 }
 
 // END !SECTION Line Height
@@ -61,6 +66,7 @@ $bourbon: (
 /// @name type-init
 /// @group typography
 /// @author Matthew McAdams
+/// @access public
 ///
 /// @param {map} $scale - map with corresponding type scale
 /// @param {number(unitless) | key[$stratus.type]} $ratio - ratio to generate font sizes
@@ -76,15 +82,15 @@ $bourbon: (
   @if type-of($ratio) != number {
     $ratio: stratus('type.#{$ratio}');
   }
-  --ratio: $ratio + 0em;
+  --ratio: #{$ratio + 0em};
 
-  @each $key, $value in $scale {
-    $size: modular-scale($value, $ratio);
+  @each $key, $step in $scale {
+    $size: modular-scale($increment: $step, $ratio: $ratio) + 0rem;
     --#{$key}: #{$size};
     --#{$key}-lh: #{line-height($size)};
   }
-  @if (stratus('config.global.use-dual-scale') != true) {
-    @warn "The mixin type-init is only used to output css custom properties for use with multiple typographical scales, but stratus is set to use a single scale. See the 'use-dual-scale' key in Stratus configuration";
+  @if (stratus('config.global.use-dynamic-scale') != true) {
+    @warn "The mixin type-init is only used to output css custom properties for use with multiple typographical scales, but stratus is set to use a single scale. See the 'use-dynamic-scale' key in Stratus configuration";
   }
 }
 
@@ -93,25 +99,33 @@ $bourbon: (
 /// @name type-setting
 /// @group typography
 /// @author Matthew McAdams
+/// @access public
 ///
-/// @param {number(unitless) | key[$stratus.type.scale]} $input - Number of steps to move up or down the scale
+/// @param {key[$stratus.type.scale] | string} $name - string used to generate css variables and calculate the step from the stratus config map.
+/// @param {null | number(unitless)} $step - Number of steps to move up or down the scale, development parameter only, should not be used in production.
+/// @param {boolean} $print-variables - Tells the mixin if it should include css variables in the output. Defaults to the `use-dynamic-scale` option in stratus configuration. Advanced / edge use only
 ///
 /// @example
 /// p { @include type-setting(normal); }
 /// h1 { @include type-setting(large); }
 
-@mixin type-setting($input: normal) {
-  @if type-of($input) != number { $step: stratus('type.scale.#{$input}'); }
-  @else { $step: $input; }
+@mixin type-setting($name: 'normal',  $step: null, $print-variables: stratus('config.global.use-dynamic-scale')) {
+
+  @if $step == null {
+    $step: stratus('type.scale.#{$name}');
+  } @else if $print-variables == true {
+    @warn "Using a generic string and defining a manual `$step` value may produce unpredictable problems.";
+    @warn "It is advised to use `$name` to refer to a key on the stratus configuration object. See `$stratus > type > scale > [$name]`. The `$step` will be generated from the value of this key. This ensures css variables are generated with the correct values.";
+  }
 
   $size: modular-scale($step);
 
   font-size: $size;
   line-height: line-height($size);
 
-  @if ($use-dual-scale == true) {
-    font-size: var(--#{$input});
-    line-height: var(--#{$input}-lh);
+  @if $print-variables == true {
+    font-size: var(--#{$name});
+    line-height: var(--#{$name}-lh);
   }
 }
 

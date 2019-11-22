@@ -4,7 +4,8 @@ var sassTrue = require('sass-true');
 var sassFile = path.join(__dirname, 'stratus.spec.scss');
 sassTrue.runSass(
     {
-    file: sassFile
+    file: sassFile,
+    includePaths: ['node_modules'],
     },
     {
       describe,

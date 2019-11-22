@@ -173,4 +173,104 @@
 }
 
 // END !SECTION Get
+// SECTION Recursive Map Merge
+//---------------------------------------------------------------------------
+
+/// Recursive Map Merge
+/// Search for any value contained within nested maps by using dot notation
+/// as the key argument
+/// @name recursive-map-merge
+/// @group maps
+/// @author Zsolt Pentz
+///
+/// @param {map} $parent-map - map to override
+/// @param {map} $child-map - map with new values to merge
+///
+/// @return {map} merged $parent-map and $child-map
+
+@function recursive-map-merge($parent-map, $child-map) {
+	$result: $parent-map;
+	@each $key, $value in $child-map {
+		@if (not map-has-key($result, $key)) or (type-of(map-get($result, $key)) != type-of($value)) or (not (type-of(map-get($result, $key)) == map and type-of($value) == map)) {
+			$result: map-merge($result, ($key: $value));
+		}
+		@else {
+			$result: map-merge($result, ($key: recursive-map-merge(map-get($result, $key), $value)));
+		}
+	}
+	@return $result;
+}
+// END !SECTION Recursive-map-merge
+// SECTION Error Reporting
+// --------------------------------------------------------------------------
+
+/// Test Env
+/// @name test-environment
+/// @type boolean
+$_test-environment: false !default;
+
+/// Error [function]
+/// Optionally override error-output for testing failure-cases
+/// @name error
+/// @group error-reporting
+/// @author Miriam Suzanne
+/// @access private
+///
+/// @param {string} $message -
+///   The error to report
+/// @param {string} $source -
+///   The source of the error
+/// @param {bool} $override [$_true-error-output-override] -
+///   Optionally override error-output for testing failure-cases
+/// @return {string}
+///   A message detailing the source and error,
+///   when the `$override` is `true`
+/// @throw
+///   A message detailing the source and error,
+///   when the `$override` is `false`
+/// @requires $_test-environment
+
+@function _error(
+  $message,
+  $source,
+  $override: $_test-environment
+) {
+  @if $override {
+    @return 'ERROR [#{$source}] #{$message}';
+  }
+  @error '[#{$source}] #{$message}';
+}
+
+/// Error [mixin]
+/// @access private
+/// @group error-reporting
+/// @author Miriam Suzanne
+/// @param {string} $message -
+///   The error to report
+/// @param {string} $source -
+///   The source of the error
+/// @param {bool} $override [$_true-error-output-override] -
+///   Optionally override error-output for testing failure-cases
+/// @output
+///   A message detailing the source and error,
+///   when the `$override` is `true`
+/// @throw
+///   A message detailing the source and error,
+///   when the `$override` is `false`
+/// @requires $_test-environment
+
+@mixin _error(
+  $message,
+  $source,
+  $override: $_test-environment
+) {
+  @if $override {
+    $error: 'ERROR [#{$source}] #{$message}';
+    @include _true-message($error, 'comments');
+  } @else {
+    @error '[#{$source}] #{$message}';
+  }
+}
+
+// END !SECTION Error Reporting
 // END !SECTION FUNCTIONS

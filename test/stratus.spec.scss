@@ -1,6 +1,8 @@
-// REQUIREMENTS
-@import '../node_modules/sass-true/sass/true';
-@import '../dist/stratus';
+@import 'bourbon/core/bourbon';
+@import 'sass-true/sass/true';
+@import 'dist/_stratus.scss';
+
+$_test-environment: true;
 
 // UNIT TESTS
-@import 'unit/_typography.spec.scss';
+@import 'unit/_typography.spec.scss'

@@ -50,6 +50,6 @@ $stratus-default: (
 $stratus: () !default;
 
 @function stratus($setting) {
-  $settings: map-merge($stratus-default, $stratus);
+  $settings: recursive-map-merge($stratus-default, $stratus);
   @return get($settings, $setting);
 }
