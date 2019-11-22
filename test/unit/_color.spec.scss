@@ -1,0 +1,91 @@
+$inspect: true;
+
+@include test-module('color pass through') {
+  @include test('outputs input color when no args are given') {
+    $test: color(#cccccc);
+    $expected: #cccccc;
+    @include assert-equal(inspect($test), inspect($expected));
+  }
+
+  @include test('outputs input color with a scale of 500') {
+    $test: color(#cccccc, 500);
+    $expected: #cccccc;
+    @include assert-equal(inspect($test), inspect($expected));
+  }
+}
+
+@include test-module('color scale by index'){
+  @include test('adjusts color 20% darker with a scale of 600') {
+    $test: color(#ccc, 600);
+    $expected: scale-color(#ccc, $lightness: -20%);
+    @include assert-equal($test, $expected);
+  }
+
+  @include test('adjusts color 80% darker with a scale of 900') {
+    $test: color(#ccc, 900);
+    $expected: scale-color(#ccc, $lightness: -80%);
+    @include assert-equal($test, $expected);
+  }
+
+  @include test('adjusts color 80% lighter with a scale of 100') {
+    $test: color(#ccc, 100);
+    $expected: scale-color(#ccc, $lightness: 80%);
+    @include assert-equal($test, $expected);
+  }
+
+  @include test('adjusts color 20% lighter with a scale of 400') {
+    $test: color(#ccc, 400);
+    $expected: scale-color(#ccc, $lightness: 20%);
+    @include assert-equal($test, $expected);
+  }
+}
+
+@include test-module('color scale by custom percentage') {
+  @include test('correctly adjusts color by positive custom percentage') {
+    $test: color(#ccc, 12%);
+    $expected: scale-color(#ccc, $lightness: 12%);
+    @include assert-equal($test, $expected);
+  }
+  @include test('correctly adjusts color by negative custom percentage') {
+    $test: color(#ccc, -12%);
+    $expected: scale-color(#ccc, $lightness: -12%);
+    @include assert-equal($test, $expected);
+  }
+}
+
+@include test-module('Integration - default color map') {
+  @include test('pull correct color by key name') {
+    $test: color('status.info');
+    $expected: #1273e6;
+    @include assert-equal(inspect($test), inspect($expected));
+  }
+}
+
+$custom-color-map-test: (
+  'blue': #1273e6,
+  'green': #258f6c
+);
+
+$stratus: (
+  'config': (
+    'global': (
+      'color-map': $custom-color-map-test
+    )
+  )
+);
+
+@include test-module('Integration - custom color map') {
+  @include test('pull correct color by key name') {
+    $test: color('green');
+    $expected: #258f6c;
+    @include assert-equal(inspect($test), inspect($expected));
+  }
+}
+
+@include test-module('Opacity') {
+  @include test('adjust opacity of input when opacity is passed') {
+    $test: color(#ccc, 500, 20%);
+    $expected: adjust-color(#ccc, $alpha: 20%);
+    @include assert-equal(inspect($test), inspect($expected));
+  }
+}

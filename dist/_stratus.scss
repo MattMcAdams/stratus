@@ -1,0 +1,23 @@
+// ==========================================================================
+// Stratus 0.1.0
+// Author: Matthew McAdams
+// Author URI: https://mattmcadams.com/
+// License: MIT License 2019
+// License URI: https://github.com/MattMcAdams/stratus/blob/master/LICENSE
+// Documentation: https://github.com/MattMcAdams/stratus/
+// ==========================================================================
+
+@import 'bourbon/core/bourbon';
+
+@import 'config';
+@import '../src/core/functions';
+
+@import '../src/partials/typography';
+@import '../src/partials/structure';
+@import '../src/partials/color';
+@import '../src/partials/media-queries';
+@import '../src/partials/mixins';
+
+// --------------------------------------------------------------------------
+// END STRATUS
+// --------------------------------------------------------------------------

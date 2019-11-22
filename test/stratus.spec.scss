@@ -1,0 +1,11 @@
+@import 'bourbon/core/bourbon';
+@import 'sass-true/sass/true';
+@import 'dist/_stratus.scss';
+
+$_test-environment: true;
+
+// UNIT TESTS
+@import 'unit/_typography.spec.scss';
+@import 'unit/_structure.spec.scss';
+@import 'unit/_mixins.spec.scss';
+@import 'unit/_color.spec.scss';

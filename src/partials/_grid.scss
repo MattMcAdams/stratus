@@ -1,3 +1,9 @@
+// ==========================================================================
+// SECTION GRID
+// WARNING: This is an experimental proof-of-concept
+// This file should not be included in a production environment
+// ==========================================================================
+
 $min-column-width: 200px;
 
 .grid {
@@ -60,26 +66,28 @@ $min-column-width: 200px;
 // As for browser compatibility, its worth noting that no solution that relies on CSS grid will work on IE
 // Even though IE supports a version of the CSS Grid spec, auto positioning does not work.
 
-// We can also look at flexbox
-// Allowing the flex container to wrap will give us a responsive effect, and flex-grow will ensure every item
-// takes up the available space. The grid gap becomes extremely hacky and messy because of the margin offsets
-// and the layout overall feels fragile and subject to odd browser bugs. Spanning a specific number of columns
-// also becomes a little more vague because it must rely on a universal background grid, likely based on 12 columns.
-.flex {
-  --grid-gap: s(1);
-  display: flex;
-  flex-wrap: wrap;
-  margin-left: calc(var(--grid-gap) * -1);
-}
-.flex > * {
-  min-width: $min-column-width;
-  max-width: 100%;
-  flex-grow: 1;
-  margin-left: var(--grid-gap);
-}
-.flex.column-2-max > * {
-  flex-basis: calc(50% - var(--grid-gap));
-}
-.flex > *.span-all {
-  flex-basis: 100%;
-}
+// // We can also look at flexbox
+// // Allowing the flex container to wrap will give us a responsive effect, and flex-grow will ensure every item
+// // takes up the available space. The grid gap becomes extremely hacky and messy because of the margin offsets
+// // and the layout overall feels fragile and subject to odd browser bugs. Spanning a specific number of columns
+// // also becomes a little more vague because it must rely on a universal background grid, likely based on 12 columns.
+// .flex {
+//   --grid-gap: s(1);
+//   display: flex;
+//   flex-wrap: wrap;
+//   margin-left: calc(var(--grid-gap) * -1);
+// }
+// .flex > * {
+//   min-width: $min-column-width;
+//   max-width: 100%;
+//   flex-grow: 1;
+//   margin-left: var(--grid-gap);
+// }
+// .flex.column-2-max > * {
+//   flex-basis: calc(50% - var(--grid-gap));
+// }
+// .flex > *.span-all {
+//   flex-basis: 100%;
+// }
+
+// END !SECTION GRID

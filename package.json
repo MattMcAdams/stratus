@@ -1,0 +1,39 @@
+{
+  "name": "stratus",
+  "version": "0.2.0",
+  "description": "Advanced SCSS Typography and Utilities built on Bourbon",
+  "main": "index.js",
+  "author": {
+    "name": "Matthew McAdams",
+    "url": "https://mattmcadams.com"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/MattMcAdams/stratus#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MattMcAdams/stratus.git"
+  },
+  "bugs": {
+    "url": "https://github.com/MattMcAdams/stratus/issues"
+  },
+  "keywords": [
+    "SCSS",
+    "CSS",
+    "Sass",
+    "bourbon",
+    "utility",
+    "typography"
+  ],
+  "scripts": {
+    "test": "jest",
+    "sass": "node-sass --include-path=node_modules dist/_stratus.scss test/comp.css"
+  },
+  "dependencies": {
+    "bourbon": "^6.0.0"
+  },
+  "devDependencies": {
+    "jest": "^24.9.0",
+    "node-sass": "^4.13.0",
+    "sass-true": "^5.0.0"
+  }
+}

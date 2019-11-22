@@ -1,0 +1,232 @@
+$stratus-type-values: (
+  'text-size': 2rem,
+  'line-height': 2.5rem,
+  'rem-size': 10px
+);
+
+$stratus: (
+  'config': (
+    'type': (
+      'text-size': 20,
+      'line-height': 1.5,
+      'rem-size': 10
+    )
+  ),
+  'type': (
+    'ratio': 1.25,
+    'ratio-alt': 1.5
+  )
+);
+
+$bourbon: (
+  "modular-scale-base": 2rem,
+  "modular-scale-ratio": 1.25
+);
+
+@include test-module('Type configuration [math]') {
+  @include test('text-size is a correct conversion from px to rem') {
+    $test: 20 / 10 + 0rem;
+    $expected: 2rem;
+
+    @include assert-equal($test, $expected);
+  }
+  @include test('line-height is a correct conversion from em to rem') {
+
+    $test: (1.5 * 20) / 10 + 0rem;
+    $expected: 3rem;
+
+    @include assert-equal($test, $expected);
+  }
+}
+
+@include test-module('Type configuration [function]') {
+  @include test('correct values are being calculated based on data from stratus configuration') {
+    $test: stratus('config.type.text-size') / stratus('config.type.rem-size') + 0rem;
+    $expected: 2rem;
+
+    @include assert-equal($test, $expected);
+  }
+}
+
+@include test-module('line-height [function]') {
+  // Test 1
+  @include test('$x == $y when $y is a multiple of $x') {
+
+    $test: line-height(16rem, 8rem);
+    $expected: 16rem;
+
+    @include assert-equal( $test, $expected );
+
+  }
+
+  // Test 2
+  @include test('$x > $y when $y is not a multiple of $x/2') {
+
+    $test: line-height(10rem, 8rem);
+    $expected: 12rem;
+
+    @include assert-equal( $test, $expected );
+  }
+
+  // Test 3
+  @include test('$x is a multiple of $x/2') {
+
+    $value-a: line-height(10rem, 8rem);
+    $value-b: line-height(16rem, 8rem);
+    $value-c: line-height(13rem, 8rem);
+
+    $test-a: $value-a / 4rem;
+    $test-b: $value-b / 4rem;
+    $test-c: $value-c / 4rem;
+
+    $expected: false;
+
+    @if round($test-a) == $test-a and round($test-b) == $test-b and round($test-c) == $test-c {
+      $expected: true;
+    }
+
+    @include assert-equal($expected, true);
+  }
+}
+
+@include test-module('type-init [mixin]') {
+
+  $test-scale: (
+    'medium': 1,
+    'normal': 0,
+    'small': -1
+  );
+
+  // Test 1
+  @include test('returns input ratio as a css variable'){
+    @include assert {
+
+      @include output {
+        @include type-init($test-scale, 2);
+      }
+      @include contains {
+        --ratio: 2em;
+      }
+
+    }
+  }
+
+  // Test 2
+  @include test('returns calculated font sizes and line heights for steps in the scale') {
+    @include assert {
+
+      @include output {
+        @include type-init($test-scale, 2);
+      }
+      @include contains {
+        --medium: #{modular-scale($increment: 1, $value: 2rem, $ratio: 2)};
+        --normal: #{modular-scale($increment: 0, $value: 2rem, $ratio: 2)};
+        --small: #{modular-scale($increment: -1, $value: 2rem, $ratio: 2)};
+      }
+
+    }
+  }
+
+  // Test 3
+  @include test('outputs correct values when pulling data from config object') {
+    @include assert {
+
+      @include output {
+        @include type-init;
+      }
+      @include contains {
+        --ratio: 1.25em;
+        --medium: #{modular-scale(1, 2rem, 1.25)};
+        --normal: #{modular-scale(0, 2rem, 1.25)};
+        --small: #{modular-scale(-1, 2rem, 1.25)};
+      }
+
+    }
+  }
+
+  // Test 4
+  @include test('outputs correct values when pulling data from custom ratio in config object') {
+    @include assert {
+
+      @include output {
+        @include type-init($ratio: 'ratio-alt');
+      }
+      @include contains {
+        --ratio: 1.5em;
+        --medium: #{modular-scale(1, 2rem, 1.5)};
+        --normal: #{modular-scale(0, 2rem, 1.5)};
+        --small: #{modular-scale(-1, 2rem, 1.5)};
+      }
+
+    }
+  }
+
+  // Test 5
+  @include test('outputs values as "rem" units') {
+    @include assert {
+
+      @include output {
+        @include type-init($ratio: 1.25);
+      }
+      @include contains {
+        --medium: 2.5rem;
+      }
+
+    }
+  }
+}
+
+@include test-module('type-setting [mixin]') {
+
+  // Test 1
+  @include test('returns a font size incremented up the modular scale') {
+    @include assert {
+      @include output{
+        @include type-setting('medium', 1);
+      }
+      @include contains {
+        font-size: 2.5rem;
+      }
+    }
+  }
+
+  // Test 2
+  @include test('returns the correct line height in rem') {
+    @include assert {
+      @include output{
+        @include type-setting('medium', 1);
+      }
+      @include contains {
+        line-height: 2.5rem;
+      }
+    }
+  }
+
+  // Test 3
+  @include test('includes correct variables when dynamic mode is enabled') {
+    @include assert {
+      @include output{
+        @include type-setting('medium', 1, true);
+      }
+      @include contains {
+        font-size: var(--medium);
+        line-height: var(--medium-lh);
+      }
+    }
+  }
+
+  // Test 4
+  @include test('pulls correct values from config object') {
+    @include assert {
+      @include output{
+        @include type-setting(medium, $print-variables: true);
+      }
+      @include contains {
+        font-size: 2.5rem;
+        line-height: 2.5rem;
+        font-size: var(--medium);
+        line-height: var(--medium-lh);
+      }
+    }
+  }
+}

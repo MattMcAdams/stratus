@@ -1,0 +1,276 @@
+// ==========================================================================
+// SECTION FUNCTIONS
+// Functions required by several functions and mixins.
+// ==========================================================================
+
+// SECTION Power
+// --------------------------------------------------------------------------
+
+/// Power function
+/// @name pow
+/// @group utility
+///
+/// @param {number} $base - number to be multiplied
+/// @param {number(unitless)} $exponents - number of times it should be multiplied
+///
+/// @return `$base` to the power of `$exponents`
+/// @example
+/// pow(10, 3)
+/// > 1,000
+
+@function pow($base, $exponents) {
+  $raised: 1;
+  @for $i from 1 through $exponents {
+    $raised: $raised * $base;
+  }
+  @return $raised;
+}
+
+// END !SECTION Power
+// SECTION String Explode
+// --------------------------------------------------------------------------
+
+/// String Explode
+/// Splits a string at the indicated delimiter
+/// @name str-explode
+/// @group utility
+/// @author Nenad Novaković
+///
+/// @param {string} $string The string to be split apart
+/// @param {string} $delimiter Where to split the string
+///
+/// @return {List}
+/// @example:
+/// str-explode('hello-world', '-')
+/// > (hello, world)
+
+@function str-explode ($string, $delimiter: '') {
+  @if type-of($string) != 'string' {
+    @error 'The argument $string: `#{$string}` is of incorrect type: `#{type-of($string)}`. Type of `String` is required!';
+  }
+  @else if type-of($delimiter) != 'string' {
+    @error 'The argument $string: `#{$string}` is of incorrect type: `#{type-of($string)}`. Type of `String` is required!';
+  }
+
+  $result: ();
+  $running: true;
+
+  @if str-length($delimiter) == 0 {
+    @for $i from 1 through str-length($string) {
+      $result: append($result, str-slice($string, $i, $i));
+    }
+
+    @return $result;
+  }
+
+  @while $running {
+    $index: str-index($string, $delimiter);
+
+    @if $index != null {
+      $item: str-slice($string, 1, ($index - 1));
+      $result: append($result, $item);
+      $string: str-slice($string, ($index + str-length($delimiter)));
+    }
+    @else {
+      $running: false;
+    }
+  }
+
+  @return append($result, $string);
+}
+
+// END !SECTION String Explode
+// SECTION Deep Map Check
+// --------------------------------------------------------------------------
+
+/// Deep Map Check
+/// Check if nested map has a value by the keys
+/// @name deep-map-check
+/// @group maps
+/// @author Nenad Novaković
+///
+/// @param {map} $map - map to check
+/// @param {string(s)} $keys - keys in $map
+///
+/// @return {boolean}
+/// @example:
+/// deep-map-check($nested-map, 'key-1', 'key-2')
+/// > boolean
+
+@function deep-map-check ($map, $keys...) {
+  @if type-of($map) != 'map' {
+    @error 'The argument $map: "#{$map}" is of incorrect type: "#{type-of($map)}". Type of "Map" is required!';
+  }
+
+  @each $key in $keys {
+    @if not map-has-key($map, $key) { @return false; }
+    $map: map-get($map, $key);
+  }
+
+  @return true;
+}
+
+// END !SECTION Deep Map Check
+// SECTION Deep Map Get
+// --------------------------------------------------------------------------
+
+/// Deep Map Get
+/// Get a value from a nested map by the keys
+/// @name deep-map-get
+/// @group maps
+/// @author Nenad Novaković
+///
+/// @param {map} $map - map to check
+/// @param {string(s)} $keys - keys in $map
+///
+/// @return {Unspecified} it may return anything as a result
+/// @example:
+/// deep-map-check($nested-map, 'top-level-key', 'second-level-key')
+/// > value of second level key
+
+@function deep-map-get ($map, $keys...) {
+  @if type-of($map) != 'map' {
+    @error 'The argument $map: "#{$map}" is of incorrect type: "#{type-of($map)}". Type of "Map" is required!';
+  }
+
+  @each $key in $keys {
+    $map: map-get($map, $key);
+  }
+
+  @return $map;
+}
+
+// END !SECTION Deep Map Get
+// SECTION Get
+// --------------------------------------------------------------------------
+
+/// Get
+/// Search for any value contained within nested maps by using dot notation
+/// as the key argument
+/// @name get
+/// @group maps
+/// @author Nenad Novaković
+///
+/// @param {map} $map - map to check
+/// @param {string} $key - keys in $map
+///
+/// @return {Unspecified} it may return anything as a result
+/// @example
+/// get($settings, border.radius.xs)
+/// > value of the "xs" key
+///
+/// @requires deep-map-get
+/// @requires str-explode
+
+@function get ($map, $key) {
+  $keys: str-explode($key, '.');
+
+  @if not deep-map-check($map, $keys...) {
+    @error 'The argument $map: "#{$map}" doesn\'t have some of the $keys: "#{$keys}"!';
+  }
+
+  @return deep-map-get($map, $keys...);
+}
+
+// END !SECTION Get
+// SECTION Recursive Map Merge
+//---------------------------------------------------------------------------
+
+/// Recursive Map Merge
+/// Search for any value contained within nested maps by using dot notation
+/// as the key argument
+/// @name recursive-map-merge
+/// @group maps
+/// @author Zsolt Pentz
+///
+/// @param {map} $parent-map - map to override
+/// @param {map} $child-map - map with new values to merge
+///
+/// @return {map} merged $parent-map and $child-map
+
+@function recursive-map-merge($parent-map, $child-map) {
+	$result: $parent-map;
+	@each $key, $value in $child-map {
+		@if (not map-has-key($result, $key)) or (type-of(map-get($result, $key)) != type-of($value)) or (not (type-of(map-get($result, $key)) == map and type-of($value) == map)) {
+			$result: map-merge($result, ($key: $value));
+		}
+		@else {
+			$result: map-merge($result, ($key: recursive-map-merge(map-get($result, $key), $value)));
+		}
+	}
+	@return $result;
+}
+// END !SECTION Recursive-map-merge
+// SECTION Error Reporting
+// --------------------------------------------------------------------------
+
+/// Test Env
+/// @name test-environment
+/// @type boolean
+$_test-environment: false !default;
+
+/// Error [function]
+/// Optionally override error-output for testing failure-cases
+/// @name error
+/// @group error-reporting
+/// @author Miriam Suzanne
+/// @access private
+///
+/// @param {string} $message -
+///   The error to report
+/// @param {string} $source -
+///   The source of the error
+/// @param {bool} $override [$_true-error-output-override] -
+///   Optionally override error-output for testing failure-cases
+/// @return {string}
+///   A message detailing the source and error,
+///   when the `$override` is `true`
+/// @throw
+///   A message detailing the source and error,
+///   when the `$override` is `false`
+/// @requires $_test-environment
+
+@function _error(
+  $message,
+  $source,
+  $override: $_test-environment
+) {
+  @if $override {
+    @return 'ERROR [#{$source}] #{$message}';
+  }
+  @error '[#{$source}] #{$message}';
+}
+
+/// Error [mixin]
+/// @access private
+/// @group error-reporting
+/// @author Miriam Suzanne
+/// @param {string} $message -
+///   The error to report
+/// @param {string} $source -
+///   The source of the error
+/// @param {bool} $override [$_true-error-output-override] -
+///   Optionally override error-output for testing failure-cases
+/// @output
+///   A message detailing the source and error,
+///   when the `$override` is `true`
+/// @throw
+///   A message detailing the source and error,
+///   when the `$override` is `false`
+/// @requires $_test-environment
+
+@mixin _error(
+  $message,
+  $source,
+  $override: $_test-environment
+) {
+  @if $override {
+    $error: 'ERROR [#{$source}] #{$message}';
+    @include _true-message($error, 'comments');
+  } @else {
+    @error '[#{$source}] #{$message}';
+  }
+}
+
+// END !SECTION Error Reporting
+// END !SECTION FUNCTIONS

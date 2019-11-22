@@ -1,0 +1,54 @@
+$stratus-type-values: (
+  'text-size': 2rem,
+  'line-height': 2.5rem,
+  'rem-size': 10px
+);
+$stratus-space-unit: _space-unit();
+
+@include test-module('structure calculation - auto') {
+  @include test('_space-unit pulls correct base measurement') {
+    $test: _space-unit();
+    $expected: 2.5rem;
+    @include assert-equal($test, $expected);
+  }
+  @include test('s() calculates correct measurement with input') {
+    $test: s(5);
+    $expected: 12.5rem;
+    @include assert-equal($test, $expected);
+  }
+}
+
+$stratus: (
+  'config': (
+    'space-unit': 7px
+  )
+);
+$stratus-space-unit: _space-unit();
+
+@include test-module('structure calculation - custom') {
+  @include test('_space-unit pulls correct base measurement') {
+    $test: _space-unit();
+    $expected: 7px;
+    @include assert-equal($test, $expected);
+  }
+  @include test('s() calculates correct measurement with input') {
+    $test: s(2);
+    $expected: 14px;
+    @include assert-equal($test, $expected);
+  }
+}
+
+$stratus: (
+  'config': (
+    'space-unit': bad-value
+  )
+);
+$stratus-space-unit: _space-unit();
+
+@include test-module('structure calculation - error handling') {
+  @include test('_space-unit throws an error when a value with invalid type is passed through') {
+    $test: _space-unit();
+    $expected: 'ERROR [$stratus configuration] stratus.config.space-unit: `bad-value` is not a valid value. Must be either a number or "auto".';
+    @include assert-equal($test, $expected);
+  }
+}

@@ -1,0 +1,56 @@
+// ==========================================================================
+// SECTION COLOR
+// ==========================================================================
+
+/// Shifts the lightness of input color by the specified level, and / or applies a specified opacity
+/// @group utility
+/// @param {color} $color
+/// @param {index(050, 100, 200, 300, 400, 500, 600, 700, 800, 900) | number(%)} $level [null]
+/// @param {number(unitless)} $opacity [null]
+/// @return manipulated color
+
+@function color($color, $level: 500, $opacity: null) {
+  // If $color is not a color, check if it is a key in a map
+  @if (type-of($color) != color) {
+    @if (stratus('config.global.color-map') == 'stratus') {
+      // If the configured color map is the default one, check $stratus.color
+      $color: get(stratus('color'), $color);
+    } @else {
+      // If the configured color map is different, check the custom map for the color.
+      $color: get(stratus('config.global.color-map'), $color);
+    }
+  }
+
+  $output: $color;
+
+  // Skip color scale calculations if no calculations are needed
+  @if (type-of($level) != number) {
+    // If level is not a number, throw an error
+    @return _error('Input value for $level is of an invalid type (#{type-of($level)}). Expected a number.', 'color()');
+  }
+
+  @if unit($level) == '%' {
+    // If the input $level is a percentage, pass the percentage directly through
+    $output: scale-color($color, $lightness: $level);
+  }
+  @else if index(050 100 200 300 400 500 600 700 800 900, $level) {
+    // If the input $level is a numerical index, perform math to convert into a percentage.
+    // Each step represents 20%. Example: 400 = 20%
+    $level: (($level - 500) / - 5) + 0%;
+    $output: scale-color($color, $lightness: $level);
+  }
+
+  @else {
+    // If we can't detect the input, pass it through anyway with a warning.
+    // scale-color will error if the input is truly invalid
+    @warn 'Parameter $level is an invalid value, expected a number(%) or value from list: (050, 100, 200, 300, 400, 500, 600, 700, 800, 900). Input for $level: #{$level}(#{type-of($level)}).';
+    $output: scale-color($color, $lightness: $level);
+  }
+
+  // If an opacity value has been passed in, apply it to the calculated output
+  @if ($opacity != null) {
+    @return adjust-color($output, $alpha: $opacity);
+  } @else { @return $output; }
+}
+
+// END !SECTION COLOR
