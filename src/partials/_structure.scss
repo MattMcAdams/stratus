@@ -4,17 +4,17 @@
 // establish vertical rhythm
 // ==========================================================================
 
-// If the space unit is set to auto, use line height
-// Else, use the value provided for space-unit in stratus config
-@if (stratus('config.space-unit') == 'auto') {
-  $stratus-space-unit: type-get('line-height');
-} @else if (type-of(stratus('config.space-unit')) != number ) {
-  @error 'stratus.config.space-unit: #{stratus("config.space-unit")} is not a valid value. Must be either a number with CSS unit or "auto".';
-} @else {
-  $stratus-space-unit: stratus('config.space-unit');
+@function _space-unit($space-config: stratus('config.space-unit')) {
+  @if $space-config == 'auto' {
+    @return type-get('line-height');
+  }
+  @else if ( type-of($space-config) != number ) or (unitless($space-config) == true) {
+    @return _error('stratus.config.space-unit: `#{$space-config}` is not a valid value. Must be either a number with CSS unit or "auto".', '$stratus configuration');
+  }
+  @else {
+    @return $space-config;
+  }
 }
-
-@if (stratus('debug') == true) { @debug "space-unit: #{$stratus-space-unit}"; }
 
 /// Custom Space Unit
 /// function to create a general unit of measurement for spacing
@@ -28,7 +28,7 @@
 /// @requires _typography.scss
 
 @function s($input) {
-  @return ($stratus-space-unit * $input);
+  @return (_space-unit() * $input);
 }
 
 // END !SECTION STRUCTURE
