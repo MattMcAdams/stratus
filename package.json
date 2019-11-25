@@ -1,11 +1,6 @@
 {
-<<<<<<< Updated upstream
-  "name": "stratus",
-  "version": "0.2.0",
-=======
   "name": "@mattmcadams/stratus",
   "version": "0.2.1",
->>>>>>> Stashed changes
   "description": "Advanced SCSS Typography and Utilities built on Bourbon",
   "main": "index.js",
   "author": {
