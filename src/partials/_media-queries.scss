@@ -20,7 +20,7 @@
     @media (orientation: landscape) { @content; }
   } @else {
     // if neither orientations match, assume the value resolves to a number.
-
+    $query-size: null;
     // Detect direction of the query, warn if input is invalid
     @if ($direction != min) or ($direction != max) {
       @warn '"#{$direction}" is not a valid value for `$direction` expected "min" or "max".';
