@@ -3,11 +3,11 @@
 // Create and manipulate color with a mix of these functions:
 // color.mix() | mix() // built-in Sass
 // color.scale | scale-color() // built-in Sass
-// stratus.color | stratus-color() // Stratus
-// stratus.scale-index | stratus-scale-index() // Stratus
-// stratus.shift-color | stratus-shift-color() // Stratus
+// stratus.color | color() // Stratus
+// stratus.scale-index | scale-index() // Stratus
+// stratus.color-shift | color-shift() // Stratus
 //
-// Example: stratus.shift-color(stratus.color('primary', 'dark'), 400)
+// Example: stratus.color-shift(stratus.color('primary', 'dark'), 400)
 // ==========================================================================
 
 /// --------------------------------------------------------------------------
@@ -15,16 +15,14 @@
 /// @group color
 /// @type string ['mix' | 'scale']
 /// --------------------------------------------------------------------------
-$stratus-default-color-method: 'mix' !default;
+$default-color-method: 'mix' !default;
 
 /// --------------------------------------------------------------------------
 /// Default color map
 /// @group color
 /// @type map
 /// --------------------------------------------------------------------------
-$stratus-color-map: $stratus-default-color-map !default;
-
-$stratus-default-color-map: (
+$default-color-map: (
   'info': #1273e6,
   'notice': #da7b12,
   'negative': #d7373f,
@@ -32,13 +30,26 @@ $stratus-default-color-map: (
 );
 
 /// --------------------------------------------------------------------------
+/// Configurable color map
+/// @group color
+/// @type map
+/// @requires $default-color-map
+/// --------------------------------------------------------------------------
+$stratus-color-map: $default-color-map !default;
+
+/// --------------------------------------------------------------------------
 /// Example get color
 /// @group color
 /// @author Matt McAdams
+/// @requires $stratus-color-map
 /// --------------------------------------------------------------------------
-@function stratus-color($args...) {
+@function color($keys...) {
+  $i: 0;
   $_map: $stratus-color-map;
-  @return deep-map-get($_map, $args);
+  @each $arg in $keys { $i: $i+1 }
+  @if $i > 1 {
+    @return deep-map-get($_map, $keys...);
+  } @else { @return map-get($_map, $keys...); }
 }
 
 /// --------------------------------------------------------------------------
@@ -47,33 +58,33 @@ $stratus-default-color-map: (
 /// @author Matt McAdams
 ///
 /// @arg {number(unitless)} - Must be a non-negative integer < 1000 & divisible by 50
-/// @example stratus-color-index(400) -> 20%
+/// @example color-index(400) -> 20%
 /// 500 is 0. every 50 represents 10%.
 /// Inputs less than 500 will be converted to positive percentages,
 /// Inputs greater than 500 will be converted to negative percentages.
 /// --------------------------------------------------------------------------
-@function stratus-scale-index($number) {
+@function scale-index($number) {
   @if is-integer($number / 50) and ($number < 1000) {
     @return (($number - 500) / - 5) + 0%;
   }
   @else {
-    @return _error('Invalid argument for `$number`: `(#{$method}{#{type-of($method)}})`. Must be a non-negative integer < 1000 & divisible by 50.', 'stratus-scale-index');
+    @return _error('Invalid argument for `$number`: `(#{$method}{#{type-of($method)}})`. Must be a non-negative integer < 1000 & divisible by 50.', 'scale-index');
   }
 }
 
 /// --------------------------------------------------------------------------
-/// Shift Color
+/// @name color-shift
 /// @group color
 /// @author Matt McAdams
-/// @requires $stratus-default-color-method
+/// @requires $default-color-method
 ///
 /// @arg {color} $color - Color to be manipulated
 /// @arg {number(%)} $percent - percent by which to be manipulated, can be positive or negative
-/// @param {keyword['mix'|'scale']} $method [$stratus-default-color-method]
+/// @param {keyword['mix'|'scale']} $method [$default-color-method]
 /// use color.mix() or color.scale() to calculate new color.
-/// @example background-color: stratus-color-shift(#AAA, -20%);
+/// @example background-color: color-shift(#AAA, -20%);
 /// --------------------------------------------------------------------------
-@function stratus-shift-color($color, $percent, $method: $stratus-default-color-method) {
+@function color-shift($color, $percent, $method: $default-color-method) {
   @if $method == 'mix' {
     $_base: white;
     @if $percent < 0 {
@@ -86,7 +97,10 @@ $stratus-default-color-map: (
     @return scale-color($color, $lightness: $percent);
   }
   @else {
-    @return _error('Invalid argument for `$method`: `(#{$method}{#{type-of($method)}})`. Must be either `mix{string}` or `scale{string}`.', 'stratus-shift-color()');
+    @return _error('Invalid argument for `$method`: `(#{$method}{#{type-of($method)}})`. Must be either `mix{string}` or `scale{string}`.', 'color-shift()');
   }
 }
+
+// ==========================================================================
 // END !SECTION COLOR
+// ==========================================================================
