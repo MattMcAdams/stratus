@@ -1,192 +1,94 @@
 // ==========================================================================
 // SECTION COLOR
+// Create and manipulate color with a mix of these functions:
+// color.mix() | mix() // built-in Sass
+// color.scale | scale-color() // built-in Sass
+// stratus.color | stratus-color() // Stratus
+// stratus.scale-index | stratus-scale-index() // Stratus
+// stratus.shift-color | stratus-shift-color() // Stratus
+//
+// Example: stratus.shift-color(stratus.color('primary', 'dark'), 400)
 // ==========================================================================
 // TODO: Add opacity option
 // TODO: Make unit tests
 
-/// Default map key for base color of a deep map
-/// @group color
-/// @type string
-$stratus-default-color-key: 'base' !default;
-
-/// Default color map to use when finding a color by name
-/// colors should be keys on this map, and may have
-/// their own child keys. See stratus color documentation
-/// @group color
-/// @type map
-$stratus-color-map: () !default;
-
+/// --------------------------------------------------------------------------
 /// Default color mix method
 /// @group color
-/// @type string ['tint/shade' | 'scale']
-$stratus-color-mix-method: 'tint/shade' !default;
+/// @type string ['mix' | 'scale']
+/// --------------------------------------------------------------------------
+$stratus-default-color-method: 'mix' !default;
 
-/// Tint color
+/// --------------------------------------------------------------------------
+/// Default color map
 /// @group color
-/// @param {color} $color - color to be tinted
-/// @param {number(%)} $percentage - how much white to be mixed
-/// @return `$color` mixed with white by `$percentage`
-@function tint($color, $percentage) {
-  @return mix(white, $color, $percentage);
-}
-/// Shade color
-/// @group color
-/// @param {color} $color - color to be shaded
-/// @param {number(%)} $percentage - how much black to be mixed
-/// @return `$color` mixed with black by `$percentage`
-@function shade($color, $percentage) {
-  @return mix(black, $color, $percentage);
-}
+/// @type map
+/// --------------------------------------------------------------------------
+$stratus-color-map: $stratus-default-color-map !default;
 
-/// Resolve color
-/// @group color
-/// @param {color | key($reference-map)} $input
-/// @param {map | null} $referent-map [null]
-/// @return map or color
-@function _resolve-color($input, $reference-map: null) {
-  @if type-of($input) == color { @return $input; }
-  @else { @return map-get($reference-map, $input); }
-}
-
-/// Resolve method
-/// @group color
-/// @param {keyword[tint-shade | scale | auto] | key($reference-map)} $input
-/// @param {map | null} $reference-map [null]
-/// @return keyword[tint/shade | scale]
-@function _resolve-method($input, $reference-map: null) {
-  @if $input == 'tint/shade' { @return 'tint/shade'; }
-  @else if $input == 'scale' { @return 'scale'; }
-  @else if ($input == 'auto') {
-    @if ( $reference-map != null ) and (map-has-key($reference-map, 'method')) {
-      @return map-get($reference-map, 'method');
-    }
-    @else { @return $stratus-color-mix-method };
-  }
-}
-
-/// Resolve adjustment
-/// @group color
-/// @param {number(%) | key($reference-map) | number 050-950 in increments of 50} $input
-/// @param {map | null} $reference-map [null]
-/// @return number(%)
-@function _resolve-adjustment($input, $reference-map: null) {
-  $_adjustment: $input;
-  @if ( $reference-map != null ) and (map-has-key($reference-map, $input)) {
-    $_adjustment: map-get($reference-map, $input)
-  }
-  @if is-percentage($_adjustment) { @return $_adjustment; }
-  @else if index(050 100 150 200 250 300 350 400 450 500 550 600 650 700 750 800 850 900 950, $_adjustment) {
-    // If the input $input is a numerical index, perform math to convert into a percentage.
-    // Each step represents 20%. Example: 400 = 20%
-    $_output: (($_adjustment - 500) / - 5) + 0%;
-    @return $_output;
-  } @else {
-    // If we can't detect the input, pass it through anyway with a warning.
-    // scale-color will error if the input is truly invalid
-    @warn 'Parameter $input is an invalid value, expected a number(%), number between 050 and 950 in increments of 50. Actual $input: #{$input}(#{type-of($input)}).';
-    @return $input;
-  }
-}
-
-/// Get custom color
-/// @group color
-/// @param {key} $input
-/// @param {map} $reference-map
-/// @return null | color
-@function _get-custom-color($input, $reference-map) {
-  @if map-has-key($reference-map, $input) {
-    @if type-of(map-get($reference-map, $input) == color) {
-      @return map-get($reference-map, $input);
-    }
-  }
-  @else {
-    @return null;
-  }
-}
-
-/// Mix color
-/// @group color
-/// @param {color} $color
-/// @param {number(%)} $adjustment
-/// @param {keyword[scale | tint/shade]} $method
-/// @return color
-@function _mix-color($color, $adjustment, $method) {
-  @if $adjustment {
-    @if $method == 'scale' {
-      @return scale-color($color, $lightness: $adjustment);
-    }
-    @else if $method == 'tint/shade' {
-      @if $adjustment < 0% {
-        $adjustment: $adjustment * -1;
-        @return shade( $color, $adjustment );
-      }
-      @else if $adjustment > 0% {
-        @return tint( $color, $adjustment );
-      }
-    }
-  }
-  @else { @return $color; }
-}
-
-
-/// Color Function
-/// @group color
-/// @param {color | key($reference-map)} $value
-/// @param {number(%) | number divisible by 50 | key($value)} $adjustment
-/// @param {map | null} $reference-map
-/// @param {keyword[scale | tint/shade | auto]} $mix-method [auto]
-/// @return color
-@function stratus-color($value, $adjustment, $opacity, $reference-map, $mix-method: 'auto') {
-
-  // The $_color param will always be of the 'color' type
-  $_color: null;
-  // The $_adjustment param should resolve to a percentage
-  $_adjustment: null;
-  // The $_reference-color can be either a 'color' or 'map'
-  $_reference-color: _resolve-color($value);
-
-  // If the input color is a real color, pass that on to the $_color param
-  @if type-of($_reference-color) == color {
-    $_color: $_reference-color;
-    $_adjustment: _resolve-adjustment($adjustment);
-    $_method: _resolve-method($mix-method);
-  }
-
-  // If the input is not a color, see if it is a map
-  @else if type-of($_reference-color) == map {
-    // Check to see if the $_reference-color map has a key matching the $adjustment arg
-    @if _get-custom-color($adjustment, $_reference-color) {
-      @return _get-custom-color($adjustment, $_reference-color);
-    }
-    $_color: map-get($_reference-color, $stratus-default-color-key);
-    $_method: _resolve-method($mix-method, $_reference-color);
-    $_adjustment: _resolve-adjustment($adjustment, $_reference-color);
-  }
-  // If the input is not a color or a map, throw an error.
-  @else { @error 'Invalid type for `$value` argument, expected type of "color" or "map". Actual type was "#{type-of($_reference-color)}"'; }
-
-  @return _mix-color($_color, $_adjustment, $_method);
-}
-/* EXAMPLES
-
-$stratus-color-map: (
-  'primary': #f7f7f7,
-  'accent': (
-    'method': 'scale',
-    'base': #1ea8d1
-  )
-  'secondary': (
-    'method': 'tint/shade',
-    'base': #4f6f8e,
-    'dark': #294159
-  )
+$stratus-default-color-map: (
+  'info': #1273e6,
+  'notice': #da7b12,
+  'negative': #d7373f,
+  'positive': #258f6c
 );
 
-stratus-color('primary', '100');
-stratus-color('primary', '-20%');
-stratus-color('accent', '400');
-stratus-color('secondary', 'dark');
-stratus-color('secondary', '700');
-*/
+/// --------------------------------------------------------------------------
+/// Example get color
+/// @group color
+/// @author Matt McAdams
+/// --------------------------------------------------------------------------
+@function stratus-color($args...) {
+  $_map: $stratus-color-map;
+  @return deep-map-get($_map, $args);
+}
 
-// END !SECTION COLOR 2.0
+/// --------------------------------------------------------------------------
+/// Scale Index
+/// @group color
+/// @author Matt McAdams
+///
+/// @arg {number(unitless)} - Must be a non-negative integer < 1000 & divisible by 50
+/// @example stratus-color-index(400) -> 20%
+/// 500 is 0. every 50 represents 10%.
+/// Inputs less than 500 will be converted to positive percentages,
+/// Inputs greater than 500 will be converted to negative percentages.
+/// --------------------------------------------------------------------------
+@function stratus-scale-index($number) {
+  @if is-integer($number / 50) and ($number < 1000) {
+    @return (($number - 500) / - 5) + 0%;
+  }
+  @else {
+    @return _error('Invalid argument for `$number`: `(#{$method}{#{type-of($method)}})`. Must be a non-negative integer < 1000 & divisible by 50.', 'stratus-scale-index');
+  }
+}
+
+/// --------------------------------------------------------------------------
+/// Shift Color
+/// @group color
+/// @author Matt McAdams
+/// @requires $stratus-default-color-method
+///
+/// @arg {color} $color - Color to be manipulated
+/// @arg {number(%)} $percent - percent by which to be manipulated, can be positive or negative
+/// @param {keyword['mix'|'scale']} $method [$stratus-default-color-method]
+/// use color.mix() or color.scale() to calculate new color.
+/// @example background-color: stratus-color-shift(#AAA, -20%);
+/// --------------------------------------------------------------------------
+@function stratus-shift-color($color, $percent, $method: $stratus-default-color-method) {
+  @if $method == 'mix' {
+    $_base: white;
+    @if $percent < 0 {
+      $_base: black;
+      $percent: $percent * -1;
+    }
+    @return mix($_base, $color, $percent);
+  }
+  @else if $method == 'scale' {
+    @return scale-color($color, $lightness: $percent);
+  }
+  @else {
+    @return _error('Invalid argument for `$method`: `(#{$method}{#{type-of($method)}})`. Must be either `mix{string}` or `scale{string}`.', 'stratus-shift-color()');
+  }
+}
+// END !SECTION COLOR
