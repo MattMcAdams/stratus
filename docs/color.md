@@ -1,9 +1,7 @@
 # Color module
 ## `$_default-color-map`
+@type: map | @access: private
 ```sass
-@type: map
-@access: private
-
 $_default-color-map: (
   'info': #1273e6,
   'notice': #da7b12,
