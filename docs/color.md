@@ -1,10 +1,9 @@
 # Color module
-## $_default-color-map
-<hr>
-Type: Map, Access: Private, Source
-<hr>
-This is the default color reference map used when no custom map has been configured.
+## Default color map
 ```sass
+@type: map
+@access: private
+
 $_default-color-map: (
   'info': #1273e6,
   'notice': #da7b12,
@@ -12,6 +11,9 @@ $_default-color-map: (
   'positive': #258f6c
 );
 ```
+This is the default color reference map used when no custom map has been configured.
+
+
 ## $stratus-color-map
 <hr>
 Type: Map, Access: Global, Source
