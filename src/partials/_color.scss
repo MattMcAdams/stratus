@@ -22,7 +22,7 @@ $default-color-method: 'mix' !default;
 /// @group color
 /// @type map
 /// --------------------------------------------------------------------------
-$default-color-map: (
+$_default-color-map: (
   'info': #1273e6,
   'notice': #da7b12,
   'negative': #d7373f,
@@ -35,7 +35,7 @@ $default-color-map: (
 /// @type map
 /// @requires $default-color-map
 /// --------------------------------------------------------------------------
-$stratus-color-map: $default-color-map !default;
+$stratus-color-map: $_default-color-map !default;
 
 /// --------------------------------------------------------------------------
 /// Example get color
