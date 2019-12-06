@@ -1,6 +1,6 @@
 # Color module
 The color module helps you manage a complex color map and provides functions to manipulate color.
-### `$_default-color-map`
+## `$_default-color-map`
 > **type**: map | **access**: private | **source**: [_color.scss](https://github.com/MattMcAdams/stratus/blob/master/src/partials/_color.scss)
 _______
 
@@ -14,15 +14,14 @@ $_default-color-map: (
 );
 ```
 
-### `$stratus-color-map`
+## `$stratus-color-map`
 > **type**: map | **access**: global | **source**: [_color.scss](https://github.com/MattMcAdams/stratus/blob/master/src/partials/_color.scss)
 ___________
+**Default Value**: $_default-color-map
 
 This variable allows you to pass a custom color map to be used in the `color()` function below. You can define a custom color map by changing this global variable at the top of your project.
 
-**Example**
+### Example
 ```
 $stratus-color-map: $my-custom-map;
 ```
-
-**Default Value**: $_default-color-map.
