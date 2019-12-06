@@ -12,7 +12,7 @@ $test-color-map: (
 
 $stratus-color-map: $test-color-map;
 
-@include test-module('Color Get') {
+@include test-module('color($keys...)') {
   @include test('fetches a color from the test map') {
     $test: color('info');
     $expected: #1273e6;
@@ -22,6 +22,121 @@ $stratus-color-map: $test-color-map;
   @include test('fetches a nested color from the test map') {
     $test: color('positive', 'dark');
     $expected: #1a684e;
+    @include assert-equal(inspect($test), inspect($expected));
+  }
+}
+
+@include test-module('scale-index($number)') {
+  @include test('output 0% with input of 500') {
+    $test: scale-index(500);
+    $expected: 0%;
+    @include assert-equal($test, $expected);
+  }
+
+  @include test('output negative number with input greater than 500') {
+    $test: if(scale-index(700) < 0, true, false);
+    $expected: true;
+    @include assert-equal($test, $expected);
+  }
+
+  @include test('output 10% with input 450') {
+    $test: scale-index(450);
+    $expected: 10%;
+    @include assert-equal($test, $expected);
+  }
+
+  @include test('output 40% with input 300') {
+    $test: scale-index(300);
+    $expected: 40%;
+    @include assert-equal($test, $expected);
+  }
+
+  @include test('output -40% with input 700') {
+    $test: scale-index(700);
+    $expected: -40%;
+    @include assert-equal($test, $expected);
+  }
+
+  @include test('output -10% with input 550') {
+    $test: scale-index(550);
+    $expected: -10%;
+    @include assert-equal($test, $expected);
+  }
+
+  @include test('throw error with input indivisible by 50') {
+    $test: scale-index(508);
+    $expected: 'ERROR [scale-index] Invalid argument for `$number`: `(508{number})`. Must be a non-negative integer < 1000 & divisible by 50.';
+    @include assert-equal($test, $expected);
+  }
+
+  @include test('throw error with input is less than 0') {
+    $test: scale-index(-100);
+    $expected: 'ERROR [scale-index] Invalid argument for `$number`: `(-100{number})`. Must be a non-negative integer < 1000 & divisible by 50.';
+    @include assert-equal($test, $expected);
+  }
+}
+
+@include test-module('color-shift($color, $percent, $method: $default-color-method)') {
+  @include test('return tinted color with $method: mix and positive $percent') {
+    $test: color-shift(#1273e6, 20%, mix);
+    $expected: mix(white, #1273e6, 20%);
+    @include assert-equal($test, $expected);
+  }
+
+  @include test('return shaded color with $method: mix and negative $percent') {
+    $test: color-shift(#1273e6, -20%, mix);
+    $expected: mix(black, #1273e6, 20%);
+    @include assert-equal($test, $expected);
+  }
+
+  @include test('return scaled color with $method: scale and negative $percent') {
+    $test: color-shift(#1273e6, -20%, scale);
+    $expected: scale-color(#1273e6, $lightness: -20%);
+    @include assert-equal($test, $expected);
+  }
+
+  @include test('return scaled color with $method: scale and positive $percent') {
+    $test: color-shift(#1273e6, 20%, scale);
+    $expected: scale-color(#1273e6, $lightness: 20%);
+    @include assert-equal($test, $expected);
+  }
+
+  @include test('return unmanipulated color with an input of 0%, regardless of method') {
+    $testA: color-shift(#1273e6, 0%, scale);
+    $testB: color-shift(#1273e6, 0%, mix);
+    $expected: #1273e6;
+    @include assert-equal(inspect($testA), inspect($testB), inspect($expected));
+  }
+
+  @include test('throws error with invalid arg for $method') {
+    $test: color-shift(#1273e6, 0%, invalid);
+    $expected: 'ERROR [color-shift()] Invalid argument for `$method`: `(invalid{string})`. Must be either `mix{string}` or `scale{string}`.';
+    @include assert-equal($test, $expected);
+  }
+}
+
+@include test-module('integration: color-shift(color(positive, dark), scale-index(800), mix)'){
+  @include test('scale-index(300) == 40%'){
+    $test: scale-index(800);
+    $expected: -60%;
+    @include assert-equal($test, $expected);
+  }
+
+  @include test('color(positive, dark) == #1a684e'){
+    $test: color(positive, dark);
+    $expected: #1a684e;
+    @include assert-equal(inspect($test), inspect($expected));
+  }
+
+  @include test('color-shift(#1a684e, -60%, mix) == mix(black, #1a684e, 60%)') {
+    $test: color-shift(#1a684e, -60%, mix);
+    $expected: mix(black, #1a684e, 60%);
+    @include assert-equal(inspect($test), inspect($expected));
+  }
+
+  @include test('integration validates') {
+    $test: color-shift(color(positive, dark), scale-index(800), mix);
+    $expected: mix(black, #1a684e, 60%);
     @include assert-equal(inspect($test), inspect($expected));
   }
 }

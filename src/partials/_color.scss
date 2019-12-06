@@ -64,11 +64,11 @@ $stratus-color-map: $default-color-map !default;
 /// Inputs greater than 500 will be converted to negative percentages.
 /// --------------------------------------------------------------------------
 @function scale-index($number) {
-  @if is-integer($number / 50) and ($number < 1000) {
+  @if is-integer(($number / 50)) and ($number < 1000) and ($number > 0) {
     @return (($number - 500) / - 5) + 0%;
   }
   @else {
-    @return _error('Invalid argument for `$number`: `(#{$method}{#{type-of($method)}})`. Must be a non-negative integer < 1000 & divisible by 50.', 'scale-index');
+    @return _error('Invalid argument for `$number`: `(#{$number}{#{type-of($number)}})`. Must be a non-negative integer < 1000 & divisible by 50.', 'scale-index');
   }
 }
 
