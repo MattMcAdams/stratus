@@ -79,26 +79,34 @@ $stratus-color-map: $default-color-map !default;
 /// @requires $default-color-method
 ///
 /// @arg {color} $color - Color to be manipulated
-/// @arg {number(%)} $percent - percent by which to be manipulated, can be positive or negative
+/// @param {number(%)} $percent - percent by which to be manipulated, can be positive or negative
+/// @param {number(%)} $opacity - desired opacity of returned color
 /// @param {keyword['mix'|'scale']} $method [$default-color-method]
 /// use color.mix() or color.scale() to calculate new color.
 /// @example background-color: color-shift(#AAA, -20%);
 /// --------------------------------------------------------------------------
-@function color-shift($color, $percent, $method: $default-color-method) {
-  @if $method == 'mix' {
-    $_base: white;
-    @if $percent < 0 {
-      $_base: black;
-      $percent: $percent * -1;
+@function color-shift($color, $percent: null, $opacity: null, $method: $default-color-method) {
+  $_output: $color;
+
+  @if ($percent != null) {
+    @if $method == 'mix' {
+      $_base: white;
+      @if $percent < 0 { $_base: black; $percent: $percent * -1; }
+      $_output: mix($_base, $color, $percent);
     }
-    @return mix($_base, $color, $percent);
+    @else if $method == 'scale' {
+      $_output: scale-color($color, $lightness: $percent);
+    }
+    @else {
+      @return _error('Invalid argument for `$method`: `(#{$method}{#{type-of($method)}})`. Must be either `mix{string}` or `scale{string}`.', 'color-shift()');
+    }
   }
-  @else if $method == 'scale' {
-    @return scale-color($color, $lightness: $percent);
+
+  @if $opacity != null {
+    $_output: scale-color($_output, $alpha: $opacity);
   }
-  @else {
-    @return _error('Invalid argument for `$method`: `(#{$method}{#{type-of($method)}})`. Must be either `mix{string}` or `scale{string}`.', 'color-shift()');
-  }
+
+  @return $_output;
 }
 
 // ==========================================================================

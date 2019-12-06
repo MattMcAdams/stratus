@@ -78,44 +78,57 @@ $stratus-color-map: $test-color-map;
 
 @include test-module('color-shift($color, $percent, $method: $default-color-method)') {
   @include test('return tinted color with $method: mix and positive $percent') {
-    $test: color-shift(#1273e6, 20%, mix);
+    $test: color-shift(#1273e6, 20%, $method: mix);
     $expected: mix(white, #1273e6, 20%);
     @include assert-equal($test, $expected);
   }
 
   @include test('return shaded color with $method: mix and negative $percent') {
-    $test: color-shift(#1273e6, -20%, mix);
+    $test: color-shift(#1273e6, -20%, $method: mix);
     $expected: mix(black, #1273e6, 20%);
     @include assert-equal($test, $expected);
   }
 
   @include test('return scaled color with $method: scale and negative $percent') {
-    $test: color-shift(#1273e6, -20%, scale);
+    $test: color-shift(#1273e6, -20%, $method: scale);
     $expected: scale-color(#1273e6, $lightness: -20%);
     @include assert-equal($test, $expected);
   }
 
   @include test('return scaled color with $method: scale and positive $percent') {
-    $test: color-shift(#1273e6, 20%, scale);
+    $test: color-shift(#1273e6, 20%, $method: scale);
     $expected: scale-color(#1273e6, $lightness: 20%);
     @include assert-equal($test, $expected);
   }
 
   @include test('return unmanipulated color with an input of 0%, regardless of method') {
-    $testA: color-shift(#1273e6, 0%, scale);
-    $testB: color-shift(#1273e6, 0%, mix);
+    $testA: color-shift(#1273e6, 0%, $method: scale);
+    $testB: color-shift(#1273e6, 0%, $method: mix);
     $expected: #1273e6;
     @include assert-equal(inspect($testA), inspect($testB), inspect($expected));
   }
 
   @include test('throws error with invalid arg for $method') {
-    $test: color-shift(#1273e6, 0%, invalid);
-    $expected: 'ERROR [color-shift()] Invalid argument for `$method`: `(invalid{string})`. Must be either `mix{string}` or `scale{string}`.';
+    $test: color-shift(#1273e6, 20%, $method: test);
+    $expected: 'ERROR [color-shift()] Invalid argument for `$method`: `(test{string})`. Must be either `mix{string}` or `scale{string}`.';
+    @include assert-equal($test, $expected);
+  }
+
+  @include test('Adjusts the output opacity, given an opacity arg') {
+    $test: color-shift(#1273e6, $opacity: 50%);
+    $expected: scale-color(#1273e6, $alpha: 50%);
+    @include assert-equal($test, $expected);
+  }
+
+  @include test('Can correctly shade color and adjust opacity') {
+    $test: color-shift(#1273e6, -20%, 50%);
+    $expectedA: mix(black, #1273e6, 20%);
+    $expected: scale-color($expectedA, $alpha: 50%);
     @include assert-equal($test, $expected);
   }
 }
 
-@include test-module('integration: color-shift(color(positive, dark), scale-index(800), mix)'){
+@include test-module('integration: color-shift(color(positive, dark), scale-index(800))'){
   @include test('scale-index(300) == 40%'){
     $test: scale-index(800);
     $expected: -60%;
@@ -128,14 +141,14 @@ $stratus-color-map: $test-color-map;
     @include assert-equal(inspect($test), inspect($expected));
   }
 
-  @include test('color-shift(#1a684e, -60%, mix) == mix(black, #1a684e, 60%)') {
-    $test: color-shift(#1a684e, -60%, mix);
+  @include test('color-shift(#1a684e, -60%) == mix(black, #1a684e, 60%)') {
+    $test: color-shift(#1a684e, -60%);
     $expected: mix(black, #1a684e, 60%);
     @include assert-equal(inspect($test), inspect($expected));
   }
 
   @include test('integration validates') {
-    $test: color-shift(color(positive, dark), scale-index(800), mix);
+    $test: color-shift(color(positive, dark), scale-index(800));
     $expected: mix(black, #1a684e, 60%);
     @include assert-equal(inspect($test), inspect($expected));
   }
