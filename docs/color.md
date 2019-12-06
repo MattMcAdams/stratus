@@ -1,5 +1,5 @@
 # Color module
-## Default color map
+## `$_default-color-map`
 ```sass
 @type: map
 @access: private
