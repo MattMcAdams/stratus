@@ -68,3 +68,43 @@ $stratus-color-map: $custom-map;
 .bar { background-color: color(primary, light); }
 // returns { background-color: #4899FF }
 ```
+## scale-index()
+**type**: function | **access**: public | **source**: [_color.scss](https://github.com/MattMcAdams/stratus/blob/master/src/partials/_color.scss)
+_____
+This function converts an input number to a percentage. This is useful if you need to calculate colors based on a model similar to that used in the colors of Google's Material Design, where each variant is reffered to by an increment of 100.
+
+For the purposes of `scale-index()`, a level of 500 equals 0%. Every 50 increment less than 500 shifts the output percentage by +10%. Every 50 increment greater than 500 shifts the output by -10%.
+
+The idea is that 500 is the base color, 100 is an extremely light variant of the base color, and 900 is extremely dark.
+
+### Spec
+```scss
+scale-index($number)
+```
+| Arg | Type | Description |
+| --- | --- | --- |
+| `$number` | number(unitless) | Must be a non-negative integer < 1000 & divisible by 50 |
+
+### Examples
+```
+scale-index(500) // 0%
+scale-index(450) // 10%
+scale-index(300) // 40%
+scale-index(700) // -40%
+```
+
+## color-shift()
+**type**: function | **access**: public | **source**: [_color.scss](https://github.com/MattMcAdams/stratus/blob/master/src/partials/_color.scss)
+_____
+Allows a color to be made darker or lighter through the use of either Sass `mix()` or Sass `scale-color()`. Also allows you to adjust the opacity of an input color all in the same function.
+
+### Spec
+```scss
+color-shift($color, $percent: null, $opacity: null, $method: $default-color-method)
+```
+| Arg | Type | Description |
+| --- | --- | --- |
+| `$color` | color | The color to be adjusted |
+| `$percent` | number(%) \| null | Can be positive or negative. Contolls how much the color is shifted |
+| `$opacity` | number(%) \| null | Allows the input color's opacity to be adjusted |
+| `$method` | keyword['mix' \| 'scale'] | Determines what color manipulation method to use. 'mix' will use the Sass `mix()` function to mix the color with white or black. `scale` will use the Sass `scale-color()` to shift the color's `$lightness` value. |
