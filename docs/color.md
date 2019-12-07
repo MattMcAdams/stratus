@@ -1,6 +1,17 @@
 # Color module
 The color module helps you manage a complex color map and provides functions to manipulate color.
-## `$_default-color-map`
+
+### `$_default-color-map`
+
+[width="100%"]
+|=======================
+|Col 1|Col 2      |Col 3
+|1    |Item 1     |a
+|2    |Item 2     |b
+|3    |Item 3     |c
+|6    |Three items|d
+|=======================
+
 > **type**: map | **access**: private | **source**: [_color.scss](https://github.com/MattMcAdams/stratus/blob/master/src/partials/_color.scss)
 _______
 
@@ -14,7 +25,7 @@ $_default-color-map: (
 );
 ```
 
-## `$stratus-color-map`
+### `$stratus-color-map`
 > **type**: map | **access**: global | **source**: [_color.scss](https://github.com/MattMcAdams/stratus/blob/master/src/partials/_color.scss)
 ___________
 **Default Value**: $_default-color-map
