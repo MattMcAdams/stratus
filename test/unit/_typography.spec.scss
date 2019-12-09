@@ -1,9 +1,3 @@
-$stratus-type-values: (
-  'text-size': 2rem,
-  'line-height': 2.5rem,
-  'rem-size': 10px
-);
-
 $type-config: (
   'use-dynamic-scale': false,
   'text-size': 20,
@@ -36,7 +30,8 @@ $bourbon: (
 
 @include test-module('Type configuration [function]') {
   @include test('correct values are being calculated based on data from stratus configuration') {
-    $test: map-get($type-config, 'text-size') / map-get($type-config, 'rem-size') + 0rem;
+
+    $test: type-config('text-size') / type-config('rem-size') + 0rem;
     $expected: 2rem;
 
     @include assert-equal($test, $expected);
@@ -192,7 +187,7 @@ $bourbon: (
         @include type-setting('medium', 1);
       }
       @include contains {
-        line-height: 2.5rem;
+        line-height: 3rem;
       }
     }
   }
@@ -218,7 +213,7 @@ $bourbon: (
       }
       @include contains {
         font-size: 2.5rem;
-        line-height: 2.5rem;
+        line-height: 3rem;
         font-size: var(--medium);
         line-height: var(--medium-lh);
       }
