@@ -1,56 +1,94 @@
 // ==========================================================================
 // SECTION COLOR
+// Create and manipulate color with a mix of these functions:
+// color.mix() | mix() // built-in Sass
+// color.scale | scale-color() // built-in Sass
+// stratus.color | color() // Stratus
+// stratus.scale-index | scale-index() // Stratus
+// stratus.color-shift | color-shift() // Stratus
+//
+// Example: stratus.color-shift(stratus.color('primary', 'dark'), 400)
 // ==========================================================================
 
-/// Shifts the lightness of input color by the specified level, and / or applies a specified opacity
-/// @group utility
-/// @param {color} $color
-/// @param {index(050, 100, 200, 300, 400, 500, 600, 700, 800, 900) | number(%)} $level [null]
-/// @param {number(unitless)} $opacity [null]
-/// @return manipulated color
+$default-color-key: 'base';
 
-@function color($color, $level: 500, $opacity: null) {
-  // If $color is not a color, check if it is a key in a map
-  @if (type-of($color) != color) {
-    @if (stratus('config.global.color-map') == 'stratus') {
-      // If the configured color map is the default one, check $stratus.color
-      $color: get(stratus('color'), $color);
-    } @else {
-      // If the configured color map is different, check the custom map for the color.
-      $color: get(stratus('config.global.color-map'), $color);
+/// --------------------------------------------------------------------------
+/// Example get color
+/// @group color
+/// @author Matt McAdams
+/// @requires $stratus-color-map
+/// --------------------------------------------------------------------------
+@function color($keys...) {
+  $_output: null;
+  $i: 0;
+  $_map: $stratus-color-map;
+  @each $arg in $keys { $i: $i+1 }
+  @if $i > 1 {
+    $_output: deep-map-get($_map, $keys...);
+  } @else { $_output: map-get($_map, $keys...); }
+  @if type-of($_output) == map {
+    @return map-get($_output, $default-color-key);
+  }
+  @return $_output;
+}
+
+/// --------------------------------------------------------------------------
+/// Scale Index
+/// @group color
+/// @author Matt McAdams
+///
+/// @arg {number(unitless)} - Must be a non-negative integer < 1000 & divisible by 50
+/// @example color-index(400) -> 20%
+/// 500 is 0. every 50 represents 10%.
+/// Inputs less than 500 will be converted to positive percentages,
+/// Inputs greater than 500 will be converted to negative percentages.
+/// --------------------------------------------------------------------------
+@function scale-index($number) {
+  @if is-integer(($number / 50)) and ($number < 1000) and ($number > 0) {
+    @return (($number - 500) / - 5) + 0%;
+  }
+  @else {
+    @return _error('Invalid argument for `$number`: `(#{$number}{#{type-of($number)}})`. Must be a non-negative integer < 1000 & divisible by 50.', 'scale-index');
+  }
+}
+
+/// --------------------------------------------------------------------------
+/// @name color-shift
+/// @group color
+/// @author Matt McAdams
+/// @requires $default-color-method
+///
+/// @arg {color} $color - Color to be manipulated
+/// @param {number(%)} $percent - percent by which to be manipulated, can be positive or negative
+/// @param {number(%)} $opacity - desired opacity of returned color
+/// @param {keyword['mix'|'scale']} $method [$default-color-method]
+/// use color.mix() or color.scale() to calculate new color.
+/// @example background-color: color-shift(#AAA, -20%);
+/// --------------------------------------------------------------------------
+@function color-shift($color, $percent: null, $opacity: null, $method: $default-color-method) {
+  $_output: $color;
+
+  @if ($percent != null) {
+    @if $method == 'mix' {
+      $_base: white;
+      @if $percent < 0 { $_base: black; $percent: $percent * -1; }
+      $_output: mix($_base, $color, $percent);
+    }
+    @else if $method == 'scale' {
+      $_output: scale-color($color, $lightness: $percent);
+    }
+    @else {
+      @return _error('Invalid argument for `$method`: `(#{$method}{#{type-of($method)}})`. Must be either `mix{string}` or `scale{string}`.', 'color-shift()');
     }
   }
 
-  $output: $color;
-
-  // Skip color scale calculations if no calculations are needed
-  @if (type-of($level) != number) {
-    // If level is not a number, throw an error
-    @return _error('Input value for $level is of an invalid type (#{type-of($level)}). Expected a number.', 'color()');
+  @if $opacity != null {
+    $_output: scale-color($_output, $alpha: $opacity);
   }
 
-  @if unit($level) == '%' {
-    // If the input $level is a percentage, pass the percentage directly through
-    $output: scale-color($color, $lightness: $level);
-  }
-  @else if index(050 100 200 300 400 500 600 700 800 900, $level) {
-    // If the input $level is a numerical index, perform math to convert into a percentage.
-    // Each step represents 20%. Example: 400 = 20%
-    $level: (($level - 500) / - 5) + 0%;
-    $output: scale-color($color, $lightness: $level);
-  }
-
-  @else {
-    // If we can't detect the input, pass it through anyway with a warning.
-    // scale-color will error if the input is truly invalid
-    @warn 'Parameter $level is an invalid value, expected a number(%) or value from list: (050, 100, 200, 300, 400, 500, 600, 700, 800, 900). Input for $level: #{$level}(#{type-of($level)}).';
-    $output: scale-color($color, $lightness: $level);
-  }
-
-  // If an opacity value has been passed in, apply it to the calculated output
-  @if ($opacity != null) {
-    @return adjust-color($output, $alpha: $opacity);
-  } @else { @return $output; }
+  @return $_output;
 }
 
+// ==========================================================================
 // END !SECTION COLOR
+// ==========================================================================

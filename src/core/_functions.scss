@@ -44,7 +44,7 @@
 /// str-explode('hello-world', '-')
 /// > (hello, world)
 
-@function str-explode ($string, $delimiter: '') {
+@function str-explode($string, $delimiter: '') {
   @if type-of($string) != 'string' {
     @error 'The argument $string: `#{$string}` is of incorrect type: `#{type-of($string)}`. Type of `String` is required!';
   }
@@ -97,7 +97,7 @@
 /// deep-map-check($nested-map, 'key-1', 'key-2')
 /// > boolean
 
-@function deep-map-check ($map, $keys...) {
+@function deep-map-check($map, $keys...) {
   @if type-of($map) != 'map' {
     @error 'The argument $map: "#{$map}" is of incorrect type: "#{type-of($map)}". Type of "Map" is required!';
   }
@@ -128,7 +128,7 @@
 /// deep-map-check($nested-map, 'top-level-key', 'second-level-key')
 /// > value of second level key
 
-@function deep-map-get ($map, $keys...) {
+@function deep-map-get($map, $keys...) {
   @if type-of($map) != 'map' {
     @error 'The argument $map: "#{$map}" is of incorrect type: "#{type-of($map)}". Type of "Map" is required!';
   }
@@ -162,8 +162,8 @@
 /// @requires deep-map-get
 /// @requires str-explode
 
-@function get ($map, $key) {
-  $keys: str-explode($key, '.');
+@function get($map, $key) {
+  $keys: str-explode($key, ', ');
 
   @if not deep-map-check($map, $keys...) {
     @error 'The argument $map: "#{$map}" doesn\'t have some of the $keys: "#{$keys}"!';
@@ -201,76 +201,20 @@
 	@return $result;
 }
 // END !SECTION Recursive-map-merge
-// SECTION Error Reporting
-// --------------------------------------------------------------------------
 
-/// Test Env
-/// @name test-environment
-/// @type boolean
-$_test-environment: false !default;
+/// Compute the maximum depth of a map
+/// @param {Map} $map
+/// @return {Number} max depth of `$map`
+@function map-depth($map) {
+  $level: 1;
 
-/// Error [function]
-/// Optionally override error-output for testing failure-cases
-/// @name error
-/// @group error-reporting
-/// @author Miriam Suzanne
-/// @access private
-///
-/// @param {string} $message -
-///   The error to report
-/// @param {string} $source -
-///   The source of the error
-/// @param {bool} $override [$_true-error-output-override] -
-///   Optionally override error-output for testing failure-cases
-/// @return {string}
-///   A message detailing the source and error,
-///   when the `$override` is `true`
-/// @throw
-///   A message detailing the source and error,
-///   when the `$override` is `false`
-/// @requires $_test-environment
-
-@function _error(
-  $message,
-  $source,
-  $override: $_test-environment
-) {
-  @if $override {
-    @return 'ERROR [#{$source}] #{$message}';
+  @each $key, $value in $map {
+    @if type-of($value) == "map" {
+      $level: max(map-depth($value) + 1, $level);
+    }
   }
-  @error '[#{$source}] #{$message}';
+
+  @return $level;
 }
 
-/// Error [mixin]
-/// @access private
-/// @group error-reporting
-/// @author Miriam Suzanne
-/// @param {string} $message -
-///   The error to report
-/// @param {string} $source -
-///   The source of the error
-/// @param {bool} $override [$_true-error-output-override] -
-///   Optionally override error-output for testing failure-cases
-/// @output
-///   A message detailing the source and error,
-///   when the `$override` is `true`
-/// @throw
-///   A message detailing the source and error,
-///   when the `$override` is `false`
-/// @requires $_test-environment
-
-@mixin _error(
-  $message,
-  $source,
-  $override: $_test-environment
-) {
-  @if $override {
-    $error: 'ERROR [#{$source}] #{$message}';
-    @include _true-message($error, 'comments');
-  } @else {
-    @error '[#{$source}] #{$message}';
-  }
-}
-
-// END !SECTION Error Reporting
 // END !SECTION FUNCTIONS
