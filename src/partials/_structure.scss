@@ -10,7 +10,7 @@ $space-unit: 'auto' !default;
   @if $space-config == 'auto' {
     @return type-get('line-height');
   } @else if ( type-of($space-config) != number ) {
-    @return _error('stratus.config.space-unit: `#{$space-config}` is not a valid value. Must be either a number or "auto".', '$stratus configuration');
+    @return _error('$space-unit: `#{$space-config}` is not a valid value. Must be either a number or "auto".', 'Stratus _space-unit()');
   } @else if is-unitless($space-config) {
     @warn 'stratus.config.space-unit: `#{$space-config}` does not have a unit measurement, this may cause css properties calculated with the s() function to be ignored, as a unit is expected.';
   }
