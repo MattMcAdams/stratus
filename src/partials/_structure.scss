@@ -4,8 +4,6 @@
 // establish vertical rhythm
 // ==========================================================================
 
-$space-unit: 'auto' !default;
-
 @function _space-unit($space-config: $space-unit) {
   @if $space-config == 'auto' {
     @return type-get('line-height');

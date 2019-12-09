@@ -3,15 +3,6 @@
 // Utility mixins to help you write cleaner, easier to read CSS
 // ==========================================================================
 
-$breakpoints: (
-  'xxlarge': 2560px,
-  'xlarge': 1440px,
-  'large': 1024px,
-  'medium': 761px,
-  'small': 760px,
-  'xsmall': 300px
-);
-
 /// Media Query Mixin
 /// @name breakpoint
 /// @group utility
