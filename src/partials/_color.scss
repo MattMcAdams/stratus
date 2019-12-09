@@ -19,6 +19,7 @@ $default-color-key: 'base';
 /// @requires $stratus-color-map
 /// --------------------------------------------------------------------------
 @function color($keys...) {
+  $_output: null;
   $i: 0;
   $_map: $stratus-color-map;
   @each $arg in $keys { $i: $i+1 }
