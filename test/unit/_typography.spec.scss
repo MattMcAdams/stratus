@@ -4,19 +4,14 @@ $stratus-type-values: (
   'rem-size': 10px
 );
 
-$stratus: (
-  'config': (
-    'type': (
-      'text-size': 20,
-      'line-height': 1.5,
-      'rem-size': 10
-    )
-  ),
-  'type': (
-    'ratio': 1.25,
-    'ratio-alt': 1.5
-  )
+$type-config: (
+  'use-dynamic-scale': false,
+  'text-size': 20,
+  'line-height': 1.5,
+  'rem-size': 10
 );
+
+$scale-ratio: 1.25;
 
 $bourbon: (
   "modular-scale-base": 2rem,
@@ -41,7 +36,7 @@ $bourbon: (
 
 @include test-module('Type configuration [function]') {
   @include test('correct values are being calculated based on data from stratus configuration') {
-    $test: stratus('config.type.text-size') / stratus('config.type.rem-size') + 0rem;
+    $test: map-get($type-config, 'text-size') / map-get($type-config, 'rem-size') + 0rem;
     $expected: 2rem;
 
     @include assert-equal($test, $expected);
@@ -149,7 +144,7 @@ $bourbon: (
     @include assert {
 
       @include output {
-        @include type-init($ratio: 'ratio-alt');
+        @include type-init($ratio: 1.5);
       }
       @include contains {
         --ratio: 1.5em;

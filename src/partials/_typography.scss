@@ -4,12 +4,31 @@
 
 // SECTION Config
 // --------------------------------------------------------------------------
+$type-config: (
+  'use-dynamic-scale': false,
+  'text-size': 16,
+  'line-height': 1.6,
+  'rem-size': 16
+) !default;
+
+$scale-ratio: 1.25 !default;
+
+$type-scale: (
+  'xlarge': 3,
+  'large': 2,
+  'medium': 1,
+  'normal': 0,
+  'small': -1,
+  'xsmall': -2,
+) !default;
+
+
 
 // Calculate rem values of type config input
 $stratus-type-values: (
-  'text-size': stratus('config.type.text-size') / stratus('config.type.rem-size') + 0rem,
-  'line-height': stratus('config.type.text-size') * stratus('config.type.line-height') / stratus('config.type.rem-size') + 0rem,
-  'rem-size': stratus('config.type.rem-size') + 0px
+  'text-size': map-get($type-config, 'text-size') / map-get($type-config, 'rem-size') + 0rem,
+  'line-height': map-get($type-config, 'text-size') * map-get($type-config, 'line-height') / map-get($type-config, 'rem-size') + 0rem,
+  'rem-size': map-get($type-config, 'rem-size') + 0px
 );
 
 @function type-get($key) { @return map-get($stratus-type-values, $key); }
@@ -17,7 +36,7 @@ $stratus-type-values: (
 // Set Bourbon settings to match that of Stratus
 $bourbon: (
   "modular-scale-base": type-get('text-size'),
-  "modular-scale-ratio": stratus('type.ratio')
+  "modular-scale-ratio": $scale-ratio
 );
 
 // END !SECTION Config
@@ -78,10 +97,7 @@ $bourbon: (
 /// :root { @include type-init($ratio: 1.25); }
 
 
-@mixin type-init($scale: stratus('type.scale'), $ratio: stratus('type.ratio')) {
-  @if type-of($ratio) != number {
-    $ratio: stratus('type.#{$ratio}');
-  }
+@mixin type-init($scale: $type-scale, $ratio: $scale-ratio) {
   --ratio: #{$ratio + 0em};
 
   @each $key, $step in $scale {
@@ -90,7 +106,7 @@ $bourbon: (
     --#{$key}-lh: #{line-height($size)};
   }
   @if (stratus('config.global.use-dynamic-scale') != true) {
-    @warn "The mixin type-init is only used to output css custom properties for use with multiple typographical scales, but stratus is set to use a single scale. See the 'use-dynamic-scale' key in Stratus configuration";
+    @warn "The mixin type-init is only used to output css custom properties for use with multiple typographical scales, but stratus is set to use a single scale. See the 'use-dynamic-scale' key in `$type-config`";
   }
 }
 
@@ -109,10 +125,10 @@ $bourbon: (
 /// p { @include type-setting(normal); }
 /// h1 { @include type-setting(large); }
 
-@mixin type-setting($name: 'normal',  $step: null, $print-variables: stratus('config.global.use-dynamic-scale')) {
+@mixin type-setting($name: 'normal',  $step: null, $print-variables: map-get($type-config, 'use-dynamic-scale')) {
 
   @if $step == null {
-    $step: stratus('type.scale.#{$name}');
+    $step: map-get($type-scale, $name);
   } @else if $print-variables == true {
     @warn "Using a generic string and defining a manual `$step` value may produce unpredictable problems.";
     @warn "It is advised to use `$name` to refer to a key on the stratus configuration object. See `$stratus > type > scale > [$name]`. The `$step` will be generated from the value of this key. This ensures css variables are generated with the correct values.";
