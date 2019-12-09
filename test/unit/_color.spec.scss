@@ -24,6 +24,12 @@ $stratus-color-map: $test-color-map;
     $expected: #1a684e;
     @include assert-equal(inspect($test), inspect($expected));
   }
+
+  @include test('fetches a the base color from a nested map') {
+    $test: color('positive');
+    $expected: #258f6c;
+    @include assert-equal(inspect($test), inspect($expected));
+  }
 }
 
 @include test-module('scale-index($number)') {

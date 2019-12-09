@@ -42,7 +42,7 @@ $stratus-space-unit: _space-unit();
 @include test-module('structure calculation - error handling') {
   @include test('_space-unit throws an error when a value with invalid type is passed through') {
     $test: _space-unit();
-    $expected: 'ERROR [$stratus configuration] stratus.config.space-unit: `bad-value` is not a valid value. Must be either a number or "auto".';
+    $expected: 'ERROR [Stratus _space-unit()] $space-unit: `bad-value` is not a valid value. Must be either a number or "auto".';
     @include assert-equal($test, $expected);
   }
 }
