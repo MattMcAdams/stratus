@@ -11,6 +11,10 @@ $type-config: (
   'rem-size': 16
 ) !default;
 
+@function type-config($key) {
+  @return map-get($type-config, $key);
+}
+
 $scale-ratio: 1.25 !default;
 
 $type-scale: (
@@ -22,16 +26,15 @@ $type-scale: (
   'xsmall': -2,
 ) !default;
 
+@function type-get($key) {
+  $_input-size: strip-unit(type-config('text-size'));
+  $_input-rem: strip-unit(type-config('rem-size'));
+  $_input-lh: strip-unit(type-config('line-height'));
 
-
-// Calculate rem values of type config input
-$stratus-type-values: (
-  'text-size': map-get($type-config, 'text-size') / map-get($type-config, 'rem-size') + 0rem,
-  'line-height': map-get($type-config, 'text-size') * map-get($type-config, 'line-height') / map-get($type-config, 'rem-size') + 0rem,
-  'rem-size': map-get($type-config, 'rem-size') + 0px
-);
-
-@function type-get($key) { @return map-get($stratus-type-values, $key); }
+  @if $key == 'text-size' { @return $_input-size / $_input-rem + 0rem; }
+  @if $key == 'line-height' { @return ($_input-size * $_input-lh) / $_input-rem + 0rem; }
+  @if $key == 'rem-size' { @return $_input-rem + 0px; }
+}
 
 // Set Bourbon settings to match that of Stratus
 $bourbon: (
@@ -51,19 +54,19 @@ $bourbon: (
 /// @author Matthew McAdams
 /// @access private
 ///
-/// @param {number(rem)} $input-text-size - text size to calculate line height for
-/// @param {number(rem)} $base-line-height - Line height to use as the base for calculation
+/// @param {number(rem)} $text-size - text size to calculate line height for
+/// @param {number(rem)} $line-height - Line height to use as the base for calculation
 ///
 /// @return {number(rem)}
 
-@function line-height( $input-text-size: type-get('text-size'), $base-line-height: type-get('line-height') ) {
+@function line-height( $text-size: type-get('text-size'), $line-height: type-get('line-height') ) {
 
-  @if unit($input-text-size) != 'rem' or unit($base-line-height) != 'rem' {
-    @warn "Both text size and line height are expected as 'rem' units. `$input-text-size`: `#{unit($input-text-size)}`, `$base-line-height`: `#{unit($base-line-height)}`.";
+  @if unit($text-size) != 'rem' or unit($line-height) != 'rem' {
+    @warn "Both text size and line height are expected as 'rem' units. `$text-size`: `#{unit($text-size)}`, `$line-height`: `#{unit($line-height)}`.";
   }
 
-  $_start-line-height: strip-unit($base-line-height);
-  $_text-size: strip-unit( $input-text-size );
+  $_start-line-height: strip-unit($line-height);
+  $_text-size: strip-unit( $text-size );
 
   $_line-height: 0;
   $_i: 1;
@@ -105,7 +108,7 @@ $bourbon: (
     --#{$key}: #{$size};
     --#{$key}-lh: #{line-height($size)};
   }
-  @if (stratus('config.global.use-dynamic-scale') != true) {
+  @if (type-config('use-dynamic-scale') != true) {
     @warn "The mixin type-init is only used to output css custom properties for use with multiple typographical scales, but stratus is set to use a single scale. See the 'use-dynamic-scale' key in `$type-config`";
   }
 }
