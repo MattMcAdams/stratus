@@ -10,6 +10,8 @@
 // Example: stratus.color-shift(stratus.color('primary', 'dark'), 400)
 // ==========================================================================
 
+$default-color-key: 'base';
+
 /// --------------------------------------------------------------------------
 /// Example get color
 /// @group color
@@ -21,8 +23,12 @@
   $_map: $stratus-color-map;
   @each $arg in $keys { $i: $i+1 }
   @if $i > 1 {
-    @return deep-map-get($_map, $keys...);
-  } @else { @return map-get($_map, $keys...); }
+    $_output: deep-map-get($_map, $keys...);
+  } @else { $_output: map-get($_map, $keys...); }
+  @if type-of($_output) == map {
+    @return map-get($_output, $default-color-key);
+  }
+  @return $_output;
 }
 
 /// --------------------------------------------------------------------------
