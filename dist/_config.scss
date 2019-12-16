@@ -35,29 +35,31 @@ $breakpoints: (
 
 // Color
 // ===========================================================================
-/// --------------------------------------------------------------------------
-/// Default color mix method
+/// Default key for deep color maps
 /// @group color
-/// @type string ['mix' | 'scale']
-/// --------------------------------------------------------------------------
-$default-color-method: 'mix' !default;
-/// --------------------------------------------------------------------------
+/// @type string
+$default-color-key: 'base' !default;
+
+/// Method used for shifting color lightness
+/// false uses the color-scale method, true uses the mix method
+/// @group color
+/// @type boolean
+$use-mix-method: true !default;
+
 /// Default color map
 /// @group color
 /// @type map
-/// --------------------------------------------------------------------------
 $_default-color-map: (
   'info': #1273e6,
   'notice': #da7b12,
   'negative': #d7373f,
   'positive': #258f6c
 );
-/// --------------------------------------------------------------------------
+
 /// Configurable color map
 /// @group color
 /// @type map
 /// @requires $default-color-map
-/// --------------------------------------------------------------------------
 $stratus-color-map: $_default-color-map !default;
 
 // Structure

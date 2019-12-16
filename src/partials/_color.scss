@@ -1,4 +1,4 @@
-// ==========================================================================
+// ===========================================================================
 // SECTION COLOR
 // Create and manipulate color with a mix of these functions:
 // color.mix() | mix() // built-in Sass
@@ -8,29 +8,7 @@
 // stratus.color-shift | color-shift() // Stratus
 //
 // Example: stratus.color-shift(stratus.color('primary', 'dark'), 400)
-// ==========================================================================
-
-$default-color-key: 'base';
-
-/// --------------------------------------------------------------------------
-/// Example get color
-/// @group color
-/// @author Matt McAdams
-/// @requires $stratus-color-map
-/// --------------------------------------------------------------------------
-@function color($keys...) {
-  $_output: null;
-  $i: 0;
-  $_map: $stratus-color-map;
-  @each $arg in $keys { $i: $i+1 }
-  @if $i > 1 {
-    $_output: deep-map-get($_map, $keys...);
-  } @else { $_output: map-get($_map, $keys...); }
-  @if type-of($_output) == map {
-    @return map-get($_output, $default-color-key);
-  }
-  @return $_output;
-}
+// ===========================================================================
 
 /// --------------------------------------------------------------------------
 /// Scale Index
@@ -52,43 +30,111 @@ $default-color-key: 'base';
   }
 }
 
+// ===========================================================================
+// SECTION Color Modifications
+// ===========================================================================
+
 /// --------------------------------------------------------------------------
-/// @name color-shift
+/// Mix Color
 /// @group color
 /// @author Matt McAdams
-/// @requires $default-color-method
+///
+/// @arg {color} $color
+/// @arg {number(%)} $percent - can be positive or negative
+/// --------------------------------------------------------------------------
+@function color-mix($color, $percent) {
+  $_base: white;
+  @if $percent < 0 { $_base: black; $percent: $percent * -1; }
+  @return mix($_base, $color, $percent);
+}
+
+/// --------------------------------------------------------------------------
+/// Shift Color
+/// @group color
+/// @author Matt McAdams
+/// @requires $use-mix-method
 ///
 /// @arg {color} $color - Color to be manipulated
-/// @param {number(%)} $percent - percent by which to be manipulated, can be positive or negative
-/// @param {number(%)} $opacity - desired opacity of returned color
-/// @param {keyword['mix'|'scale']} $method [$default-color-method]
+/// @arg {number(%)} $percent - percent by which to be manipulated, can be positive or negative
+/// @param {boolean} $mix-method [$use-mix-method]
 /// use color.mix() or color.scale() to calculate new color.
 /// @example background-color: color-shift(#AAA, -20%);
 /// --------------------------------------------------------------------------
-@function color-shift($color, $percent: null, $opacity: null, $method: $default-color-method) {
-  $_output: $color;
+@function color-shift($color, $percent, $mix-method: $use-mix-method) {
+  @if $mix-method { @return color-mix($color, $percent); }
+  @return scale-color($color, $lightness: $percent);
+}
 
-  @if ($percent != null) {
-    @if $method == 'mix' {
-      $_base: white;
-      @if $percent < 0 { $_base: black; $percent: $percent * -1; }
-      $_output: mix($_base, $color, $percent);
-    }
-    @else if $method == 'scale' {
-      $_output: scale-color($color, $lightness: $percent);
-    }
-    @else {
-      @return _error('Invalid argument for `$method`: `(#{$method}{#{type-of($method)}})`. Must be either `mix{string}` or `scale{string}`.', 'color-shift()');
-    }
+/// --------------------------------------------------------------------------
+/// Color Alpha
+/// @group color
+/// @author Matt McAdams
+///
+/// @arg {color} $color
+/// @arg {number(%) | color(0-1)} $opacity
+/// --------------------------------------------------------------------------
+@function color-alpha($color, $opacity) {
+  @return scale-color($color, $alpha: $opacity);
+}
+
+// END !SECTION Color Modifications
+// ===========================================================================
+// SECTION Get Color
+// ===========================================================================
+
+/// --------------------------------------------------------------------------
+/// Resolve Color
+/// @group color
+/// @author Matt McAdams
+/// @requires $stratus-color-map (config.scss)
+///
+/// @arg {color | key($stratus-color-map)} $name
+/// @arg {key($name)} $variant
+/// @return {color}
+/// --------------------------------------------------------------------------
+@function resolve-color($name, $variant) {
+  // bypass logic if the input is already a color
+  @if type-of($name) == color { @return $name; }
+
+  // If the $color is a key on the color map, assign the output as that key, else pass $color through
+  $_output: if(map-has-key($stratus-color-map, $name), map-get($stratus-color-map, $name), $name);
+
+  // See if the variant is a key on the map, else assign the new output the default key
+   @if type-of($_output) == map {
+    $_output: if(map-has-key($_output, $variant), map-get($_output, $variant), map-get($_output, $default-color-key));
   }
-
-  @if $opacity != null {
-    $_output: scale-color($_output, $alpha: $opacity);
-  }
-
   @return $_output;
 }
 
+/// --------------------------------------------------------------------------
+/// Color
+/// @group color
+/// @author Matt McAdams
+///
+/// @requires $use-mix-method (config.scss)
+/// @requires is-percentage (validation.scss)
+/// @requires color-shift (color.scss)
+/// @requires resolve-color (color.scss)
+/// @requires color-alpha (color.scss)
+///
+/// @arg {color | key($stratus-color-map)} $color
+/// @param {number(%) | key($color)} $variant [null]
+/// @param {number(%) | number(0-1)} $opacity [null]
+/// @param {boolean} $mix-method [$use-mix-method]
+///
+/// @returns {color}
+/// --------------------------------------------------------------------------
+@function color($color, $variant: null, $opacity: null, $mix-method: $use-mix-method) {
+  $_color: resolve-color($color, $variant);
+  $_output: $_color;
+  // made edits to the color if necessary
+  @if is-percentage($variant) { $_output: color-shift($_output, $variant, $mix-method) }
+  // adjust opacity if necessary
+  @if $opacity { @return color-alpha($_output, $opacity); }
+  @return $_output;
+}
+
+// END !SECTION Get Color
 // ==========================================================================
 // END !SECTION COLOR
 // ==========================================================================
