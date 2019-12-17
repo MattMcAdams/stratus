@@ -4,33 +4,42 @@
 // establish vertical rhythm
 // ==========================================================================
 
-@function _space-unit($space-config: $space-unit) {
-  @if $space-config == 'auto' {
-    @return type-get('line-height');
-  } @else if ( type-of($space-config) != number ) {
-    @return _error('$space-unit: `#{$space-config}` is not a valid value. Must be either a number or "auto".', 'Stratus _space-unit()');
-  } @else if is-unitless($space-config) {
-    @warn 'stratus.config.space-unit: `#{$space-config}` does not have a unit measurement, this may cause css properties calculated with the s() function to be ignored, as a unit is expected.';
-  }
+@use 'typography' as type;
 
-  @return $space-config;
-}
-
-$stratus-space-unit: _space-unit();
-
-/// Custom Space Unit
-/// function to create a general unit of measurement for spacing
-/// @name space
+/// --------------------------------------------------------------------------
+/// Line Height Unit
+/// Use the base line height to calculate measurements
 /// @group structure
 /// @author Matthew McAdams
 ///
-/// @param {number(unitless)} $input
-/// @return {number(rem)} `space-unit` times `$input`
+/// @requires type.get (typography.scss)
 ///
-/// @requires _typography.scss
+/// @arg {number(unitless)} $input
+/// @param {number(rem)} $line-height [type.get('line-height')]
+///
+/// @returns {number(rem)} `$line-height` times `$input`
+/// --------------------------------------------------------------------------
+@function lh($input, $line-height: type.get('line-height')){
+  @return ($line-height * $input);
+}
 
-@function s($input) {
-  @return ($stratus-space-unit * $input);
+/// --------------------------------------------------------------------------
+/// Custom Space Unit
+/// function to create a general unit of measurement for spacing
+/// @group structure
+/// @author Matthew McAdams
+///
+/// @requires config.$unit-size (config.scss)
+/// @requires lh
+///
+/// @arg {number(unitless)} $input
+/// @param {number(with-unit) | 'auto'} $size [config.$use-vertical-rhythm]
+///
+/// @returns {number} `$size` times `$input`
+/// --------------------------------------------------------------------------
+@function sp($input, $size: config.$unit-size) {
+  @if $size == auto { @return lh($input); }
+  @return ($size * $input);
 }
 
 // END !SECTION STRUCTURE

@@ -1,55 +1,88 @@
-// ==========================================================================
+// ===========================================================================
 // SECTION TYPOGRAPHY
-// ==========================================================================
+// ===========================================================================
+
+@use 'sass:map';
+@use 'sass:math';
+@use '../../dist/config';
+@use '../core/functions' as stratus;
 
 // SECTION Config
-// --------------------------------------------------------------------------
+// ===========================================================================
 
-@function type-config($key) {
-  @return map-get($type-config, $key);
-}
-
-@function type-get($key) {
-  $_input-size: strip-unit(type-config('text-size'));
-  $_input-rem: strip-unit(type-config('rem-size'));
-  $_input-lh: strip-unit(type-config('line-height'));
-
-  @if $key == 'text-size' { @return $_input-size / $_input-rem + 0rem; }
-  @if $key == 'line-height' { @return ($_input-size * $_input-lh) / $_input-rem + 0rem; }
-  @if $key == 'rem-size' { @return $_input-rem + 0px; }
-}
-
-// Set Bourbon settings to match that of Stratus
-$bourbon: (
-  "modular-scale-base": type-get('text-size'),
-  "modular-scale-ratio": $scale-ratio
-);
-
-// END !SECTION Config
-// SECTION Line Height
-// Calculates line height based on input text size
-// --------------------------------------------------------------------------
-
-/// Line Height
-/// Calculate line height based on input text size
-/// @name line-height
+/// --------------------------------------------------------------------------
+/// Get Configuration
+/// Gets configuration information from the $type map in config.scss
 /// @group typography
 /// @author Matthew McAdams
-/// @access private
+///
+/// @requires config.$type (config.scss)
+/// @requires map.get (sass:map)
+///
+/// @arg {key(config.$type)} $key
+/// --------------------------------------------------------------------------
+@function _type-config($key) {
+  @return map.get(config.$type, $key);
+}
+
+// TODO: Add warning when input values are not in px
+
+/// --------------------------------------------------------------------------
+/// Calculate rem values of config data
+/// @group typography
+/// @author Matthew McAdams
+///
+/// @requires _type-config
+/// @requires stratus.strip-unit (functions.scss)
+/// @requires map.get (sass:map)
+///
+/// @arg {keyword['text-size'| 'line-height' | 'rem-size']} $key
+/// --------------------------------------------------------------------------
+@function get($key) {
+  $_input-size: stratus.strip-unit(_type-config('text-size'));
+  $_input-rem: stratus.strip-unit(_type-config('rem-size'));
+  $_input-lh: stratus.strip-unit(_type-config('line-height'));
+
+  $_values: (
+    'text-size': $_input-size / $_input-rem + 0rem,
+    'line-height': ($_input-size * $_input-lh) / $_input-rem + 0rem,
+    'rem-size': $_input-rem + 0px
+  );
+
+  @return map.get($_values, $key);
+}
+
+// END !SECTION Config
+// SECTION Logic
+// ===========================================================================
+
+/// --------------------------------------------------------------------------
+/// Line Height
+/// Calculate line height based on input text size
+/// @group typography
+/// @author Matthew McAdams
+///
+/// @requires math.unit (sass:math)
+/// @requires stratus.strip-unit (functions.scss)
+/// @requires get
 ///
 /// @param {number(rem)} $text-size - text size to calculate line height for
 /// @param {number(rem)} $line-height - Line height to use as the base for calculation
 ///
 /// @return {number(rem)}
+/// --------------------------------------------------------------------------
+@function _line-height(
+  $text-size: get('text-size'),
+  $line-height: get('line-height')
+  ) {
 
-@function line-height( $text-size: type-get('text-size'), $line-height: type-get('line-height') ) {
-
-  @if unit($text-size) != 'rem' or unit($line-height) != 'rem' {
-    @warn "Both text size and line height are expected as 'rem' units. `$text-size`: `#{unit($text-size)}`, `$line-height`: `#{unit($line-height)}`.";
+  @if math.unit($text-size) != 'rem'
+  or math.unit($line-height) != 'rem' {
+    @warn "Both text size and line height are expected as 'rem' units. `$text-size`: `#{math.unit($text-size)}`, `$line-height`: `#{math.unit($line-height)}`.";
   }
 
-  $_start-line-height: strip-unit($line-height);
-  $_text-size: strip-unit( $text-size );
+  $_start-line-height: stratus.strip-unit( $line-height );
+  $_text-size: stratus.strip-unit( $text-size );
 
   $_line-height: 0;
   $_i: 1;
@@ -61,17 +94,56 @@ $bourbon: (
   @return $_line-height + 0rem;
 }
 
-// END !SECTION Line Height
-// SECTION Mixins
-// --------------------------------------------------------------------------
-
-/// Type Init
-/// Generate css custom properties
-/// based on key labels in input map and input ratio
-/// @name type-init
+/// --------------------------------------------------------------------------
+/// Modular Scale
+/// Increments up or down a defined scale and returns an adjusted value.
 /// @group typography
 /// @author Matthew McAdams
-/// @access public
+///
+/// @requires stratus.pow (functions.scss)
+/// @requires config.$type-ratio (config.scss)
+/// @requires get
+///
+/// @arg {number(unitless)} $increment
+/// How many steps to increment up or down the scale.
+/// @param {number(with unit)} $base [1em]
+///   The base value the scale starts at.
+/// @param {number (unitless)} $ratio [config.$type-ratio]
+///   The ratio the scale is built on.
+
+/// @returns {number}
+/// --------------------------------------------------------------------------
+@function modular-scale(
+  $increment,
+  $base: get('text-size'),
+  $ratio: config.$type-ratio
+  ) {
+  @if $increment == 0 {
+    @return $base;
+  }
+  @if $increment < 0 {
+    // remove negative from number, division does this for us
+    $increment: $increment * -1;
+    @return $base / stratus.pow( $ratio, $increment );
+  }
+  @return $base * stratus.pow( $ratio, $increment );
+}
+
+// END !SECTION Logic
+// SECTION Mixins
+// ===========================================================================
+
+/// --------------------------------------------------------------------------
+/// Type Init
+/// Generate css custom properties based on keys on input map and input ratio
+/// @group typography
+/// @author Matthew McAdams
+///
+/// @requires config.$type-scale (config.scss)
+/// @requires config.$type-ratio (config.scss)
+/// @requires modular-scale
+/// @requires _line-height
+/// @requires _type-config
 ///
 /// @param {map} $scale - map with corresponding type scale
 /// @param {number(unitless) | key[$stratus.type]} $ratio - ratio to generate font sizes
@@ -81,27 +153,34 @@ $bourbon: (
 /// @example
 /// :root { @include type-init($ratio: 'ratio-alt'); }
 /// :root { @include type-init($ratio: 1.25); }
-
-
-@mixin type-init($scale: $type-scale, $ratio: $scale-ratio) {
+/// --------------------------------------------------------------------------
+@mixin init(
+  $scale: config.$type-scale,
+  $ratio: config.$type-ratio
+  ) {
   --ratio: #{$ratio + 0em};
 
   @each $key, $step in $scale {
     $size: modular-scale($increment: $step, $ratio: $ratio) + 0rem;
     --#{$key}: #{$size};
-    --#{$key}-lh: #{line-height($size)};
+    --#{$key}-lh: #{_line-height($size)};
   }
-  @if (type-config('use-dynamic-scale') != true) {
+  @if not _type-config('use-dynamic-scale') {
     @warn "The mixin type-init is only used to output css custom properties for use with multiple typographical scales, but stratus is set to use a single scale. See the 'use-dynamic-scale' key in `$type-config`";
   }
 }
 
+/// --------------------------------------------------------------------------
 /// Typesetting
 /// Assign font size and line height using the modular scale
-/// @name type-setting
 /// @group typography
 /// @author Matthew McAdams
-/// @access public
+///
+/// @requires map.get (sass:map)
+/// @requires config.$type-scale (config.scss)
+/// @requires _type-config
+/// @requires modular-scale
+/// @requires line-height
 ///
 /// @param {key[$stratus.type.scale] | string} $name - string used to generate css variables and calculate the step from the stratus config map.
 /// @param {null | number(unitless)} $step - Number of steps to move up or down the scale, development parameter only, should not be used in production.
@@ -110,36 +189,30 @@ $bourbon: (
 /// @example
 /// p { @include type-setting(normal); }
 /// h1 { @include type-setting(large); }
-
-@mixin type-setting($name: 'normal',  $step: null, $print-variables: map-get($type-config, 'use-dynamic-scale')) {
+/// --------------------------------------------------------------------------
+@mixin setting(
+  $name: 'normal',
+  $step: null,
+  $print-variables: _type-config('use-dynamic-scale')
+  ) {
 
   @if $step == null {
-    $step: map-get($type-scale, $name);
-  } @else if $print-variables == true {
+    $step: map.get(config.$type-scale, $name);
+  }
+  @else if $print-variables {
     @warn "Using a generic string and defining a manual `$step` value may produce unpredictable problems.";
-    @warn "It is advised to use `$name` to refer to a key on the stratus configuration object. See `$stratus > type > scale > [$name]`. The `$step` will be generated from the value of this key. This ensures css variables are generated with the correct values.";
   }
 
   $size: modular-scale($step);
 
   font-size: $size;
-  line-height: line-height($size);
+  line-height: _line-height($size);
 
-  @if $print-variables == true {
+  @if $print-variables {
     font-size: var(--#{$name});
     line-height: var(--#{$name}-lh);
   }
 }
 
-//$font-stack: (
-//  'body': $font-stack-georgia,
-//  'head': $font-stack-helvetica,
-//  'mono': $font-stack-monaco,
-//  'icon': null
-//);
-//
-//@mixin font($name, $weight: 'normal') {
-//  font-family: map-get($font-stack, $name);
-//}
 // END !SECTION Mixins
 // END !SECTION TYPOGRAPHY

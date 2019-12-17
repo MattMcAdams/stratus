@@ -4,14 +4,14 @@ $_test-environment: false !default;
 
 // Typography
 // ===========================================================================
-$type-config: (
+$type-base: (
   'use-dynamic-scale': false,
-  'text-size': 16,
+  'text-size': 16px,
   'line-height': 1.6,
-  'rem-size': 16
+  'rem-size': 16px
 ) !default;
 
-$scale-ratio: 1.25 !default;
+$type-ratio: 1.25 !default;
 
 $type-scale: (
   'xlarge': 3,
@@ -64,4 +64,4 @@ $stratus-color-map: $_default-color-map !default;
 
 // Structure
 // ===========================================================================
-$space-unit: 'auto' !default;
+$unit-size: 'auto' !default;

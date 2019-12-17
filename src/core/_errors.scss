@@ -1,10 +1,7 @@
 // SECTION Error Reporting
 // --------------------------------------------------------------------------
 
-/// Test Env
-/// @name test-environment
-/// @type boolean
-$_test-environment: false !default;
+$test-environment: false !default;
 
 /// Error [function]
 /// Optionally override error-output for testing failure-cases
@@ -25,12 +22,12 @@ $_test-environment: false !default;
 /// @throw
 ///   A message detailing the source and error,
 ///   when the `$override` is `false`
-/// @requires $_test-environment
+/// @requires $test-environment
 
-@function _error(
+@function error(
   $message,
   $source,
-  $override: $_test-environment
+  $override: $test-environment
 ) {
   @if $override {
     @return 'ERROR [#{$source}] #{$message}';
@@ -54,12 +51,12 @@ $_test-environment: false !default;
 /// @throw
 ///   A message detailing the source and error,
 ///   when the `$override` is `false`
-/// @requires $_test-environment
+/// @requires $test-environment
 
-@mixin _error(
+@mixin error(
   $message,
   $source,
-  $override: $_test-environment
+  $override: $test-environment
 ) {
   @if $override {
     $error: 'ERROR [#{$source}] #{$message}';
@@ -67,6 +64,10 @@ $_test-environment: false !default;
   } @else {
     @error '[#{$source}] #{$message}';
   }
+}
+
+@function inspect-param($param) {
+  @return '`(#{$param}{#{meta.type-of($param)}})`';
 }
 
 // END !SECTION Error Reporting

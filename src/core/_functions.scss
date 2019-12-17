@@ -3,165 +3,182 @@
 // Functions required by several functions and mixins.
 // ==========================================================================
 
-// SECTION Power
-// --------------------------------------------------------------------------
+@use 'sass:meta';
+@use 'sass:string';
+@use 'sass:list';
+@use 'sass:map';
+@use 'sass:math';
 
+@use 'validation' as *;
+
+/// --------------------------------------------------------------------------
 /// Power function
-/// @name pow
 /// @group utility
+/// @author Sass
 ///
-/// @param {number} $base - number to be multiplied
-/// @param {number(unitless)} $exponents - number of times it should be multiplied
+/// @arg {number} $base - number to be multiplied
+/// @arg {number(unitless)} $exponents - number of times it should be multiplied
 ///
-/// @return `$base` to the power of `$exponents`
+/// @returns {number}
 /// @example
 /// pow(10, 3)
 /// > 1,000
+/// --------------------------------------------------------------------------
+@function pow(
+  $base,
+  $exponents
+  ) {
+  $_raised: 1;
 
-@function pow($base, $exponents) {
-  $raised: 1;
-  @for $i from 1 through $exponents {
-    $raised: $raised * $base;
+  @for $_i from 1 through $exponents {
+    $_raised: $_raised * $base;
   }
-  @return $raised;
+  @return $_raised;
 }
 
-// END !SECTION Power
-// SECTION String Explode
-// --------------------------------------------------------------------------
-
+/// --------------------------------------------------------------------------
 /// String Explode
 /// Splits a string at the indicated delimiter
-/// @name str-explode
 /// @group utility
 /// @author Nenad Novaković
 ///
-/// @param {string} $string The string to be split apart
+/// @requires string.length (sass:string)
+/// @requires string.slice (sass:string)
+/// @requires string.index (sass:string)
+/// @requires list.append (sass:list)
+/// @requires meta.type-of (sass:meta)
+/// @requires is-string (validation.scss)
+///
+/// @arg {string} $string The string to be split apart
 /// @param {string} $delimiter Where to split the string
 ///
-/// @return {List}
+/// @returns {List}
 /// @example:
 /// str-explode('hello-world', '-')
 /// > (hello, world)
-
-@function str-explode($string, $delimiter: '') {
-  @if type-of($string) != 'string' {
-    @error 'The argument $string: `#{$string}` is of incorrect type: `#{type-of($string)}`. Type of `String` is required!';
+/// --------------------------------------------------------------------------
+@function str-explode(
+  $string,
+  $delimiter: ''
+  ) {
+  @if not is-string($string) {
+    @error 'The argument $string: `#{$string}` is of incorrect type: `#{meta.type-of($string)}`. Type of `String` is required!';
   }
-  @else if type-of($delimiter) != 'string' {
-    @error 'The argument $string: `#{$string}` is of incorrect type: `#{type-of($string)}`. Type of `String` is required!';
+  @else if not is-string($delimiter) {
+    @error 'The argument $string: `#{$string}` is of incorrect type: `#{meta.type-of($string)}`. Type of `String` is required!';
   }
 
-  $result: ();
-  $running: true;
+  $_result: ();
+  $_running: true;
 
-  @if str-length($delimiter) == 0 {
-    @for $i from 1 through str-length($string) {
-      $result: append($result, str-slice($string, $i, $i));
+  @if string.length($delimiter) == 0 {
+    @for $i from 1 through string.length($string) {
+      $_result: list.append($result, string.slice($string, $i, $i));
     }
-
-    @return $result;
+    @return $_result;
   }
 
-  @while $running {
-    $index: str-index($string, $delimiter);
+  @while $_running {
+    $_index: string.index($string, $delimiter);
 
-    @if $index != null {
-      $item: str-slice($string, 1, ($index - 1));
-      $result: append($result, $item);
-      $string: str-slice($string, ($index + str-length($delimiter)));
+    @if $_index != null {
+      $_item: string.slice($string, 1, ($_index - 1));
+      $_result: list.append($_result, $_item);
+      $string: string.slice($string, ($_index + string.length($delimiter)));
     }
-    @else {
-      $running: false;
-    }
+    @else { $_running: false; }
   }
 
-  @return append($result, $string);
+  @return list.append($_result, $string);
 }
 
-// END !SECTION String Explode
-// SECTION Deep Map Check
-// --------------------------------------------------------------------------
-
+/// --------------------------------------------------------------------------
 /// Deep Map Check
 /// Check if nested map has a value by the keys
-/// @name deep-map-check
 /// @group maps
 /// @author Nenad Novaković
 ///
-/// @param {map} $map - map to check
-/// @param {string(s)} $keys - keys in $map
+/// @requires map.has-key (sass:map)
+/// @requires meta.type-of (sass:meta)
+/// @requires map.get (sass:map)
+/// @requires is-map (validation.scss)
 ///
-/// @return {boolean}
+/// @arg {map} $map - map to check
+/// @arg {string(s)} $keys - keys in $map
+///
+/// @returns {boolean}
 /// @example:
 /// deep-map-check($nested-map, 'key-1', 'key-2')
 /// > boolean
-
-@function deep-map-check($map, $keys...) {
-  @if type-of($map) != 'map' {
-    @error 'The argument $map: "#{$map}" is of incorrect type: "#{type-of($map)}". Type of "Map" is required!';
+/// --------------------------------------------------------------------------
+@function deep-map-check(
+  $map,
+  $keys...
+  ) {
+  @if not is-map($map) {
+    @error 'The argument $map: "#{$map}" is of incorrect type: "#{meta.type-of($map)}". Type of "Map" is required!';
   }
-
   @each $key in $keys {
-    @if not map-has-key($map, $key) { @return false; }
-    $map: map-get($map, $key);
+    @if not (map.has-key($map, $key)) {
+      @return false;
+    }
+    $map: map.get($map, $key);
   }
-
   @return true;
 }
 
-// END !SECTION Deep Map Check
-// SECTION Deep Map Get
-// --------------------------------------------------------------------------
-
+/// --------------------------------------------------------------------------
 /// Deep Map Get
 /// Get a value from a nested map by the keys
-/// @name deep-map-get
 /// @group maps
 /// @author Nenad Novaković
 ///
-/// @param {map} $map - map to check
-/// @param {string(s)} $keys - keys in $map
+/// @requires map.get (sass:map)
+/// @requires meta.type-of (sass:meta)
+/// @requires is-map (validation.scss)
 ///
-/// @return {Unspecified} it may return anything as a result
+/// @arg {map} $map - map to check
+/// @arg {string(s)} $keys - keys in $map
+///
+/// @returns {Unspecified} it may return anything as a result
 /// @example:
 /// deep-map-check($nested-map, 'top-level-key', 'second-level-key')
 /// > value of second level key
-
-@function deep-map-get($map, $keys...) {
-  @if type-of($map) != 'map' {
-    @error 'The argument $map: "#{$map}" is of incorrect type: "#{type-of($map)}". Type of "Map" is required!';
+/// --------------------------------------------------------------------------
+@function deep-map-get(
+  $map,
+  $keys...
+  ) {
+  @if not is-map($map) {
+    @error 'The argument $map: "#{$map}" is of incorrect type: "#{meta.type-of($map)}". Type of "Map" is required!';
   }
 
   @each $key in $keys {
-    $map: map-get($map, $key);
+    $map: map.get($map, $key);
   }
 
   @return $map;
 }
 
-// END !SECTION Deep Map Get
-// SECTION Get
-// --------------------------------------------------------------------------
-
+/// --------------------------------------------------------------------------
 /// Get
 /// Search for any value contained within nested maps by using dot notation
 /// as the key argument
-/// @name get
 /// @group maps
 /// @author Nenad Novaković
 ///
-/// @param {map} $map - map to check
-/// @param {string} $key - keys in $map
+/// @requires str-explode
+/// @requires deep-map-check
+/// @requires deep-map-get
 ///
-/// @return {Unspecified} it may return anything as a result
+/// @arg {map} $map - map to check
+/// @arg {string} $key - keys in $map
+///
+/// @returns {Unspecified} it may return anything as a result
 /// @example
 /// get($settings, border.radius.xs)
 /// > value of the "xs" key
-///
-/// @requires deep-map-get
-/// @requires str-explode
-
+/// --------------------------------------------------------------------------
 @function get($map, $key) {
   $keys: str-explode($key, ', ');
 
@@ -172,49 +189,85 @@
   @return deep-map-get($map, $keys...);
 }
 
-// END !SECTION Get
-// SECTION Recursive Map Merge
-//---------------------------------------------------------------------------
-
+/// --------------------------------------------------------------------------
 /// Recursive Map Merge
 /// Search for any value contained within nested maps by using dot notation
 /// as the key argument
-/// @name recursive-map-merge
 /// @group maps
 /// @author Zsolt Pentz
 ///
-/// @param {map} $parent-map - map to override
-/// @param {map} $child-map - map with new values to merge
+/// @requires map.has-key (sass:map)
+/// @requires map.get (sass:map)
+/// @requires map.merge (sass:map)
+/// @requires meta.type-of (sass:meta)
 ///
-/// @return {map} merged $parent-map and $child-map
-
-@function recursive-map-merge($parent-map, $child-map) {
-	$result: $parent-map;
-	@each $key, $value in $child-map {
-		@if (not map-has-key($result, $key)) or (type-of(map-get($result, $key)) != type-of($value)) or (not (type-of(map-get($result, $key)) == map and type-of($value) == map)) {
-			$result: map-merge($result, ($key: $value));
+/// @arg {map} $parent-map - map to override
+/// @arg {map} $child-map - map with new values to merge
+///
+/// @returns {map} merged $parent-map and $child-map
+///
+/// DEPRECIATED: Code is no longer used
+/// --------------------------------------------------------------------------
+@function recursive-map-merge(
+  $parent-map,
+  $child-map
+  ) {
+	$_result: $parent-map;
+	@each $_key, $_value in $child-map {
+		@if ( not ( map.has-key($_result, $_key)) )
+      or ( meta.type-of(map.get($_result, $_key)) != meta.type-of( $_value ) )
+      or ( not ( (meta.type-of(map.get($_result, $_key)) ) == map and meta.type-of($_value) == map )) {
+			$_result: map.merge($_result, ($_key: $_value));
 		}
 		@else {
-			$result: map-merge($result, ($key: recursive-map-merge(map-get($result, $key), $value)));
+			$_result: map.merge($_result, ($_key: recursive-map-merge(map.get($_result, $_key), $_value)));
 		}
 	}
-	@return $result;
+	@return $_result;
 }
-// END !SECTION Recursive-map-merge
 
+/// --------------------------------------------------------------------------
+/// Map Depth
 /// Compute the maximum depth of a map
-/// @param {Map} $map
-/// @return {Number} max depth of `$map`
-@function map-depth($map) {
-  $level: 1;
+/// @group maps
+/// @author Unknown
+///
+/// @requires is-map (validation.scss)
+/// @requires math.max (sass:math)
+///
+/// @arg {Map} $map
+///
+/// @returns {Number} max depth of `$map`
+/// --------------------------------------------------------------------------
+@function map-depth(
+  $map
+  ) {
+  $_level: 1;
 
-  @each $key, $value in $map {
-    @if type-of($value) == "map" {
-      $level: max(map-depth($value) + 1, $level);
+  @each $_key, $_value in $map {
+    @if is-map($_value) {
+      $_level: math.max(map-depth($_value) + 1, $_level);
     }
   }
-
-  @return $level;
+  @return $_level;
 }
 
+/// --------------------------------------------------------------------------
+/// Strip Unit
+/// Strips the unit from a number.
+/// @group utility
+/// @author Matthew McAdams
+///
+/// @arg {number} $value
+///
+/// @return {number (unitless)}
+/// @example scss
+///   $dimension: strip-unit(10em);
+///
+///   // Output
+///   $dimension: 10;
+/// --------------------------------------------------------------------------
+@function strip-unit($value) {
+  @return ($value / ($value * 0 + 1));
+}
 // END !SECTION FUNCTIONS
