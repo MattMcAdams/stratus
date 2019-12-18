@@ -27,12 +27,12 @@
     "typography"
   ],
   "scripts": {
-    "test": "jest"
+    "test": "mocha"
   },
   "dependencies": {},
   "devDependencies": {
-    "dart-sass": "^1.23.7",
-    "jest": "^24.9.0",
+    "mocha": "^6.2.2",
+    "sass": "^1.23.7",
     "sass-true": "^5.0.0"
   }
 }

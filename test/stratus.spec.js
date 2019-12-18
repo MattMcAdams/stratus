@@ -1,16 +1,14 @@
 var path = require('path');
 var sassTrue = require('sass-true');
 
-var path = require('path');
-var sassTrue = require('sass-true');
-
-var sassFile = path.join(__dirname, 'stratus.spec.scss');
+var sassFile = path.join(__dirname, 'unit/_color.spec.scss');
 sassTrue.runSass(
   {
     file: sassFile,
+    includePaths: ['node-modules']
   },
   {
-    sass: require('dart-sass'),
+    sass: require('sass'),
     describe,
     it,
   }
