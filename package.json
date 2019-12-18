@@ -23,20 +23,16 @@
     "SCSS",
     "CSS",
     "Sass",
-    "bourbon",
     "utility",
     "typography"
   ],
   "scripts": {
-    "test": "jest",
-    "sass": "node-sass --include-path=node_modules dist/_stratus.scss test/comp.css"
+    "test": "jest"
   },
-  "dependencies": {
-    "bourbon": "^6.0.0"
-  },
+  "dependencies": {},
   "devDependencies": {
+    "dart-sass": "^1.23.7",
     "jest": "^24.9.0",
-    "node-sass": "^4.13.0",
     "sass-true": "^5.0.0"
   }
 }
