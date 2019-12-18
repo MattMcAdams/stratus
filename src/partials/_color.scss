@@ -2,8 +2,7 @@
 // SECTION COLOR
 // ===========================================================================
 
-@use '../core/validation' as stratus;
-@use '../core/functions' as stratus;
+@use '../core/validation' as v;
 @use '../../dist/config';
 
 @use 'sass:meta';
@@ -15,7 +14,7 @@
 /// @group color
 /// @author Matt McAdams
 ///
-/// @requires stratus.is-integer (validation.scss)
+/// @requires v.is-integer (validation.scss)
 ///
 /// @arg {number(unitless)} - Must be a non-negative integer < 1000 & divisible by 50
 ///
@@ -25,10 +24,10 @@
 /// Inputs less than 500 will be converted to positive percentages,
 /// Inputs greater than 500 will be converted to negative percentages.
 /// --------------------------------------------------------------------------
-@function index(
+@function color-index(
   $number
   ) {
-  @if (stratus.is-integer(($number / 50)))
+  @if (v.is-integer(($number / 50)))
   and ($number < 1000)
   and ($number > 0) {
     @return (($number - 500) / - 5) + 0%;
@@ -51,7 +50,7 @@
 ///
 /// @returns {color}
 /// --------------------------------------------------------------------------
-@function mix(
+@function color-mix(
   $color,
   $percent
   ) {
@@ -79,13 +78,13 @@
 /// @returns {color}
 /// @example background-color: color-shift(#AAA, -20%);
 /// --------------------------------------------------------------------------
-@function shift(
+@function color-scale(
   $color,
   $percent,
   $mix: config.$use-mix-method
   ) {
   @if $mix {
-    @return mix($color, $percent);
+    @return color-mix($color, $percent);
   }
   @return color.scale($color, $lightness: $percent);
 }
@@ -102,7 +101,7 @@
 ///
 /// @returns {color(rgba)}
 /// --------------------------------------------------------------------------
-@function alpha(
+@function color-alpha(
   $color,
   $opacity
   ) {
@@ -112,6 +111,11 @@
 // END !SECTION Color Modifications
 // ===========================================================================
 // SECTION Get Color
+// IDEA
+// It would be cool to have a function that could combine getting a color
+// from a map and manipulating that color. For now, I feel this is outside the
+// scope of this project, and possibly too opinionated as to the structure
+// of the color data.
 // ===========================================================================
 
 /// --------------------------------------------------------------------------
@@ -121,7 +125,7 @@
 ///
 /// @requires map.get (sass:map)
 /// @requires map.has-key (sass:map)
-/// @requires is-color (validation.scss)
+/// @requires v.is-color (validation.scss)
 /// @requires config.$color-map (config.scss)
 /// @requires config.$default-color-key (config.scss)
 ///
@@ -130,35 +134,35 @@
 ///
 /// @returns {color}
 /// --------------------------------------------------------------------------
-@function resolve(
-  $name,
-  $variant
-  ) {
-  $_output: null;
+// @function resolve(
+//   $name,
+//   $variant
+//   ) {
+//   $_output: null;
 
-  // bypass logic if the input is already a color
-  @if stratus.is-color($name) {
-    @return $name;
-  }
+//   // bypass logic if the input is already a color
+//   @if stratus.is-color($name) {
+//     @return $name;
+//   }
 
-  // If the $color is a key on the color map, assign the output as that key, else pass $color through
-  $_output: if(
-    map.has-key(config.$color-map, $name),
-    map.get(config.$color-map, $name),
-    $name
-  );
+//   // If the $color is a key on the color map, assign the output as that key, else pass $color through
+//   $_output: if(
+//     map.has-key(config.$color-map, $name),
+//     map.get(config.$color-map, $name),
+//     $name
+//   );
 
-  // See if the variant is a key on the map, else assign the new output the default key
-   @if stratus.is-map($_output){
-    $_output: if(
-      map.has-key($_output, $variant),
-      map.get($_output, $variant),
-      map.get($_output, config.$default-color-key)
-    );
-  }
+//   // See if the variant is a key on the map, else assign the new output the default key
+//    @if stratus.is-map($_output){
+//     $_output: if(
+//       map.has-key($_output, $variant),
+//       map.get($_output, $variant),
+//       map.get($_output, config.$default-color-key)
+//     );
+//   }
 
-  @return $_output;
-}
+//   @return $_output;
+// }
 
 /// --------------------------------------------------------------------------
 /// Set Color
@@ -178,26 +182,26 @@
 ///
 /// @returns {color}
 /// --------------------------------------------------------------------------
-@function set(
-  $color,
-  $variant: null,
-  $opacity: null,
-  $mix: config.$use-mix-method
-  ) {
-  $_color: resolve($color, $variant);
-  $_output: $_color;
+// @function set(
+//   $color,
+//   $variant: null,
+//   $opacity: null,
+//   $mix: config.$use-mix-method
+//   ) {
+//   $_color: resolve($color, $variant);
+//   $_output: $_color;
 
-  // made edits to the color if necessary
-  @if stratus.is-percentage($variant) {
-    $_output: shift($_output, $variant, $mix)
-  }
+//   // made edits to the color if necessary
+//   @if stratus.is-percentage($variant) {
+//     $_output: shift($_output, $variant, $mix)
+//   }
 
-  // adjust opacity if necessary
-  @if $opacity {
-    @return alpha($_output, $opacity);
-  }
-  @return $_output;
-}
+//   // adjust opacity if necessary
+//   @if $opacity {
+//     @return alpha($_output, $opacity);
+//   }
+//   @return $_output;
+// }
 
 // END !SECTION Get Color
 // ==========================================================================
