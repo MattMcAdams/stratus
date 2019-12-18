@@ -8,7 +8,8 @@ $type-base: (
   'use-dynamic-scale': false,
   'text-size': 16px,
   'line-height': 1.6,
-  'rem-size': 16px
+  'rem-size': 16px,
+  'unit': 'rem'
 ) !default;
 
 $type-ratio: 1.25 !default;

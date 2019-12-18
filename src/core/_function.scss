@@ -270,4 +270,98 @@
 @function strip-unit($value) {
   @return ($value / ($value * 0 + 1));
 }
+
+/// --------------------------------------------------------------------------
+/// Convert Unit
+/// Converts unit measurements
+/// @group utility
+/// @author Matthew McAdams
+///
+/// @requires math.unit (sass:math)
+/// @requires math.percentage (sass:math)
+/// @requires math.is-unitless (sass:math)
+/// @requires config.$type-base (config.scss)
+/// @requires strip-unit
+///
+/// @arg {number(with-unit)} $value - starting value to be converted
+/// @arg {keyword['px'|'pt'|'%'|'em'|'rem']} $unit - unit to be converted to
+/// @param {number(px)} $base [config.$type-base] - the px value of 1rem
+///
+/// @returns {number(with-unit)} $value conveted to $unit
+/// --------------------------------------------------------------------------
+@function convert($value, $unit, $base: map.get(config.$type-base, 'rem-size')) {
+  $_current-unit: math.unit($value);
+  $_value: strip-unit($value);
+  @if not (math.is-unitless($base)) {
+    @if math.unit($base) != px {
+      @error "Not supported unit '#{math.unit($base)}' as convert base! Must be 'px'.";
+    }
+    $_base: strip-unit($base);
+  }
+  @if $_current-unit == 'px' {
+    @if $unit == 'px' { @return $value; }
+    @if $unit == 'em' { @return ($_value / $_base) + 0em; }
+    @if $unit == 'rem' { @return ($_value / $_base) + 0rem; }
+    @if $unit == '%' { @return math.percentage($_value / $_base); }
+    @if $unit == 'pt' { @return ($value / 1.3333) + 0px; }
+  }
+  @if $_current-unit == '%' {
+    @if $unit == 'px' { @return ($_value * $_base / 100) + 0px; }
+    @if $unit == 'em' { @return ($strippedValue / 100) + 0em; }
+    @if $unit == 'rem' { @return ($strippedValue / 100) + 0rem; }
+    @if $unit == '%' { @return $value; }
+    @if $unit == 'pt' { @return (($_value * $_base / 100) / 1.3333) + 0pt; }
+  }
+  @if ($_current-unit == 'em') or ($_current-unit == 'rem') {
+    @if $unit == 'px' { @return ($_value * $_base) + 0px; }
+    @if $unit == 'em' { @return $_value + 0em; }
+    @if $unit == 'rem' { @return $_value + 0rem; }
+    @if $unit == '%' { @return math.percentage($_value * $_base); }
+    @if $unit == 'pt' { @return (($_value * $_base) / 1.3333) + 0pt; }
+  }
+  @if $_current-unit == 'pt' {
+    @if $unit == 'px' { @return ($_value * 1.3333) + 0px; }
+    @if $unit == 'em' { @return (($_value * 1.333) / $_base) + 0em; }
+    @if $unit == 'rem' { @return (($_value * 1.333) / $_base) + 0rem; }
+    @if $unit == '%' { @return math.percentage(($_value * 1.333) / $_base); }
+    @if $unit == 'pt' { @return $value; }
+  }
+  @error "Can't convert '#{$value}' to unit '#{$unit}'!";
+}
+
+/// --------------------------------------------------------------------------
+/// Modular Scale
+/// Increments up or down a defined scale and returns an adjusted value.
+/// @group typography
+/// @author Matthew McAdams
+///
+/// @requires stratus.pow (functions.scss)
+/// @requires config.$type-ratio (config.scss)
+/// @requires get
+///
+/// @arg {number(unitless)} $increment
+/// How many steps to increment up or down the scale.
+/// @param {number(with unit)} $base [1em]
+///   The base value the scale starts at.
+/// @param {number (unitless)} $ratio [config.$type-ratio]
+///   The ratio the scale is built on.
+
+/// @returns {number(with-unit)}
+/// --------------------------------------------------------------------------
+@function modular-scale(
+  $increment,
+  $base: 1em,
+  $ratio: config.$type-ratio
+){
+  @if $increment == 0 {
+    @return $base;
+  }
+  @if $increment < 0 {
+    // remove negative from number, division does this for us
+    $increment: $increment * -1;
+    @return $base / stratus.pow( $ratio, $increment );
+  }
+  @return $base * stratus.pow( $ratio, $increment );
+}
+
 // END !SECTION FUNCTIONS
