@@ -5,6 +5,12 @@
 // ==========================================================================
 
 @use 'typography' as type;
+@use '../core/' as stratus;
+@use '../../dist/config';
+
+$config-lh-unit: type.line-height(0) !default;
+$config-sp-unit: config.$space-unit-size !default;
+$config-ms-unit: config.$default-ratio !default;
 
 /// --------------------------------------------------------------------------
 /// Line Height Unit
@@ -12,14 +18,14 @@
 /// @group structure
 /// @author Matthew McAdams
 ///
-/// @requires type.get (typography.scss)
+/// @requires type.line-height (typography.scss)
 ///
 /// @arg {number(unitless)} $input
-/// @param {number(rem)} $line-height [type.get('line-height')]
+/// @param {number(with-unit)} $line-height
 ///
-/// @returns {number(rem)} `$line-height` times `$input`
+/// @returns {number} `$line-height` times `$input`
 /// --------------------------------------------------------------------------
-@function lh($input, $line-height: type.get('line-height')){
+@function lh($input, $line-height: $config-lh-unit){
   @return ($line-height * $input);
 }
 
@@ -29,17 +35,32 @@
 /// @group structure
 /// @author Matthew McAdams
 ///
-/// @requires config.$unit-size (config.scss)
+/// @requires $config-sp-unit (config.scss)
 /// @requires lh
 ///
 /// @arg {number(unitless)} $input
-/// @param {number(with-unit) | 'auto'} $size [config.$use-vertical-rhythm]
+/// @param {number(with-unit) | 'auto'} $size
 ///
 /// @returns {number} `$size` times `$input`
 /// --------------------------------------------------------------------------
-@function sp($input, $size: config.$unit-size) {
+@function sp($input, $size: $config-sp-unit) {
   @if $size == auto { @return lh($input); }
   @return ($size * $input);
 }
 
+/// --------------------------------------------------------------------------
+/// Modular Scale Unit
+/// function to get an `em` value based on the modular scale
+/// @group structure
+/// @author Matthew McAdams
+///
+/// @requires stratus.modular-scale (core)
+///
+/// @arg {number(unitless)} $input
+///
+/// @returns {number} `$size` times `$input`
+/// --------------------------------------------------------------------------
+@function ms($input, $ratio: $config-ms-unit) {
+  @return stratus.modular-scale($input, 1em, $ratio);
+}
 // END !SECTION STRUCTURE
