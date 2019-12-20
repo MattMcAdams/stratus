@@ -1,6 +1,0 @@
-scss:
-  enabled: false
-stylelint:
-  config_file: .stylelintrc
-  enabled: true
-  version: 10.1.0
