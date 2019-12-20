@@ -4,22 +4,29 @@
 
 @use '../core/validation' as v;
 @use '../../dist/config';
+@use '../core/error';
 
 @use 'sass:meta';
 @use 'sass:color';
 @use 'sass:map';
 
+$config-use-mix-method: config.$use-mix-method !default;
+
 /// --------------------------------------------------------------------------
-/// Scale Index
+/// Color Index
+/// Converts a value from a numerical index to a usable percentage
 /// @group color
 /// @author Matt McAdams
+/// @access public
 ///
 /// @requires v.is-integer (validation.scss)
+/// @requires error.inspect-param (error.scss)
 ///
-/// @arg {number(unitless)} - Must be a non-negative integer < 1000 & divisible by 50
+/// @arg {number(unitless)}
+///   Must be a positive integer < 1000 & divisible by 50
 ///
 /// @returns {number(%)}
-/// @example color-index(400) -> 20%
+/// @example stratus.color-index(400) -> 20%
 /// 500 is 0. every 50 represents 10%.
 /// Inputs less than 500 will be converted to positive percentages,
 /// Inputs greater than 500 will be converted to negative percentages.
@@ -32,6 +39,7 @@
   and ($number > 0) {
     @return (($number - 500) / - 5) + 0%;
   }
+  @error 'Invalid arg `$number`, expected a positive integer less than 1000 that is also divisible by 50. $number: #{error.inspect-param($number)}';
 }
 
 // ===========================================================================
@@ -40,13 +48,18 @@
 
 /// --------------------------------------------------------------------------
 /// Mix Color
+/// Tints or shades a color using the sass color.mix function
 /// @group color
 /// @author Matt McAdams
+/// @access public
 ///
 /// @requires color.mix (sass:color)
 ///
 /// @arg {color} $color
-/// @arg {number(%)} $percent - can be positive or negative
+///   Color to be manipulated
+/// @arg {number(%)} $percent
+///   How much white or black to mix with the color
+///   Can be positive or negative
 ///
 /// @returns {color}
 /// --------------------------------------------------------------------------
@@ -62,42 +75,18 @@
 }
 
 /// --------------------------------------------------------------------------
-/// Shift Color
-/// @group color
-/// @author Matt McAdams
-///
-/// @requires mix
-/// @requires color.scale (sass:color)
-/// @requires config.$use-mix-method (config.scss)
-///
-/// @arg {color} $color - Color to be manipulated
-/// @arg {number(%)} $percent - percent by which to be manipulated, can be positive or negative
-/// @param {boolean} $mix [config.$use-mix-method]
-/// use color.mix() or color.scale() to calculate new color.
-///
-/// @returns {color}
-/// @example background-color: color-shift(#AAA, -20%);
-/// --------------------------------------------------------------------------
-@function color-scale(
-  $color,
-  $percent,
-  $mix: config.$use-mix-method
-  ) {
-  @if $mix {
-    @return color-mix($color, $percent);
-  }
-  @return color.scale($color, $lightness: $percent);
-}
-
-/// --------------------------------------------------------------------------
 /// Color Alpha
+/// Adjusts a color's opacity
 /// @group color
 /// @author Matt McAdams
+/// @access public
 ///
-/// @requires color.scale (sass:color)
+/// @requires color.change (sass:color)
 ///
 /// @arg {color} $color
-/// @arg {number(%) | color(0-1)} $opacity
+///   Color to be manipulated
+/// @arg {number(unitless)} $opacity
+///   0-1 inclusive. 0 is invisible, 1 is fully opaque
 ///
 /// @returns {color(rgba)}
 /// --------------------------------------------------------------------------
@@ -105,105 +94,44 @@
   $color,
   $opacity
   ) {
-  @return color.scale($color, $alpha: $opacity);
+  @return color.change($color, $alpha: $opacity);
+}
+
+/// --------------------------------------------------------------------------
+/// Scale Color
+/// Adjusts a color's lightness and/or opacity
+/// @group color
+/// @author Matt McAdams
+/// @access public
+///
+/// @requires color.scale (sass:color)
+/// @requires color-mix
+/// @requires $config-use-mix-method
+///
+/// @arg {color} $color
+///   Color to be manipulated
+/// @param {number(%)} $percent [null]
+///   Percent by which to be manipulated, can be positive or negative
+/// @param {number(unitless)} $opacity [null]
+///   0-1 inclusive
+/// @param {boolean} $mix [$config-use-mix-method]
+///   Use color.mix() or color.scale() to calculate new color.
+///
+/// @returns {color}
+/// @example background-color: stratus.color-scale(#AAA, -20%);
+/// --------------------------------------------------------------------------
+@function color-scale(
+  $color,
+  $percent,
+  $opacity: null,
+  $mix: $config-use-mix-method
+  ) {
+  @if $mix {
+    @return color-mix($color, $percent);
+  }
+  @return color.scale($color, $lightness: $percent);
 }
 
 // END !SECTION Color Modifications
-// ===========================================================================
-// SECTION Get Color
-// IDEA
-// It would be cool to have a function that could combine getting a color
-// from a map and manipulating that color. For now, I feel this is outside the
-// scope of this project, and possibly too opinionated as to the structure
-// of the color data.
-// ===========================================================================
-
-/// --------------------------------------------------------------------------
-/// Resolve Color
-/// @group color
-/// @author Matt McAdams
-///
-/// @requires map.get (sass:map)
-/// @requires map.has-key (sass:map)
-/// @requires v.is-color (validation.scss)
-/// @requires config.$color-map (config.scss)
-/// @requires config.$default-color-key (config.scss)
-///
-/// @arg {color | key($stratus-color-map)} $name
-/// @arg {key($name)} $variant
-///
-/// @returns {color}
-/// --------------------------------------------------------------------------
-// @function resolve(
-//   $name,
-//   $variant
-//   ) {
-//   $_output: null;
-
-//   // bypass logic if the input is already a color
-//   @if stratus.is-color($name) {
-//     @return $name;
-//   }
-
-//   // If the $color is a key on the color map, assign the output as that key, else pass $color through
-//   $_output: if(
-//     map.has-key(config.$color-map, $name),
-//     map.get(config.$color-map, $name),
-//     $name
-//   );
-
-//   // See if the variant is a key on the map, else assign the new output the default key
-//    @if stratus.is-map($_output){
-//     $_output: if(
-//       map.has-key($_output, $variant),
-//       map.get($_output, $variant),
-//       map.get($_output, config.$default-color-key)
-//     );
-//   }
-
-//   @return $_output;
-// }
-
-/// --------------------------------------------------------------------------
-/// Set Color
-/// @group color
-/// @author Matt McAdams
-///
-/// @requires config.$use-mix-method (config.scss)
-/// @requires stratus.is-percentage (validation.scss)
-/// @requires shift
-/// @requires resolve
-/// @requires alpha
-///
-/// @arg {color | key(config.$stratus-color-map)} $color
-/// @param {number(%) | key($color)} $variant [null]
-/// @param {number(%) | number(0-1)} $opacity [null]
-/// @param {boolean} $mix [config.$use-mix-method]
-///
-/// @returns {color}
-/// --------------------------------------------------------------------------
-// @function set(
-//   $color,
-//   $variant: null,
-//   $opacity: null,
-//   $mix: config.$use-mix-method
-//   ) {
-//   $_color: resolve($color, $variant);
-//   $_output: $_color;
-
-//   // made edits to the color if necessary
-//   @if stratus.is-percentage($variant) {
-//     $_output: shift($_output, $variant, $mix)
-//   }
-
-//   // adjust opacity if necessary
-//   @if $opacity {
-//     @return alpha($_output, $opacity);
-//   }
-//   @return $_output;
-// }
-
-// END !SECTION Get Color
-// ==========================================================================
 // END !SECTION COLOR
 // ==========================================================================
