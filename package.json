@@ -1,8 +1,8 @@
 {
   "name": "@mattmcadams/stratus",
-  "version": "0.4.0-alpha.1",
+  "version": "1.0.0-alpha",
   "description": "Advanced SCSS Typography and Utilities built on Bourbon",
-  "main": "index.js",
+  "main": "_index.scss",
   "author": {
     "name": "Matthew McAdams",
     "url": "https://mattmcadams.com"
@@ -28,7 +28,7 @@
   ],
   "scripts": {
     "test": "mocha",
-    "lint": "stylelint 'src/**/*.scss' 'dist/*.scss' 'test/**/*.scss'",
+    "lint": "stylelint '**/*.scss'",
     "build:docs": "sassdoc 'src/**/*.scss'"
   },
   "dependencies": {},

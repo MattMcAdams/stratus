@@ -7,12 +7,12 @@
 // Documentation: https://github.com/MattMcAdams/stratus/
 // ==========================================================================
 
-@forward '../src/core';
+@forward 'src/core';
 
-@forward '../src/partials/typography' hide line-height type-scale;
-@forward '../src/partials/color';
-@forward '../src/partials/structure';
-@forward '../src/partials/media' hide orientation get-breakpoint;
+@forward 'src/partials/typography' hide line-height type-scale;
+@forward 'src/partials/color';
+@forward 'src/partials/structure';
+@forward 'src/partials/media' hide orientation get-breakpoint;
 
 // ==========================================================================
 // END STRATUS

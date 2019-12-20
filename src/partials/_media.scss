@@ -2,12 +2,10 @@
 // SECTION MEDIA QUERIES
 // Utility mixins to help you write cleaner, easier to read CSS
 // ===========================================================================
-
 @use 'sass:meta';
 @use 'sass:map';
 @use 'sass:string';
-
-@use '../../dist/config';
+@use '../config';
 
 $config-breakpoint-map: config.$breakpoint-map !default;
 

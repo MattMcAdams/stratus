@@ -18,7 +18,7 @@ $test-scale: (
   $config-default-scale: $test-scale
 );
 
-@use '../../src/core/math' as s;
+@use '../../src/core' as s;
 
 // type-scale( $increment, $base, $ratio)
 // ===========================================================================

@@ -1,14 +1,12 @@
 // ===========================================================================
 // SECTION COLOR
 // ===========================================================================
-
-@use '../core/validation' as v;
-@use '../../dist/config';
-@use '../core/error';
-
 @use 'sass:meta';
 @use 'sass:color';
 @use 'sass:map';
+@use '../core/validation' as v;
+@use '../core/error';
+@use '../config';
 
 /// @type boolean
 $config-use-mix-method: config.$use-mix-method !default;

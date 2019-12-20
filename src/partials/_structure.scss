@@ -4,9 +4,9 @@
 // establish vertical rhythm
 // ==========================================================================
 
-@use 'typography' as type;
 @use '../core/' as stratus;
-@use '../../dist/config';
+@use 'typography' as type;
+@use '../config';
 
 $config-lh-unit: type.line-height(0) !default;
 $config-sp-unit: config.$space-unit-size !default;

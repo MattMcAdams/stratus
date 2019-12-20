@@ -1,6 +1,6 @@
 
 @use 'true';
-@use '../../dist/config' with (
+@use '../../src/config' with (
   $space-unit-size: 5px,
   $default-ratio: 1.5,
   $line-height: 1.5,
