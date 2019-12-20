@@ -1,6 +1,7 @@
 .DS_Store
 .travis.yml
 .stylelintrc
+.vscode
 node_modules
 sassdoc
 test
