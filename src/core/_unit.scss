@@ -1,0 +1,91 @@
+@use 'sass:math';
+@use '../../dist/config';
+
+$config-rem-size: config.$rem-size !default;
+
+/// --------------------------------------------------------------------------
+/// Strip Unit
+/// Strips the unit from a number.
+/// @group utility
+/// @author Matthew McAdams
+/// @access public
+///
+/// @arg {number} $value
+///
+/// @return {number (unitless)}
+/// @example scss
+///   $dimension: strip-unit(10em);
+///
+///   // Output
+///   $dimension: 10;
+/// --------------------------------------------------------------------------
+@function strip-unit($value) {
+  @return ($value / ($value * 0 + 1));
+}
+
+/// --------------------------------------------------------------------------
+/// Convert Unit
+/// Converts unit measurements
+/// @group utility
+/// @author Matthew McAdams
+/// @access public
+///
+/// @requires math.unit (sass:math)
+/// @requires math.percentage (sass:math)
+/// @requires math.is-unitless (sass:math)
+/// @requires $config-rem-size
+/// @requires strip-unit
+///
+/// @arg {number(with-unit)} $value
+///   Starting value to be converted
+/// @arg {keyword['px'|'pt'|'%'|'em'|'rem']} $unit
+///   Unit to be converted to
+/// @param {number(px)} $base [config.$type-base]
+///   The px value of 1rem in your project
+///
+/// @returns {number(with-unit)} $value conveted to $unit
+/// --------------------------------------------------------------------------
+@function convert-unit(
+  $value,
+  $unit,
+  $base: $config-rem-size
+  ) {
+  $_current-unit: math.unit($value);
+  $_value: strip-unit($value);
+  $_base: null;
+  @if not (math.is-unitless($base)) {
+    @if math.unit($base) != px {
+      @error "Not supported unit '#{math.unit($base)}' as convert base! Must be 'px'.";
+    }
+    $_base: strip-unit($base);
+  }
+  @if $_current-unit == 'px' {
+    @if $unit == 'px' { @return $value; }
+    @if $unit == 'em' { @return ($_value / $_base) + 0em; }
+    @if $unit == 'rem' { @return ($_value / $_base) + 0rem; }
+    @if $unit == '%' { @return math.percentage($_value / $_base); }
+    @if $unit == 'pt' { @return ($_value * 0.75) + 0pt; }
+  }
+  @if $_current-unit == '%' {
+    @if $unit == 'px' { @return ($_value * $_base / 100) + 0px; }
+    @if $unit == 'em' { @return ($_value / 100) + 0em; }
+    @if $unit == 'rem' { @return ($_value / 100) + 0rem; }
+    @if $unit == '%' { @return $value; }
+    @if $unit == 'pt' { @return (($_value * $_base / 100) * 0.75) + 0pt; }
+  }
+  @if ($_current-unit == 'em') or ($_current-unit == 'rem') {
+    @if $unit == 'px' { @return ($_value * $_base) + 0px; }
+    @if $unit == 'em' { @return $_value + 0em; }
+    @if $unit == 'rem' { @return $_value + 0rem; }
+    @if $unit == '%' { @return math.percentage($_value); }
+    @if $unit == 'pt' { @return (($_value * $_base) * 0.75) + 0pt; }
+  }
+  @if $_current-unit == 'pt' {
+    @if $unit == 'px' { @return ($_value / 0.75) + 0px; }
+    @if $unit == 'em' { @return (($_value / 0.75) / $_base) + 0em; }
+    @if $unit == 'rem' { @return (($_value / 0.75) / $_base) + 0rem; }
+    @if $unit == '%' { @return math.percentage(($_value / 0.75) / $_base); }
+    @if $unit == 'pt' { @return $value; }
+  }
+  @error "Can't convert '#{$value}' to unit '#{$unit}'!";
+}
