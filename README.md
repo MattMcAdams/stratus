@@ -4,9 +4,8 @@ Minimal, Modular, Modest. Stratus offers several powerful Sass tools to get star
 ![Release](https://img.shields.io/github/v/release/mattmcadams/stratus?include_prereleases)
 ![License](https://img.shields.io/github/license/mattmcadams/stratus)
 ![Size](https://img.shields.io/github/languages/code-size/mattmcadams/stratus)
-![Bourbon](https://img.shields.io/github/package-json/dependency-version/mattmcadams/stratus/bourbon)
+![Sass 1.23.0](https://img.shields.io/badge/dart--sass-%5E1.23.0-%23bf4080)
 ![Maintained](https://img.shields.io/maintenance/yes/2020)
-![Sass](https://img.shields.io/badge/made%20with-Sass-%23bf4080)
 
 ## Install
 You can install Stratus by either downloading the latest release and including it in your project*, or by downloading it with npm.
