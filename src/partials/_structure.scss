@@ -4,33 +4,63 @@
 // establish vertical rhythm
 // ==========================================================================
 
-@function _space-unit($space-config: $space-unit) {
-  @if $space-config == 'auto' {
-    @return type-get('line-height');
-  } @else if ( type-of($space-config) != number ) {
-    @return _error('$space-unit: `#{$space-config}` is not a valid value. Must be either a number or "auto".', 'Stratus _space-unit()');
-  } @else if is-unitless($space-config) {
-    @warn 'stratus.config.space-unit: `#{$space-config}` does not have a unit measurement, this may cause css properties calculated with the s() function to be ignored, as a unit is expected.';
-  }
+@use 'typography' as type;
+@use '../core/' as stratus;
+@use '../../dist/config';
 
-  @return $space-config;
-}
+$config-lh-unit: type.line-height(0) !default;
+$config-sp-unit: config.$space-unit-size !default;
+$config-ms-unit: config.$default-ratio !default;
 
-$stratus-space-unit: _space-unit();
-
-/// Custom Space Unit
-/// function to create a general unit of measurement for spacing
-/// @name space
+/// --------------------------------------------------------------------------
+/// Line Height Unit
+/// Use the base line height to calculate measurements
 /// @group structure
 /// @author Matthew McAdams
 ///
-/// @param {number(unitless)} $input
-/// @return {number(rem)} `space-unit` times `$input`
+/// @requires type.line-height (typography.scss)
 ///
-/// @requires _typography.scss
-
-@function s($input) {
-  @return ($stratus-space-unit * $input);
+/// @arg {number(unitless)} $input
+/// @param {number(with-unit)} $line-height
+///
+/// @returns {number} `$line-height` times `$input`
+/// --------------------------------------------------------------------------
+@function lh($input, $line-height: $config-lh-unit){
+  @return ($line-height * $input);
 }
 
+/// --------------------------------------------------------------------------
+/// Custom Space Unit
+/// function to create a general unit of measurement for spacing
+/// @group structure
+/// @author Matthew McAdams
+///
+/// @requires $config-sp-unit (config.scss)
+/// @requires lh
+///
+/// @arg {number(unitless)} $input
+/// @param {number(with-unit) | 'auto'} $size
+///
+/// @returns {number} `$size` times `$input`
+/// --------------------------------------------------------------------------
+@function sp($input, $size: $config-sp-unit) {
+  @if $size == auto { @return lh($input); }
+  @return ($size * $input);
+}
+
+/// --------------------------------------------------------------------------
+/// Modular Scale Unit
+/// function to get an `em` value based on the modular scale
+/// @group structure
+/// @author Matthew McAdams
+///
+/// @requires stratus.modular-scale (core)
+///
+/// @arg {number(unitless)} $input
+///
+/// @returns {number} `$size` times `$input`
+/// --------------------------------------------------------------------------
+@function ms($input, $ratio: $config-ms-unit) {
+  @return stratus.modular-scale($input, 1em, $ratio);
+}
 // END !SECTION STRUCTURE

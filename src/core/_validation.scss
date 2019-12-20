@@ -3,12 +3,17 @@
 // @author Hugo Giraudel
 ////
 
-@function is-number($value) {
-  @return type-of($value) == 'number';
-}
+@use 'sass:meta';
+@use 'sass:string';
+@use 'sass:math';
+
+@function is-number($value) { @return meta.type-of($value) == 'number'; }
+@function is-map($value) { @return meta.type-of($value) == 'map'; }
+@function is-string($value) { @return meta.type-of($value) == 'string'; }
+@function is-color($value) { @return meta.type-of($value) == 'color'; }
 
 @function is-time($value) {
-  @return is-number($value) and index('ms' 's', unit($value)) != null;
+  @return is-number($value) and string.index('ms' 's', math.unit($value)) != null;
 }
 
 @function is-duration($value) {
@@ -16,27 +21,27 @@
 }
 
 @function is-angle($value) {
-  @return is-number($value) and index('deg' 'rad' 'grad' 'turn', unit($value)) != null;
+  @return is-number($value) and string.index('deg' 'rad' 'grad' 'turn', math.unit($value)) != null;
 }
 
 @function is-frequency($value) {
-  @return is-number($value) and index('Hz' 'kHz', unit($value)) != null;
+  @return is-number($value) and string.index('Hz' 'kHz', math.unit($value)) != null;
 }
 
 @function is-integer($value) {
-  @return is-number($value) and round($value) == $value;
+  @return is-number($value) and math.round($value) == $value;
 }
 
 @function is-relative-length($value) {
-  @return is-number($value) and index('em' 'ex' 'ch' 'rem' 'vw' 'vh' 'vmin' 'vmax', unit($value)) != null;
+  @return is-number($value) and string.index('em' 'ex' 'ch' 'rem' 'vw' 'vh' 'vmin' 'vmax', math.unit($value)) != null;
 }
 
 @function is-absolute-length($value) {
-  @return is-number($value) and index('cm' 'mm' 'in' 'px' 'pt' 'pc', unit($value)) != null;
+  @return is-number($value) and string.index('cm' 'mm' 'in' 'px' 'pt' 'pc', math.unit($value)) != null;
 }
 
 @function is-percentage($value) {
-  @return is-number($value) and unit($value) == '%';
+  @return is-number($value) and math.unit($value) == '%';
 }
 
 @function is-length($value) {
@@ -44,9 +49,13 @@
 }
 
 @function is-resolution($value) {
-  @return is-number($value) and index('dpi' 'dpcm' 'dppx', unit($value)) != null;
+  @return is-number($value) and string.index('dpi' 'dpcm' 'dppx', math.unit($value)) != null;
 }
 
 @function is-position($value) {
-  @return is-length($value) or is-percentage($value) or index('top' 'right' 'bottom' 'left' 'center', $value) != null;
+  @return is-length($value) or is-percentage($value) or string.index('top' 'right' 'bottom' 'left' 'center', $value) != null;
+}
+
+@function is-unitless($value) {
+  @return is-number($value) and math.is-unitless($value);
 }

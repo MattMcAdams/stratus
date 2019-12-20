@@ -1,0 +1,105 @@
+$test-breakpoints: (
+  'xxlarge': 2560px,
+  'xlarge': 1440px,
+  'large': 1024px,
+  'medium': 761px,
+  'small': 760px,
+  'xsmall': 300px
+);
+
+@use 'true';
+@use '../../src/partials/media' as stratus with (
+  $config-breakpoint-map: $test-breakpoints
+);
+
+// orientation( $orientation )
+// ===========================================================================
+@include true.test-module('orientation [mixin]') {
+  @include true.test('returns a portrait media query'){
+    @include true.assert {
+      @include true.output {
+        @include stratus.orientation('portrait'){property: value;};
+      }
+      @include true.contains {
+        @media (orientation: portrait) {property: value;}
+      }
+    }
+  }
+
+  @include true.test('returns a landscape media query'){
+    @include true.assert {
+      @include true.output {
+        @include stratus.orientation('landscape'){property: value;};
+      }
+      @include true.contains {
+        @media (orientation: landscape) {property: value;}
+      }
+    }
+  }
+}
+
+// get-breakpoint( $key, $map )
+// ===========================================================================
+@include true.test-module('get-breakpoint [function]'){
+  @include true.test('passes an input number directly through') {
+    $test: stratus.get-breakpoint(1000px);
+    $expected: 1000px;
+    @include true.assert-equal($test, $expected);
+  }
+  @include true.test('gets a breakpoint from default map') {
+    $test: stratus.get-breakpoint('medium');
+    $expected: 761px;
+    @include true.assert-equal($test, $expected);
+  }
+  @include true.test('gets a breakpoint from custom map') {
+    $-custom-map: ( 'large': 2000px );
+    $test: stratus.get-breakpoint('large', $-custom-map);
+    $expected: 2000px;
+    @include true.assert-equal($test, $expected);
+  }
+}
+
+// media( $breakpoint, $direction )
+// ===========================================================================
+@include true.test-module('media [mixin]'){
+  @include true.test('creates an orientation breakpoint') {
+    @include true.assert {
+      @include true.output {
+        @include stratus.media('landscape'){property: value;}
+      }
+      @include true.contains {
+        @media (orientation: landscape) {property: value;}
+      }
+    }
+  }
+  @include true.test('creates a min breakpoint') {
+    @include true.assert {
+      @include true.output {
+        @include stratus.media(1000px, min){property: value;}
+      }
+      @include true.contains {
+        @media (min-width: 1000px) {property: value;}
+      }
+    }
+  }
+  @include true.test('creates a max breakpoint') {
+    @include true.assert {
+      @include true.output {
+        @include stratus.media(1000px, max){property: value;}
+      }
+      @include true.contains {
+        @media (max-width: 1000px) {property: value;}
+      }
+    }
+  }
+  @include true.test('creates a breakpoint using map key') {
+    @include true.assert {
+      @include true.output {
+        @include stratus.media('medium', max){property: value;}
+      }
+      @include true.contains {
+        @media (max-width: 761px) {property: value;}
+      }
+    }
+  }
+}

@@ -1,19 +1,32 @@
-
-$stratus-debug: false !default;
-$_test-environment: false !default;
-
 // Typography
 // ===========================================================================
-$type-config: (
-  'use-dynamic-scale': false,
-  'text-size': 16,
-  'line-height': 1.6,
-  'rem-size': 16
-) !default;
+/// @group typography
+/// @type boolean
+$use-dynamic-scale: false !default;
 
-$scale-ratio: 1.25 !default;
+/// @group typography
+/// @type number px
+$rem-size: 16px !default;
 
-$type-scale: (
+/// @group typography
+/// @type number with unit
+$text-size: $rem-size !default;
+
+/// @group typography
+/// @type number unitless
+$line-height: 1.6 !default;
+
+/// @group typography
+/// @type string['rem'|'em'|'px'|'pt']
+$type-unit: 'rem' !default;
+
+/// @group typography
+/// @type number unitless
+$default-ratio: 1.25 !default;
+
+/// @group typography
+/// @type map
+$default-scale: (
   'xlarge': 3,
   'large': 2,
   'medium': 1,
@@ -22,9 +35,26 @@ $type-scale: (
   'xsmall': -2,
 ) !default;
 
+@function _type-unit($unit: $type-unit) {
+  @if $unit == 'rem' { @return 0rem; }
+  @if $unit == 'px' { @return 0px; }
+  @if $unit == 'pt' { @return 0pt; }
+  @if $unit == 'em' { @return 0em; }
+  @error "Invalid arg for `$type-unit` expected a string['rem'|'em'|'px'|'pt']";
+}
+/// @group typography
+/// @type number with unit
+$type-unit-zero: _type-unit();
+
+/// @group typography
+/// @type boolean
+$use-vertical-rhythm: true !default;
+
 // Media Queries
 // ===========================================================================
-$breakpoints: (
+/// @group media
+/// @type map
+$breakpoint-map: (
   'xxlarge': 2560px,
   'xlarge': 1440px,
   'large': 1024px,
@@ -35,33 +65,14 @@ $breakpoints: (
 
 // Color
 // ===========================================================================
-/// Default key for deep color maps
-/// @group color
-/// @type string
-$default-color-key: 'base' !default;
-
 /// Method used for shifting color lightness
-/// false uses the color-scale method, true uses the mix method
+/// false uses the color.scale method, true uses the color.mix method
 /// @group color
 /// @type boolean
 $use-mix-method: true !default;
 
-/// Default color map
-/// @group color
-/// @type map
-$_default-color-map: (
-  'info': #1273e6,
-  'notice': #da7b12,
-  'negative': #d7373f,
-  'positive': #258f6c
-);
-
-/// Configurable color map
-/// @group color
-/// @type map
-/// @requires $default-color-map
-$stratus-color-map: $_default-color-map !default;
-
 // Structure
 // ===========================================================================
-$space-unit: 'auto' !default;
+/// @group structure
+/// @type number with unit | auto
+$space-unit-size: auto !default;

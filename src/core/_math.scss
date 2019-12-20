@@ -1,0 +1,86 @@
+@use '../../dist/config';
+
+$config-type-ratio: config.$default-ratio !default;
+
+/// --------------------------------------------------------------------------
+/// Power function
+/// @group utility
+/// @author Sass
+/// @access private
+///
+/// @arg {number} $base - number to be multiplied
+/// @arg {number(unitless)} $exponents - number of times it should be multiplied
+///
+/// @returns {number}
+/// @example
+/// pow(10, 3)
+/// > 1,000
+/// --------------------------------------------------------------------------
+@function _pow($base, $exponents) {
+  $_raised: 1;
+  @for $_i from 1 through $exponents {
+    $_raised: $_raised * $base;
+  }
+  @return $_raised;
+}
+
+/// --------------------------------------------------------------------------
+/// Modular Scale
+/// Increments up or down a defined scale and returns an adjusted value.
+/// @group typography
+/// @author Matthew McAdams
+/// @access public
+///
+/// @requires _pow
+/// @requires $config-type-ratio
+///
+/// @arg {number(unitless)} $increment
+/// How many steps to increment up or down the scale.
+/// @param {number(with-unit)} $base [1em]
+///   The base value the scale starts at.
+/// @param {number(unitless)} $ratio [config.$type-ratio]
+///   The ratio the scale is built on.
+///
+/// @returns {number(with-unit)}
+/// --------------------------------------------------------------------------
+@function modular-scale(
+  $increment,
+  $base: 1em,
+  $ratio: $config-type-ratio
+){
+  @if $increment == 0 {
+    @return $base;
+  }
+  @if $increment < 0 {
+    // remove negative from number, division does this for us
+    $increment: $increment * -1;
+    @return $base / _pow( $ratio, $increment );
+  }
+  @return $base * _pow( $ratio, $increment );
+}
+
+/// --------------------------------------------------------------------------
+/// min-multiple
+/// Returns a multiple of x/y >= z
+/// @group typography
+/// @author Matthew McAdams
+/// @access public
+///
+/// @arg {number} $base
+///   The value to be multiplied
+/// @arg {number} $min
+///   The lowest possible output
+/// @param {number} $multiple [1]
+///   Can be 0-1 inclusive. Allows half multiples
+///
+/// @return {number}
+/// --------------------------------------------------------------------------
+@function min-multiple($base, $min, $multiple: 1) {
+  $_output: $base;
+  $_i: $multiple;
+  @while $_output < $min {
+    $_output: $base * $_i;
+    $_i: $_i + $multiple;
+  }
+  @return $_output;
+}
