@@ -50,13 +50,13 @@
 @include true.test-module('color-mix [function]') {
   @include true.test('return tinted color with positive $percent') {
     $test: stratus.color-mix(#1273e6, 20%);
-    $expected: color.mix(white, #1273e6, 20%);
+    $expected: color.mix(#fff, #1273e6, 20%);
     @include true.assert-equal(inspect($test), inspect($expected));
   }
 
   @include true.test('return shaded color with negative $percent') {
     $test: stratus.color-mix(#1273e6, -20%);
-    $expected: color.mix(black, #1273e6, 20%);
+    $expected: color.mix(#000, #1273e6, 20%);
     @include true.assert-equal(meta.inspect($test), meta.inspect($expected));
   }
 }

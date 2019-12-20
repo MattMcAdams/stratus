@@ -10,6 +10,7 @@
 @use 'sass:color';
 @use 'sass:map';
 
+/// @type boolean
 $config-use-mix-method: config.$use-mix-method !default;
 
 /// --------------------------------------------------------------------------
@@ -22,7 +23,7 @@ $config-use-mix-method: config.$use-mix-method !default;
 /// @requires v.is-integer (validation.scss)
 /// @requires error.inspect-param (error.scss)
 ///
-/// @arg {number(unitless)}
+/// @arg {number(unitless)} $number
 ///   Must be a positive integer < 1000 & divisible by 50
 ///
 /// @returns {number(%)}
@@ -33,10 +34,10 @@ $config-use-mix-method: config.$use-mix-method !default;
 /// --------------------------------------------------------------------------
 @function color-index(
   $number
-  ) {
+) {
   @if (v.is-integer(($number / 50)))
-  and ($number < 1000)
-  and ($number > 0) {
+    and ($number < 1000)
+    and ($number > 0) {
     @return (($number - 500) / - 5) + 0%;
   }
   @error 'Invalid arg `$number`, expected a positive integer less than 1000 that is also divisible by 50. $number: #{error.inspect-param($number)}';
@@ -66,10 +67,10 @@ $config-use-mix-method: config.$use-mix-method !default;
 @function color-mix(
   $color,
   $percent
-  ) {
-  $_base: white;
+) {
+  $_base: #fff;
   @if $percent < 0 {
-    $_base: black; $percent: $percent * -1;
+    $_base: #000; $percent: $percent * -1;
   }
   @return color.mix($_base, $color, $percent);
 }
@@ -93,7 +94,7 @@ $config-use-mix-method: config.$use-mix-method !default;
 @function color-alpha(
   $color,
   $opacity
-  ) {
+) {
   @return color.change($color, $alpha: $opacity);
 }
 
@@ -125,7 +126,7 @@ $config-use-mix-method: config.$use-mix-method !default;
   $percent,
   $opacity: null,
   $mix: $config-use-mix-method
-  ) {
+) {
   @if $mix {
     @return color-mix($color, $percent);
   }

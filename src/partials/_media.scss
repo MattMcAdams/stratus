@@ -22,12 +22,12 @@ $config-breakpoint-map: config.$breakpoint-map !default;
 /// --------------------------------------------------------------------------
 @mixin orientation(
   $orientation: 'portrait'
-  ) {
+) {
   @if $orientation == 'landscape' {
-    @media (orientation: landscape) { @content; }
+    @media ( orientation: landscape ) { @content; }
   }
   @else if $orientation == 'portrait' {
-    @media (orientation: portrait) { @content; }
+    @media ( orientation: portrait ) { @content; }
   }
 }
 
@@ -51,7 +51,7 @@ $config-breakpoint-map: config.$breakpoint-map !default;
 @function get-breakpoint(
   $key,
   $map: $config-breakpoint-map
-  ) {
+) {
   @if meta.type-of($key) == number { @return $key; }
   @if map.has-key($map, $key) { @return map.get($map, $key); }
   @else { @return $key; }
@@ -75,14 +75,14 @@ $config-breakpoint-map: config.$breakpoint-map !default;
 @mixin media(
   $breakpoint,
   $direction: min
-  ) {
+) {
   // See if the breakpoint pertains to orientation
   @if $breakpoint == 'landscape'
-  or $breakpoint == 'portrait' {
+    or $breakpoint == 'portrait' {
     @include orientation($breakpoint) { @content; }
   } @else {
     $query-size: get-breakpoint($breakpoint);
-    @media (#{$direction}-width: $query-size) { @content; }
+    @media ( #{$direction}-width: $query-size ) { @content; }
   }
 }
 

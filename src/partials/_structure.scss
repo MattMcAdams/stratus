@@ -25,7 +25,10 @@ $config-ms-unit: config.$default-ratio !default;
 ///
 /// @returns {number} `$line-height` times `$input`
 /// --------------------------------------------------------------------------
-@function lh($input, $line-height: $config-lh-unit){
+@function lh(
+  $input,
+  $line-height: $config-lh-unit
+) {
   @return ($line-height * $input);
 }
 
@@ -43,7 +46,10 @@ $config-ms-unit: config.$default-ratio !default;
 ///
 /// @returns {number} `$size` times `$input`
 /// --------------------------------------------------------------------------
-@function sp($input, $size: $config-sp-unit) {
+@function sp(
+  $input,
+  $size: $config-sp-unit
+) {
   @if $size == auto { @return lh($input); }
   @return ($size * $input);
 }
@@ -60,7 +66,10 @@ $config-ms-unit: config.$default-ratio !default;
 ///
 /// @returns {number} `$size` times `$input`
 /// --------------------------------------------------------------------------
-@function ms($input, $ratio: $config-ms-unit) {
+@function ms(
+  $input,
+  $ratio: $config-ms-unit
+) {
   @return stratus.modular-scale($input, 1em, $ratio);
 }
 // END !SECTION STRUCTURE

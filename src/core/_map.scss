@@ -17,14 +17,20 @@
 /// @arg {string(s)} $keys - keys in $map
 ///
 /// @returns {Unspecified} it may return anything as a result
-/// @example:
-/// deep-map-check($nested-map, 'top-level-key', 'second-level-key')
-/// > value of second level key
+/// @example scss - Get the value of a key from a nested map
+///   $example-map: (
+///     'top-key': (
+///       'deep-key': foo
+///     );
+///   );
+///
+///   stratus.get($example-map, 'top-key', 'deep-key')
+///   // -> Value of second level key
 /// --------------------------------------------------------------------------
 @function get(
   $map,
   $keys...
-  ) {
+) {
   @if not (v.is-map($map)) {
     @error 'The argument $map: "#{$map}" is of incorrect type: "#{meta.type-of($map)}". Type of "Map" is required!';
   }

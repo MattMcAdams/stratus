@@ -18,10 +18,10 @@ $test-breakpoints: (
   @include true.test('returns a portrait media query'){
     @include true.assert {
       @include true.output {
-        @include stratus.orientation('portrait'){property: value;};
+        @include stratus.orientation('portrait'){color: value;}
       }
       @include true.contains {
-        @media (orientation: portrait) {property: value;}
+        @media ( orientation: portrait ) {color: value;}
       }
     }
   }
@@ -29,10 +29,10 @@ $test-breakpoints: (
   @include true.test('returns a landscape media query'){
     @include true.assert {
       @include true.output {
-        @include stratus.orientation('landscape'){property: value;};
+        @include stratus.orientation('landscape'){color: value;}
       }
       @include true.contains {
-        @media (orientation: landscape) {property: value;}
+        @media ( orientation: landscape ) {color: value;}
       }
     }
   }
@@ -65,40 +65,40 @@ $test-breakpoints: (
   @include true.test('creates an orientation breakpoint') {
     @include true.assert {
       @include true.output {
-        @include stratus.media('landscape'){property: value;}
+        @include stratus.media('landscape'){color: value;}
       }
       @include true.contains {
-        @media (orientation: landscape) {property: value;}
+        @media ( orientation: landscape ) {color: value;}
       }
     }
   }
   @include true.test('creates a min breakpoint') {
     @include true.assert {
       @include true.output {
-        @include stratus.media(1000px, min){property: value;}
+        @include stratus.media(1000px, min){color: value;}
       }
       @include true.contains {
-        @media (min-width: 1000px) {property: value;}
+        @media ( min-width: 1000px ) {color: value;}
       }
     }
   }
   @include true.test('creates a max breakpoint') {
     @include true.assert {
       @include true.output {
-        @include stratus.media(1000px, max){property: value;}
+        @include stratus.media(1000px, max){color: value;}
       }
       @include true.contains {
-        @media (max-width: 1000px) {property: value;}
+        @media ( max-width: 1000px ) {color: value;}
       }
     }
   }
   @include true.test('creates a breakpoint using map key') {
     @include true.assert {
       @include true.output {
-        @include stratus.media('medium', max){property: value;}
+        @include stratus.media('medium', max){color: value;}
       }
       @include true.contains {
-        @media (max-width: 761px) {property: value;}
+        @media ( max-width: 761px ) {color: value;}
       }
     }
   }

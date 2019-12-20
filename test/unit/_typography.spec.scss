@@ -152,7 +152,7 @@ $test-scale: (
       }
       @include true.contains {
         font-size: #{stratus.type-scale($increment: -1)};
-        line-height:  #{stratus.line-height(stratus.type-scale($increment: -1))};
+        line-height: #{stratus.line-height(stratus.type-scale($increment: -1))};
       }
     }
   }

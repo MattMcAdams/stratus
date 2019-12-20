@@ -27,12 +27,19 @@
     "typography"
   ],
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "lint": "stylelint 'src/**/*.scss' 'dist/*.scss' 'test/**/*.scss'",
+    "build:quality": "npm run lint && npm run test",
+    "build:docs": "sassdoc 'src/**/*.scss'"
   },
   "dependencies": {},
   "devDependencies": {
     "mocha": "^6.2.2",
     "sass": "^1.23.7",
-    "sass-true": "^5.0.0"
+    "sass-true": "^5.0.0",
+    "sassdoc": "^2.7.1",
+    "stylelint": "^12.0.0",
+    "stylelint-config-recommended-scss": "^4.1.0",
+    "stylelint-scss": "^3.13.0"
   }
 }

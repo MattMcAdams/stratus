@@ -49,7 +49,7 @@ $config-rem-size: config.$rem-size !default;
   $value,
   $unit,
   $base: $config-rem-size
-  ) {
+) {
   $_current-unit: math.unit($value);
   $_value: strip-unit($value);
   $_base: null;
