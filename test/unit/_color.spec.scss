@@ -1,11 +1,12 @@
 @use 'true';
 
-@use '../../dist/config' as config;
-@use '../../src/partials/color' as stratus;
+@use '../../src/partials/color' as stratus with ($config-use-mix-method: false);
 
 @use 'sass:color';
 @use 'sass:meta';
 
+// color-index($number)
+// ===========================================================================
 @include true.test-module('color-index [function]') {
   @include true.test('output 0% with input of 500') {
     $test: stratus.color-index(500);
@@ -44,6 +45,8 @@
   }
 }
 
+// color-mix($color, $percent)
+// ===========================================================================
 @include true.test-module('color-mix [function]') {
   @include true.test('return tinted color with positive $percent') {
     $test: stratus.color-mix(#1273e6, 20%);
@@ -58,7 +61,8 @@
   }
 }
 
-
+// color-scale($color, $percent, $mix)
+// ===========================================================================
 @include true.test-module('color-scale [function]') {
   @include true.test('call color-mix with $mix: true') {
     $test: stratus.color-scale(#1273e6, 20%, $mix: true);
@@ -83,5 +87,20 @@
     $testB: stratus.color-scale(#1273e6, 0%, $mix: true);
     $expected: #1273e6;
     @include true.assert-equal(meta.inspect($testA), meta.inspect($testB), meta.inspect($expected));
+  }
+
+  @include true.test('pull correct mix method from configuration') {
+    $test: stratus.color-scale(#1273e6, 20%);
+    $expected: color.scale(#1273e6, $lightness: 20%);
+    @include true.assert-equal(meta.inspect($test), meta.inspect($expected));
+  }
+}
+
+// color-alpha($color, $opacity)
+// ===========================================================================
+@include true.test-module('color-alpha [function]') {
+  @include true.test('return adjusted opacity') {
+    $test: stratus.color-alpha(#1273e6, 0.4);
+    $expected: color.change(#1273e6, $alpha: 0.4);
   }
 }
