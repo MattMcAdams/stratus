@@ -1,0 +1,54 @@
+@use 'true';
+@use '../../src/core/math' as stratus;
+@use 'sass:math';
+
+// min-multiple( $base, $min, $multiple )
+// ===========================================================================
+@include true.test-module('min-multiple [function]') {
+  @include true.test('$x == $y when $y is a multiple of $x') {
+    $test: stratus.min-multiple(8, 16, 0.5);
+    $expected: 16;
+    @include true.assert-equal( $test, $expected );
+  }
+
+  @include true.test('$x > $y when $y is not a multiple of $x/2') {
+    $test: stratus.min-multiple(8, 10, 0.5);
+    $expected: 12;
+    @include true.assert-equal( $test, $expected );
+  }
+
+  @include true.test('$x is a multiple of $x/2') {
+    $value-a: stratus.min-multiple(8, 10, 0.5);
+    $value-b: stratus.min-multiple(8, 16, 0.5);
+    $value-c: stratus.min-multiple(8, 13, 0.5);
+    $test-a: $value-a / 4;
+    $test-b: $value-b / 4;
+    $test-c: $value-c / 4;
+    $expected: false;
+    @if math.round($test-a) == $test-a and math.round($test-b) == $test-b and math.round($test-c) == $test-c { $expected: true; }
+    @include true.assert-equal($expected, true);
+  }
+}
+
+// modular-scale( $increment, $base, $ratio )
+// ===========================================================================
+@include true.test-module('modular-scale [function]') {
+
+  $-proof-ratio: 1.5;
+  $-proof-0: 1em;
+  $-proof-1: $-proof-0 * $-proof-ratio;
+  $-proof-2: $-proof-1 * $-proof-ratio;
+  $-proof--1: $-proof-0 / $-proof-ratio;
+  $-proof--2: $-proof--1 / $-proof-ratio;
+
+  @include true.test('calculates correct positive value'){
+    $test: stratus.modular-scale(2, 1em, 1.5);
+    $expected: $-proof-2 ;
+    @include true.assert-equal($test, $expected);
+  }
+  @include true.test('calculates correct negative value'){
+    $test: stratus.modular-scale(-2, 1em, 1.5);
+    $expected: $-proof--2 ;
+    @include true.assert-equal($test, $expected);
+  }
+}
