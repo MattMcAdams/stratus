@@ -1,5 +1,5 @@
 # Stratus
-Minimal, Modular, Modest. Stratus offers several powerful Sass tools to get started with a web project. It can help standardize spacing, organize and manipulate color, and generate and maintain a typographical scale.
+Minimal, modular, and modest, Stratus offers several powerful Sass tools to get started with a web project. It can help standardize spacing, organize and manipulate color, and generate and maintain a typographical scale.
 
 ![Release](https://img.shields.io/github/v/release/mattmcadams/stratus?include_prereleases)
 ![License](https://img.shields.io/github/license/mattmcadams/stratus)
@@ -8,36 +8,52 @@ Minimal, Modular, Modest. Stratus offers several powerful Sass tools to get star
 ![Maintained](https://img.shields.io/maintenance/yes/2020)
 
 ## Install
-You can install Stratus by either downloading the latest release and including it in your project*, or by downloading it with npm.
+You can install Stratus by either downloading the latest release and including it in your project, or by downloading it with npm.
 
-1. Add a file `.npmrc` to your project folder with these contents:
+> **NOTE**<br>If using the package distributed from GitHub, you'll also need to linclude the following line in your `.npmrc` file at the root of your project: `@mattmcadams:registry=https://npm.pkg.github.com`.
+
+1. Install with npm
 ```
-@mattmcadams:registry=https://npm.pkg.github.com
+npm install @mattmcadams/stratus --save-dev
 ```
-2. Install with npm
-```
-npm install @mattmcadams/stratus --save
+2. Configure your settings (optional)
+```scss
+@use 'stratus/src/config' with (
+  $param: value
+);
 ```
 3. Include in your project
+```scss
+@use 'stratus';
 ```
-@import 'stratus/dist/stratus';
-```
-
-Note that if you install Stratus manually, you will also need to download and install Bourbon.
 
 ## Use
-* [Organize and manipulate color](docs/color.md)
-* [Create and maintain a typographical scale](docs/typography.md)
+With the Sass modules syntax, use Stratus in your project like this:
+```scss
+@use 'stratus';
 
-You'll also need to include node modules in your build process. The method of achieving this depends on your setup, but a basic npm build script might look something like this:
-```json
-"scripts": {
-  "build": "node-sass --include-path=node_modules my-file.scss my-file.css"
+foo: {
+  @include stratus.type-set('normal');
 }
 ```
-The important part is `--include-path=node_modules`. Again, this may be different depending on your build setup. The script above uses node-sass and npm scripts to build.
+You can learn more about all of Stratus' functions and mixins in the project's [documentation]().
+
+> **NOTE**<br>
+> If you've installed Stratus using npm, you'll also need to include `node-modules` in your build process. The method of achieving this depends on your setup. Look at this project's [package.json]() to see a possible solution
+
+## Requirements
+Because Stratus uses the Sass modules syntax, using it in your project means you must compile using the dart implementation of sass.
+
+If using npm, you can install sass like so
+```
+npm install sass --save-dev
+```
+You can learn more about [dart sass]() on their website, and Mirium Suzanne has a great article about the [module system]() on css-tricks.
 
 ## Contribute!
-See something that could be better? Found a bug? Have an idea for a new feature?
+I'm a self taught developer, and this has been my pet project I've used to learn about best practices, project management, and so much more, so I'm sure it's not perfect.
 
-Come help build, submit an issue, or contact me! I'd love to chat and hear your ideas.
+See something that could be better? Found a bug? Have an idea for a new feature? Come [help build](), [submit an issue](), or [contact me]()! I'd love to chat and hear your ideas.
+
+## Looking forward
+This project is constantly evolving, and I'm excited to bring more features to it in the future. Some of my current thoughts include mixins inspired by boubon, a minimal style boilerplate, and UI components.
