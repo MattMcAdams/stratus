@@ -1,0 +1,168 @@
+@use 'true';
+@use '../../src/core/unit' as stratus with (
+  $config-rem-size: 10px
+);
+
+// strip-unit( $value )
+// ===========================================================================
+@include true.test-module('strip-unit [function]') {
+  @include true.test('removes absolute units'){
+    $test: stratus.strip-unit(2px);
+    $expected: 2;
+    @include true.assert-equal($test, $expected);
+  }
+
+  @include true.test('removes relative units'){
+    $test: stratus.strip-unit(2rem);
+    $expected: 2;
+    @include true.assert-equal($test, $expected);
+  }
+
+  @include true.test('removes percentage'){
+    $test: stratus.strip-unit(2%);
+    $expected: 2;
+    @include true.assert-equal($test, $expected);
+  }
+}
+
+// convert-unit( $value, $unit, $base: $config-rem-size )
+// ===========================================================================
+@include true.test-module('convert-unit (px) [function]') {
+  @include true.test('px -> px') {
+    $test: stratus.convert-unit(5px, 'px');
+    $expected: 5px;
+    @include true.assert-equal($test, $expected);
+  }
+  @include true.test('px -> pt') {
+    $test: stratus.convert-unit(10px, 'pt');
+    $expected: 7.5pt;
+    @include true.assert-equal($test, $expected);
+  }
+  @include true.test('px -> rem') {
+    $test: stratus.convert-unit(15px, 'rem');
+    $expected: 1.5rem;
+    @include true.assert-equal($test, $expected);
+  }
+  @include true.test('px -> em') {
+    $test: stratus.convert-unit(15px, 'em');
+    $expected: 1.5em;
+    @include true.assert-equal($test, $expected);
+  }
+  @include true.test('px -> %') {
+    $test: stratus.convert-unit(15px, '%');
+    $expected: 150%;
+    @include true.assert-equal($test, $expected);
+  }
+}
+
+@include true.test-module('convert-unit (rem) [function]') {
+  @include true.test('rem -> rem') {
+    $test: stratus.convert-unit(5rem, 'rem');
+    $expected: 5rem;
+    @include true.assert-equal($test, $expected);
+  }
+  @include true.test('rem -> em') {
+    $test: stratus.convert-unit(10rem, 'em');
+    $expected: 10em;
+    @include true.assert-equal($test, $expected);
+  }
+  @include true.test('rem -> px') {
+    $test: stratus.convert-unit(1.5rem, 'px');
+    $expected: 15px;
+    @include true.assert-equal($test, $expected);
+  }
+  @include true.test('rem -> pt') {
+    $test: stratus.convert-unit(1.5rem, 'pt');
+    $expected: 11.25pt;
+    @include true.assert-equal($test, $expected);
+  }
+  @include true.test('rem -> %') {
+    $test: stratus.convert-unit(1.5rem, '%');
+    $expected: 150%;
+    @include true.assert-equal($test, $expected);
+  }
+}
+
+@include true.test-module('convert-unit (em) [function]') {
+  @include true.test('em -> em') {
+    $test: stratus.convert-unit(5em, 'em');
+    $expected: 5em;
+    @include true.assert-equal($test, $expected);
+  }
+  @include true.test('em -> rem') {
+    $test: stratus.convert-unit(10em, 'rem');
+    $expected: 10rem;
+    @include true.assert-equal($test, $expected);
+  }
+  @include true.test('rem -> px') {
+    $test: stratus.convert-unit(1.5em, 'px');
+    $expected: 15px;
+    @include true.assert-equal($test, $expected);
+  }
+  @include true.test('rem -> pt') {
+    $test: stratus.convert-unit(1.5em, 'pt');
+    $expected: 11.25pt;
+    @include true.assert-equal($test, $expected);
+  }
+  @include true.test('rem -> %') {
+    $test: stratus.convert-unit(1.5em, '%');
+    $expected: 150%;
+    @include true.assert-equal($test, $expected);
+  }
+}
+
+@include true.test-module('convert-unit (%) [function]') {
+  @include true.test('% -> em') {
+    $test: stratus.convert-unit(120%, 'em');
+    $expected: 1.2em;
+    @include true.assert-equal($test, $expected);
+  }
+  @include true.test('% -> rem') {
+    $test: stratus.convert-unit(120%, 'rem');
+    $expected: 1.2rem;
+    @include true.assert-equal($test, $expected);
+  }
+  @include true.test('% -> px') {
+    $test: stratus.convert-unit(120%, 'px');
+    $expected: 12px;
+    @include true.assert-equal($test, $expected);
+  }
+  @include true.test('% -> pt') {
+    $test: stratus.convert-unit(120%, 'pt');
+    $expected: 9pt;
+    @include true.assert-equal($test, $expected);
+  }
+  @include true.test('% -> %') {
+    $test: stratus.convert-unit(110%, '%');
+    $expected: 110%;
+    @include true.assert-equal($test, $expected);
+  }
+}
+
+@include true.test-module('convert-unit (pt) [function]') {
+  @include true.test('pt -> pt') {
+    $test: stratus.convert-unit(9pt, 'pt');
+    $expected: 9pt;
+    @include true.assert-equal($test, $expected);
+  }
+  @include true.test('pt -> px') {
+    $test: stratus.convert-unit(9pt, 'px');
+    $expected: 12px;
+    @include true.assert-equal($test, $expected);
+  }
+  @include true.test('pt -> rem') {
+    $test: stratus.convert-unit(9pt, 'rem');
+    $expected: 1.2rem;
+    @include true.assert-equal($test, $expected);
+  }
+  @include true.test('pt -> em') {
+    $test: stratus.convert-unit(9pt, 'em');
+    $expected: 1.2em;
+    @include true.assert-equal($test, $expected);
+  }
+  @include true.test('pt -> %') {
+    $test: stratus.convert-unit(9pt, '%');
+    $expected: 120%;
+    @include true.assert-equal($test, $expected);
+  }
+}
