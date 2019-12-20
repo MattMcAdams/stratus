@@ -9,11 +9,14 @@
 
 @use '../../dist/config';
 
+$config-breakpoint-map: config.$breakpoint-map !default;
+
 /// --------------------------------------------------------------------------
 /// Orientation Media Query
 /// Creates a media query based on screen rotation / orientation
 /// @group responsive
 /// @author Matthew McAdams
+/// @access private
 ///
 /// @param {keyword['portrait' | 'landscape']} $oriendation ['portrait']
 /// --------------------------------------------------------------------------
@@ -30,22 +33,24 @@
 
 /// --------------------------------------------------------------------------
 /// Get Breakpoint
-/// resolves input breakpoint to a number
+/// Resolves input breakpoint to a number
 /// @group responsive
 /// @author Matthew McAdams
+/// @access private
 ///
 /// @requires meta.type-of (sass:meta)
 /// @requires map.has-key (sass:map)
 /// @requires map.get (sass:map)
-/// @requires config.$breakpoints (config.scss)
+/// @requires $config-breakpoint-map
 ///
 /// @arg {number | key(config.$breakpoints)} $key
 /// @param {map} $map [config.$breakpoints]
+///
 /// @returns {number}
 /// --------------------------------------------------------------------------
 @function get-breakpoint(
   $key,
-  $map: config.$breakpoints
+  $map: $config-breakpoint-map
   ) {
   @if meta.type-of($key) == number { @return $key; }
   @if map.has-key($map, $key) { @return map.get($map, $key); }
@@ -56,22 +61,25 @@
 /// Media Query Mixin
 /// @group responsive
 /// @author Matthew McAdams
+/// @access public
 ///
 /// @requires string.index (sass:string)
 /// @requires get-breakpoint
 /// @requires orientation
 ///
 /// @arg {key[config.$breakpoints] | keyword[landscape, portrait] | number } $input
-/// Sets the media query orientation or width
-/// @param {keyword[min, max]} $direction [min] - used as #{$direction}-width to detect screen size
+///    Sets the media query orientation or width
+/// @param {string} $direction [min]
+///    Used as #{$direction}-width to detect screen size
 /// --------------------------------------------------------------------------
 @mixin media(
   $breakpoint,
   $direction: min
   ) {
   // See if the breakpoint pertains to orientation
-  @if string.index('portrait landscape', $breakpoint) {
-    @include orientation($breakpoint);
+  @if $breakpoint == 'landscape'
+  or $breakpoint == 'portrait' {
+    @include orientation($breakpoint) { @content; }
   } @else {
     $query-size: get-breakpoint($breakpoint);
     @media (#{$direction}-width: $query-size) { @content; }
