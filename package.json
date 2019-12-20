@@ -27,9 +27,9 @@
     "typography"
   ],
   "scripts": {
-    "test": "mocha",
-    "lint": "stylelint 'src/**/*.scss' 'dist/*.scss' 'test/**/*.scss'",
-    "build:quality": "npm run lint && npm run test",
+    "test:unit": "mocha",
+    "test:lint": "stylelint 'src/**/*.scss' 'dist/*.scss' 'test/**/*.scss'",
+    "test": "npm run test:unit & npm run test:lint",
     "build:docs": "sassdoc 'src/**/*.scss'"
   },
   "dependencies": {},
