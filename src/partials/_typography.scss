@@ -187,5 +187,15 @@ $config-use-vertical-rhythm: config.$use-vertical-rhythm !default;
   }
 }
 
+//$font-stack: (
+//  'body': $font-stack-georgia,
+//  'head': $font-stack-helvetica,
+//  'mono': $font-stack-monaco,
+//  'icon': null
+//);
+//
+//@mixin font($name, $weight: 'normal') {
+//  font-family: map-get($font-stack, $name);
+//}
 // END !SECTION Mixins
 // END !SECTION TYPOGRAPHY

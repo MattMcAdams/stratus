@@ -44,7 +44,6 @@
     @include true.assert-equal($test, $expected);
   }
 }
-
 // color-mix($color, $percent)
 // ===========================================================================
 @include true.test-module('color-mix [function]') {
@@ -95,7 +94,6 @@
     @include true.assert-equal(meta.inspect($test), meta.inspect($expected));
   }
 }
-
 // color-alpha($color, $opacity)
 // ===========================================================================
 @include true.test-module('color-alpha [function]') {
