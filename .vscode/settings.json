@@ -1,3 +1,134 @@
 {
-  "scss.validate": false
+  "scss.validate": false,
+  "editor.tabSize": 2,
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "files.trimTrailingWhitespace": true,
+  "commentAnchors.tags.list": [
+    {
+      "tag": "ANCHOR",
+      "iconColor": "default",
+      "highlightColor": "",
+      "scope": "file",
+      "styleComment": true
+    },
+    {
+      "tag": "TEMP",
+      "iconColor": "pink",
+      "highlightColor": "#e84393",
+      "scope": "workspace",
+      "styleComment": true
+    },
+    {
+      "tag": "DEPRECIATED",
+      "iconColor": "pink",
+      "highlightColor": "#e84393",
+      "scope": "file",
+      "styleComment": true
+    },
+    {
+      "tag": "TODO",
+      "iconColor": "teal",
+      "highlightColor": "#00cec9",
+      "scope": "workspace",
+      "styleComment": true
+    },
+    {
+      "tag": "IDEA",
+      "iconColor": "purple",
+      "highlightColor": "#ba68c8",
+      "scope": "workspace",
+      "styleComment": true
+    },
+    {
+      "tag": "QUESTION",
+      "iconColor": "purple",
+      "highlightColor": "#ba68c8",
+      "scope": "workspace",
+      "styleComment": true
+    },
+    {
+      "tag": "OPTIMIZE",
+      "iconColor": "teal",
+      "highlightColor": "#00cec9",
+      "scope": "workspace",
+      "styleComment": true
+    },
+    {
+      "tag": "FIXME",
+      "iconColor": "red",
+      "highlightColor": "#F44336",
+      "scope": "workspace",
+      "styleComment": true
+    },
+    {
+      "tag": "DEBUG",
+      "iconColor": "red",
+      "highlightColor": "#F44336",
+      "scope": "workspace",
+      "styleComment": true
+    },
+    {
+      "tag": "BUG",
+      "iconColor": "red",
+      "highlightColor": "#F44336",
+      "scope": "workspace",
+      "styleComment": true
+    },
+    {
+      "tag": "NOTE",
+      "iconColor": "orange",
+      "highlightColor": "#ffa100",
+      "scope": "file",
+      "styleComment": true
+    },
+    {
+      "tag": "STUB",
+      "enabled": false
+    },
+    {
+      "tag": "REVIEW",
+      "iconColor": "blue",
+      "highlightColor": "#3ea8ff",
+      "scope": "workspace",
+      "styleComment": true
+    },
+    {
+      "tag": "COMBAK",
+      "iconColor": "blue",
+      "highlightColor": "#3ea8ff",
+      "scope": "workspace",
+      "styleComment": true,
+      "enabled": false
+    },
+    {
+      "tag": "WARNING",
+      "iconColor": "orange",
+      "highlightColor": "#ffa100",
+      "scope": "file",
+      "styleComment": true
+    },
+    {
+      "tag": "FIX",
+      "iconColor": "emerald",
+      "highlightColor": "#2ecc71",
+      "scope": "file",
+      "styleComment": true
+    },
+    {
+      "tag": "HACK",
+      "iconColor": "emerald",
+      "highlightColor": "#2ecc71",
+      "scope": "file",
+      "styleComment": true
+    },
+    {
+      "tag": "SECTION",
+      "iconColor": "default",
+      "highlightColor": "#CCC",
+      "scope": "file",
+      "isRegion": true,
+      "styleComment": true
+    }
+  ]
 }
