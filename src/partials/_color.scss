@@ -1,94 +1,133 @@
-// ==========================================================================
+////
+/// @group color
+////
+
+// ===========================================================================
 // SECTION COLOR
-// Create and manipulate color with a mix of these functions:
-// color.mix() | mix() // built-in Sass
-// color.scale | scale-color() // built-in Sass
-// stratus.color | color() // Stratus
-// stratus.scale-index | scale-index() // Stratus
-// stratus.color-shift | color-shift() // Stratus
-//
-// Example: stratus.color-shift(stratus.color('primary', 'dark'), 400)
-// ==========================================================================
+// ===========================================================================
 
-$default-color-key: 'base';
+@use 'sass:meta';
+@use 'sass:color';
+@use 'sass:map';
+@use '../core/validation' as v;
+@use '../core/error';
+@use '../config';
 
-/// --------------------------------------------------------------------------
-/// Example get color
-/// @group color
-/// @author Matt McAdams
-/// @requires $stratus-color-map
-/// --------------------------------------------------------------------------
-@function color($keys...) {
-  $_output: null;
-  $i: 0;
-  $_map: $stratus-color-map;
-  @each $arg in $keys { $i: $i+1 }
-  @if $i > 1 {
-    $_output: deep-map-get($_map, $keys...);
-  } @else { $_output: map-get($_map, $keys...); }
-  @if type-of($_output) == map {
-    @return map-get($_output, $default-color-key);
-  }
-  @return $_output;
-}
+/// @type boolean
+$config-use-mix-method: config.$use-mix-method !default;
 
 /// --------------------------------------------------------------------------
-/// Scale Index
-/// @group color
-/// @author Matt McAdams
+/// Color Index
+/// Converts a value from a numerical index to a usable percentage
+/// @access public
 ///
-/// @arg {number(unitless)} - Must be a non-negative integer < 1000 & divisible by 50
-/// @example color-index(400) -> 20%
+/// @requires v.is-integer (validation.scss)
+/// @requires error.inspect-param (error.scss)
+///
+/// @param {number(unitless)} $number
+///   Must be a positive integer < 1000 & divisible by 50
+///
+/// @returns {number(%)}
+/// @example stratus.color-index(400) -> 20%
 /// 500 is 0. every 50 represents 10%.
 /// Inputs less than 500 will be converted to positive percentages,
 /// Inputs greater than 500 will be converted to negative percentages.
 /// --------------------------------------------------------------------------
-@function scale-index($number) {
-  @if is-integer(($number / 50)) and ($number < 1000) and ($number > 0) {
+@function color-index(
+  $number
+) {
+  @if (v.is-integer(($number / 50)))
+    and ($number < 1000)
+    and ($number > 0) {
     @return (($number - 500) / - 5) + 0%;
   }
-  @else {
-    @return _error('Invalid argument for `$number`: `(#{$number}{#{type-of($number)}})`. Must be a non-negative integer < 1000 & divisible by 50.', 'scale-index');
-  }
+  @error 'Invalid arg `$number`, expected a positive integer less than 1000 that is also divisible by 50. $number: #{error.inspect-param($number)}';
 }
 
+// ===========================================================================
+// SECTION Color Modifications
+// ===========================================================================
+
 /// --------------------------------------------------------------------------
-/// @name color-shift
-/// @group color
-/// @author Matt McAdams
-/// @requires $default-color-method
+/// Mix Color
+/// Tints or shades a color using the sass color.mix function
+/// @access public
 ///
-/// @arg {color} $color - Color to be manipulated
-/// @param {number(%)} $percent - percent by which to be manipulated, can be positive or negative
-/// @param {number(%)} $opacity - desired opacity of returned color
-/// @param {keyword['mix'|'scale']} $method [$default-color-method]
-/// use color.mix() or color.scale() to calculate new color.
-/// @example background-color: color-shift(#AAA, -20%);
+/// @requires color.mix (sass:color)
+///
+/// @param {color} $color
+///   Color to be manipulated
+/// @param {number(%)} $percent
+///   How much white or black to mix with the color
+///   Can be positive or negative
+///
+/// @returns {color}
 /// --------------------------------------------------------------------------
-@function color-shift($color, $percent: null, $opacity: null, $method: $default-color-method) {
-  $_output: $color;
-
-  @if ($percent != null) {
-    @if $method == 'mix' {
-      $_base: white;
-      @if $percent < 0 { $_base: black; $percent: $percent * -1; }
-      $_output: mix($_base, $color, $percent);
-    }
-    @else if $method == 'scale' {
-      $_output: scale-color($color, $lightness: $percent);
-    }
-    @else {
-      @return _error('Invalid argument for `$method`: `(#{$method}{#{type-of($method)}})`. Must be either `mix{string}` or `scale{string}`.', 'color-shift()');
-    }
+@function color-mix(
+  $color,
+  $percent
+) {
+  $_base: #fff;
+  @if $percent < 0 {
+    $_base: #000; $percent: $percent * -1;
   }
-
-  @if $opacity != null {
-    $_output: scale-color($_output, $alpha: $opacity);
-  }
-
-  @return $_output;
+  @return color.mix($_base, $color, $percent);
 }
 
-// ==========================================================================
+/// --------------------------------------------------------------------------
+/// Color Alpha
+/// Adjusts a color's opacity
+/// @access public
+///
+/// @requires color.change (sass:color)
+///
+/// @param {color} $color
+///   Color to be manipulated
+/// @param {number(unitless)} $opacity
+///   0-1 inclusive. 0 is invisible, 1 is fully opaque
+///
+/// @returns {color(rgba)}
+/// --------------------------------------------------------------------------
+@function color-alpha(
+  $color,
+  $opacity
+) {
+  @return color.change($color, $alpha: $opacity);
+}
+
+/// --------------------------------------------------------------------------
+/// Scale Color
+/// Adjusts a color's lightness and/or opacity
+/// @access public
+///
+/// @requires color.scale (sass:color)
+/// @requires color-mix
+/// @requires $config-use-mix-method
+///
+/// @param {color} $color
+///   Color to be manipulated
+/// @param {number(%)} $percent [null]
+///   Percent by which to be manipulated, can be positive or negative
+/// @param {number(unitless)} $opacity [null]
+///   0-1 inclusive
+/// @param {boolean} $mix [$config-use-mix-method]
+///   Use color.mix() or color.scale() to calculate new color.
+///
+/// @returns {color}
+/// @example background-color: stratus.color-scale(#AAA, -20%);
+/// --------------------------------------------------------------------------
+@function color-scale(
+  $color,
+  $percent,
+  $opacity: null,
+  $mix: $config-use-mix-method
+) {
+  @if $mix {
+    @return color-mix($color, $percent);
+  }
+  @return color.scale($color, $lightness: $percent);
+}
+
+// END !SECTION Color Modifications
 // END !SECTION COLOR
 // ==========================================================================

@@ -1,0 +1,9 @@
+.vscode
+node_modules
+sassdoc
+test
+.gitignore
+.stylelintrc
+.travis.yml
+.DS_Store
+CONTRIBUTING.md

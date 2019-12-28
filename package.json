@@ -1,11 +1,14 @@
 {
   "name": "@mattmcadams/stratus",
-  "version": "0.3.0",
-  "description": "Advanced SCSS Typography and Utilities built on Bourbon",
-  "main": "index.js",
+  "version": "1.0.0-alpha",
+  "description": "Advanced SCSS Typography and Utilities",
+  "main": "_index.scss",
   "author": {
     "name": "Matthew McAdams",
     "url": "https://mattmcadams.com"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
   },
   "license": "MIT",
   "homepage": "https://github.com/MattMcAdams/stratus#readme",
@@ -20,20 +23,22 @@
     "SCSS",
     "CSS",
     "Sass",
-    "bourbon",
     "utility",
     "typography"
   ],
   "scripts": {
-    "test": "jest",
-    "sass": "node-sass --include-path=node_modules dist/_stratus.scss test/comp.css"
+    "test": "mocha",
+    "lint": "stylelint '**/*.scss'",
+    "build:docs": "sassdoc 'src/**/*.scss' -d docs"
   },
-  "dependencies": {
-    "bourbon": "^6.0.0"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "jest": "^24.9.0",
-    "node-sass": "^4.13.0",
-    "sass-true": "^5.0.0"
+    "mocha": "^6.2.2",
+    "sass": "^1.23.7",
+    "sass-true": "^5.0.0",
+    "sassdoc": "^2.7.1",
+    "stylelint": "^12.0.0",
+    "stylelint-config-recommended-scss": "^4.1.0",
+    "stylelint-scss": "^3.13.0"
   }
 }

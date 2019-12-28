@@ -1,48 +1,45 @@
-$type-config: (
-  'use-dynamic-scale': false,
-  'text-size': 10,
-  'line-height': 1.5,
-  'rem-size': 10
+
+@use 'true';
+@use '../../src/config' with (
+  $space-unit-size: 5px,
+  $default-ratio: 1.5,
+  $line-height: 1.5,
+  $rem-size: 10px,
+  $text-size: 15px,
+  $type-unit: 'rem',
+  $use-vertical-rhythm: true
 );
+@use '../../src/partials/structure' as stratus;
 
-$stratus-space-unit: _space-unit();
+// true font size would be 1.5rem
+// true line height would be 2.25rem
 
-@include test-module('structure calculation - auto') {
-  @include test('_space-unit pulls correct base measurement') {
-    $test: _space-unit();
-    $expected: 1.5rem;
-    @include assert-equal($test, $expected);
-  }
-  @include test('s() calculates correct measurement with input') {
-    $test: s(5);
-    $expected: 7.5rem;
-    @include assert-equal($test, $expected);
-  }
-}
-
-$space-unit: 7px;
-$stratus-space-unit: _space-unit();
-
-@include test-module('structure calculation - custom') {
-  @include test('_space-unit pulls correct base measurement') {
-    $test: _space-unit();
-    $expected: 7px;
-    @include assert-equal($test, $expected);
-  }
-  @include test('s() calculates correct measurement with input') {
-    $test: s(2);
-    $expected: 14px;
-    @include assert-equal($test, $expected);
+// sp($input, $size)
+// ===========================================================================
+@include true.test-module('sp [function]') {
+  @include true.test('sp() calculates correct measurement with input') {
+    $test: stratus.sp(5);
+    $expected: 25px;
+    @include true.assert-equal($test, $expected);
   }
 }
 
-$space-unit: 'bad-value';
-$stratus-space-unit: _space-unit();
+// lh($input, $line-height)
+// ===========================================================================
+@include true.test-module('lh [function]') {
+  @include true.test('lh() calculates correct measurement with input') {
+    $test: stratus.lh(5);
+    $expected: 11.25rem;
+    @include true.assert-equal($test, $expected);
+  }
+}
 
-@include test-module('structure calculation - error handling') {
-  @include test('_space-unit throws an error when a value with invalid type is passed through') {
-    $test: _space-unit();
-    $expected: 'ERROR [Stratus _space-unit()] $space-unit: `bad-value` is not a valid value. Must be either a number or "auto".';
-    @include assert-equal($test, $expected);
+// ms($input, $ratio)
+// ===========================================================================
+@include true.test-module('ms [function]') {
+  @include true.test('ms() calculates correct measurement with input') {
+    $test: stratus.ms(3);
+    $expected: 3.375em;
+    @include true.assert-equal($test, $expected);
   }
 }
