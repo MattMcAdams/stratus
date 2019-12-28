@@ -1,6 +1,11 @@
+////
+/// @group color
+////
+
 // ===========================================================================
 // SECTION COLOR
 // ===========================================================================
+
 @use 'sass:meta';
 @use 'sass:color';
 @use 'sass:map';
@@ -14,14 +19,12 @@ $config-use-mix-method: config.$use-mix-method !default;
 /// --------------------------------------------------------------------------
 /// Color Index
 /// Converts a value from a numerical index to a usable percentage
-/// @group color
-/// @author Matt McAdams
 /// @access public
 ///
 /// @requires v.is-integer (validation.scss)
 /// @requires error.inspect-param (error.scss)
 ///
-/// @arg {number(unitless)} $number
+/// @param {number(unitless)} $number
 ///   Must be a positive integer < 1000 & divisible by 50
 ///
 /// @returns {number(%)}
@@ -48,15 +51,13 @@ $config-use-mix-method: config.$use-mix-method !default;
 /// --------------------------------------------------------------------------
 /// Mix Color
 /// Tints or shades a color using the sass color.mix function
-/// @group color
-/// @author Matt McAdams
 /// @access public
 ///
 /// @requires color.mix (sass:color)
 ///
-/// @arg {color} $color
+/// @param {color} $color
 ///   Color to be manipulated
-/// @arg {number(%)} $percent
+/// @param {number(%)} $percent
 ///   How much white or black to mix with the color
 ///   Can be positive or negative
 ///
@@ -76,15 +77,13 @@ $config-use-mix-method: config.$use-mix-method !default;
 /// --------------------------------------------------------------------------
 /// Color Alpha
 /// Adjusts a color's opacity
-/// @group color
-/// @author Matt McAdams
 /// @access public
 ///
 /// @requires color.change (sass:color)
 ///
-/// @arg {color} $color
+/// @param {color} $color
 ///   Color to be manipulated
-/// @arg {number(unitless)} $opacity
+/// @param {number(unitless)} $opacity
 ///   0-1 inclusive. 0 is invisible, 1 is fully opaque
 ///
 /// @returns {color(rgba)}
@@ -99,15 +98,13 @@ $config-use-mix-method: config.$use-mix-method !default;
 /// --------------------------------------------------------------------------
 /// Scale Color
 /// Adjusts a color's lightness and/or opacity
-/// @group color
-/// @author Matt McAdams
 /// @access public
 ///
 /// @requires color.scale (sass:color)
 /// @requires color-mix
 /// @requires $config-use-mix-method
 ///
-/// @arg {color} $color
+/// @param {color} $color
 ///   Color to be manipulated
 /// @param {number(%)} $percent [null]
 ///   Percent by which to be manipulated, can be positive or negative

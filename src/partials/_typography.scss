@@ -1,6 +1,11 @@
+////
+/// @group typography
+////
+
 // ===========================================================================
 // SECTION TYPOGRAPHY
 // ===========================================================================
+
 @use 'sass:map';
 @use 'sass:math';
 @use 'sass:string';
@@ -29,19 +34,17 @@ $config-use-vertical-rhythm: config.$use-vertical-rhythm !default;
 /// --------------------------------------------------------------------------
 /// Type scale
 /// Increments the font size up or down a defined scale and returns an adjusted value.
-/// @group typography
-/// @author Matthew McAdams
 /// @access private
 ///
 /// @requires $config-text-size
 /// @requires $config-default-ratio
 /// @requires stratus.modular-scale (core)
 ///
-/// @arg {number(unitless)} $increment
+/// @param {number(unitless)} $increment
 ///   How many steps to increment up or down the scale.
-/// @param {number(with unit)} $base
+/// @param {number} $base [$config-text-size]
 ///   The base value the scale starts at.
-/// @param {number (unitless)} $ratio [config.$type-ratio]
+/// @param {number(unitless)} $ratio [$config-default-ratio]
 ///   The ratio the scale is built on.
 ///
 /// @returns {number}
@@ -57,8 +60,6 @@ $config-use-vertical-rhythm: config.$use-vertical-rhythm !default;
 /// --------------------------------------------------------------------------
 /// Line Height
 /// Calculate line height based on input text size
-/// @group typography
-/// @author Matthew McAdams
 /// @access private
 ///
 /// @requires math.unit (sass:math)
@@ -67,13 +68,13 @@ $config-use-vertical-rhythm: config.$use-vertical-rhythm !default;
 /// @requires $config-text-size
 /// @requires $config-use-vertical-rhythm
 ///
-/// @arg {number(with-unit)} $text-size
+/// @param {number(with-unit)} $text-size
 ///   Text size to calculate line height for
-/// @param {number(unitless)} $line-height
+/// @param {number(unitless)} $line-height [$config-line-height]
 ///   Line height to use as the base for calculation
-/// @param {number(with-unit)} $base-text-size
+/// @param {number(with-unit)} $base-text-size [$config-text-size]
 ///   The standard text size for your project
-/// @param {boolean} $static-output
+/// @param {boolean} $static-output [$config-use-vertical-rhythm]
 ///   True will output a static line height using the same unit as the input
 ///   text size. False returns the unitless input lineheight
 ///
@@ -100,8 +101,6 @@ $config-use-vertical-rhythm: config.$use-vertical-rhythm !default;
 /// --------------------------------------------------------------------------
 /// Type Init
 /// Generate css custom properties based on keys on input map and input ratio
-/// @group typography
-/// @author Matthew McAdams
 /// @access public
 ///
 /// @requires $config-default-scale
@@ -142,8 +141,6 @@ $config-use-vertical-rhythm: config.$use-vertical-rhythm !default;
 /// --------------------------------------------------------------------------
 /// Typesetting
 /// Assign font size and line height using the modular scale
-/// @group typography
-/// @author Matthew McAdams
 /// @access public
 ///
 /// @requires map.get (sass:map)

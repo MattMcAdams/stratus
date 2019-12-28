@@ -29,7 +29,7 @@
   "scripts": {
     "test": "mocha",
     "lint": "stylelint '**/*.scss'",
-    "build:docs": "sassdoc 'src/**/*.scss'"
+    "build:docs": "sassdoc 'src/**/*.scss' -d docs"
   },
   "dependencies": {},
   "devDependencies": {

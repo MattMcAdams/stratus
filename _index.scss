@@ -1,9 +1,6 @@
 // ==========================================================================
-// Stratus 0.4.0-alpha.2
-// Author: Matthew McAdams
-// Author URI: https://mattmcadams.com/
+// Stratus
 // License: MIT License 2019
-// License URI: https://github.com/MattMcAdams/stratus/blob/master/LICENSE
 // Documentation: https://github.com/MattMcAdams/stratus/
 // ==========================================================================
 
@@ -13,7 +10,3 @@
 @forward 'src/partials/color';
 @forward 'src/partials/structure';
 @forward 'src/partials/media' hide orientation get-breakpoint;
-
-// ==========================================================================
-// END STRATUS
-// ==========================================================================

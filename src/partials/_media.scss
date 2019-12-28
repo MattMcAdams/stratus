@@ -1,7 +1,12 @@
+////
+/// @group media
+////
+
 // ===========================================================================
 // SECTION MEDIA QUERIES
 // Utility mixins to help you write cleaner, easier to read CSS
 // ===========================================================================
+
 @use 'sass:meta';
 @use 'sass:map';
 @use 'sass:string';
@@ -12,8 +17,6 @@ $config-breakpoint-map: config.$breakpoint-map !default;
 /// --------------------------------------------------------------------------
 /// Orientation Media Query
 /// Creates a media query based on screen rotation / orientation
-/// @group responsive
-/// @author Matthew McAdams
 /// @access private
 ///
 /// @param {keyword['portrait' | 'landscape']} $oriendation ['portrait']
@@ -32,8 +35,6 @@ $config-breakpoint-map: config.$breakpoint-map !default;
 /// --------------------------------------------------------------------------
 /// Get Breakpoint
 /// Resolves input breakpoint to a number
-/// @group responsive
-/// @author Matthew McAdams
 /// @access private
 ///
 /// @requires meta.type-of (sass:meta)
@@ -41,7 +42,7 @@ $config-breakpoint-map: config.$breakpoint-map !default;
 /// @requires map.get (sass:map)
 /// @requires $config-breakpoint-map
 ///
-/// @arg {number | key(config.$breakpoints)} $key
+/// @param {number | key(config.$breakpoints)} $key
 /// @param {map} $map [config.$breakpoints]
 ///
 /// @returns {number}
@@ -57,15 +58,13 @@ $config-breakpoint-map: config.$breakpoint-map !default;
 
 /// --------------------------------------------------------------------------
 /// Media Query Mixin
-/// @group responsive
-/// @author Matthew McAdams
 /// @access public
 ///
 /// @requires string.index (sass:string)
 /// @requires get-breakpoint
 /// @requires orientation
 ///
-/// @arg {key[config.$breakpoints] | keyword[landscape, portrait] | number } $input
+/// @param {key[config.$breakpoints] | keyword[landscape, portrait] | number } $input
 ///    Sets the media query orientation or width
 /// @param {string} $direction [min]
 ///    Used as #{$direction}-width to detect screen size

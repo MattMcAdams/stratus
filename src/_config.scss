@@ -1,30 +1,27 @@
+////
+/// @group configuration
+////
+
 // Typography
 // ===========================================================================
-/// @group typography
 /// @type boolean
 $use-dynamic-scale: false !default;
 
-/// @group typography
-/// @type number px
+/// @type number(px)
 $rem-size: 16px !default;
 
-/// @group typography
-/// @type number with unit
+/// @type number
 $text-size: $rem-size !default;
 
-/// @group typography
-/// @type number unitless
+/// @type number(unitless)
 $line-height: 1.6 !default;
 
-/// @group typography
 /// @type string['rem'|'em'|'px'|'pt']
 $type-unit: 'rem' !default;
 
-/// @group typography
-/// @type number unitless
+/// @type number(unitless)
 $default-ratio: 1.25 !default;
 
-/// @group typography
 /// @type map
 $default-scale: (
   'xlarge': 3,
@@ -42,17 +39,15 @@ $default-scale: (
   @if $unit == 'em' { @return 0em; }
   @error "Invalid arg for `$type-unit` expected a string['rem'|'em'|'px'|'pt']";
 }
-/// @group typography
-/// @type number with unit
+
+/// @type number
 $type-unit-zero: _type-unit();
 
-/// @group typography
 /// @type boolean
 $use-vertical-rhythm: true !default;
 
 // Media Queries
 // ===========================================================================
-/// @group media
 /// @type map
 $breakpoint-map: (
   'xxlarge': 2560px,
@@ -67,12 +62,10 @@ $breakpoint-map: (
 // ===========================================================================
 /// Method used for shifting color lightness
 /// false uses the color.scale method, true uses the color.mix method
-/// @group color
 /// @type boolean
 $use-mix-method: true !default;
 
 // Structure
 // ===========================================================================
-/// @group structure
-/// @type number with unit | auto
+/// @type number | auto
 $space-unit-size: auto !default;

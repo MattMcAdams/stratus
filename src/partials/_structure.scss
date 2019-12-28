@@ -1,3 +1,7 @@
+////
+/// @group structure
+////
+
 // ==========================================================================
 // SECTION STRUCTURE
 // Custom measurement unit, set to 1 line height by default to help
@@ -15,13 +19,12 @@ $config-ms-unit: config.$default-ratio !default;
 /// --------------------------------------------------------------------------
 /// Line Height Unit
 /// Use the base line height to calculate measurements
-/// @group structure
-/// @author Matthew McAdams
+/// @access public
 ///
-/// @requires type.line-height (typography.scss)
+/// @requires $config-lh-unit
 ///
-/// @arg {number(unitless)} $input
-/// @param {number(with-unit)} $line-height
+/// @param {number(unitless)} $input
+/// @param {number} $line-height
 ///
 /// @returns {number} `$line-height` times `$input`
 /// --------------------------------------------------------------------------
@@ -35,14 +38,13 @@ $config-ms-unit: config.$default-ratio !default;
 /// --------------------------------------------------------------------------
 /// Custom Space Unit
 /// function to create a general unit of measurement for spacing
-/// @group structure
-/// @author Matthew McAdams
+/// @access public
 ///
-/// @requires $config-sp-unit (config.scss)
+/// @requires $config-sp-unit
 /// @requires lh
 ///
-/// @arg {number(unitless)} $input
-/// @param {number(with-unit) | 'auto'} $size
+/// @param {number(unitless)} $input
+/// @param {number | 'auto'} $size
 ///
 /// @returns {number} `$size` times `$input`
 /// --------------------------------------------------------------------------
@@ -57,12 +59,12 @@ $config-ms-unit: config.$default-ratio !default;
 /// --------------------------------------------------------------------------
 /// Modular Scale Unit
 /// function to get an `em` value based on the modular scale
-/// @group structure
-/// @author Matthew McAdams
+/// @access public
 ///
 /// @requires stratus.modular-scale (core)
 ///
-/// @arg {number(unitless)} $input
+/// @param {number(unitless)} $input
+/// @param {number(unitless)} $ratio [$config-ms-unit]
 ///
 /// @returns {number} `$size` times `$input`
 /// --------------------------------------------------------------------------
