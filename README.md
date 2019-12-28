@@ -53,7 +53,7 @@ You can learn more about [dart sass](https://sass-lang.com/dart-sass) on their w
 ## Contribute!
 I'm a self taught developer, and this has been my pet project I've used to learn about best practices, project management, and so much more, so I'm sure it's not perfect.
 
-See something that could be better? Found a bug? Have an idea for a new feature? Come [help build](https://github.com/MattMcAdams/stratus/blob/master/CONTRIBUTING.md), [submit an issue](https://github.com/MattMcAdams/stratus/issues/new), or [contact me](https://github.com/MattMcAdams)! I'd love to chat and hear your ideas.
+See something that could be better? Found a bug? Have an idea for a new feature? Come [help build](https://github.com/MattMcAdams/stratus/wiki), [submit an issue](https://github.com/MattMcAdams/stratus/issues/new), or [contact me](https://github.com/MattMcAdams)! I'd love to chat and hear your ideas.
 
 ## Looking forward
 This project is constantly evolving, and I'm excited to bring more features to it in the future. Some of my current thoughts include mixins inspired by bourbon, a minimal style boilerplate, and UI components.

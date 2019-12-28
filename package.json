@@ -1,7 +1,7 @@
 {
   "name": "@mattmcadams/stratus",
   "version": "1.0.0-alpha",
-  "description": "Advanced SCSS Typography and Utilities built on Bourbon",
+  "description": "Advanced SCSS Typography and Utilities",
   "main": "_index.scss",
   "author": {
     "name": "Matthew McAdams",

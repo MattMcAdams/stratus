@@ -24,7 +24,7 @@ When making a contribution to Stratus, you should keep in mind this checklist.
 - [ ] If the change requires updated documentation, this documentation has been updated and conforms to the [documentation style guide](https://github.com/MattMcAdams/stratus/wiki/Documentation-Style-Guide).
 - [ ] If a new feature was added, tests have been made to cover those changes.
 - [ ] If making a pull request, ensure all new and existing tests pass.
-- [ ] Be welcoming to newcomers and encourage diverse new contributors from all backgrounds, see the [code of conduct](https://github.com/MattMcAdams/stratus/blob/master/.github/CODE_OF_CONDUCT.md) for more.
+- [ ] Be welcoming to newcomers and encourage diverse new contributors from all backgrounds, see the [code of conduct](https://github.com/MattMcAdams/stratus/wiki/Code-of-Conduct) for more.
 
 ## Your first contribution
 If you'd like to contribute but you're not sure where to start, check to see if you're interested in working on any of the [open issues](https://github.com/MattMcAdams/stratus/issues) or taking part in one of the [discussions](https://github.com/MattMcAdams/stratus/labels/%5Bfeedback%5D%20discussion).
