@@ -7,9 +7,6 @@
     "name": "Matthew McAdams",
     "url": "https://mattmcadams.com"
   },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
-  },
   "license": "MIT",
   "homepage": "https://github.com/MattMcAdams/stratus#readme",
   "repository": {
