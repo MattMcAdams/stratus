@@ -1,6 +1,6 @@
 {
   "name": "@mattmcadams/stratus",
-  "version": "1.0.0-5",
+  "version": "1.0.0-6",
   "description": "Advanced SCSS Typography and Utilities",
   "main": "_index.scss",
   "author": {
@@ -26,6 +26,7 @@
   "scripts": {
     "test": "mocha",
     "lint": "stylelint '**/*.scss'",
+    "compile": "sass _index.scss",
     "build:docs": "sassdoc 'src/**/*.scss' -d docs"
   },
   "dependencies": {},
