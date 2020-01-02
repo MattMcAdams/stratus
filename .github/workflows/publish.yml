@@ -1,9 +1,8 @@
 name: Publish to NPMJS and GPR
 
 on:
-  push:
-    branches:
-      - master
+  release:
+    types: [published]
 
 jobs:
   publish-to-npm-and-gpr:
@@ -45,3 +44,5 @@ jobs:
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{github.token}}
+          
+# Huge thanks to @affrae for this configuration
