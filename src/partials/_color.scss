@@ -83,7 +83,7 @@ $config-use-mix-method: config.$use-mix-method !default;
 ///
 /// @param {color} $color
 ///   Color to be manipulated
-/// @param {number(unitless)} $opacity
+/// @param {number(unitless) | number(%)} $opacity
 ///   0-1 inclusive. 0 is invisible, 1 is fully opaque
 ///
 /// @returns {color(rgba)}
@@ -112,7 +112,7 @@ $config-use-mix-method: config.$use-mix-method !default;
 /// @param {number(%)} $percent [null]
 ///   Percent by which to be manipulated, can be positive or negative
 /// @param {number(unitless)} $opacity [null]
-///   0-1 inclusive
+///   0-1 inclusive, or percentage 0-100
 /// @param {boolean} $mix [$config-use-mix-method]
 ///   Use color.mix() or color.scale() to calculate new color.
 ///
