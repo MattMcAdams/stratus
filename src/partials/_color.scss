@@ -83,7 +83,7 @@ $config-use-mix-method: config.$use-mix-method !default;
 ///
 /// @param {color} $color
 ///   Color to be manipulated
-/// @param {number(unitless)} $opacity
+/// @param {number(unitless) | number(%)} $opacity
 ///   0-1 inclusive. 0 is invisible, 1 is fully opaque
 ///
 /// @returns {color(rgba)}
@@ -92,6 +92,9 @@ $config-use-mix-method: config.$use-mix-method !default;
   $color,
   $opacity
 ) {
+  @if v.is-percentage($opacity) {
+    $opacity: $opacity / 100;
+  }
   @return color.change($color, $alpha: $opacity);
 }
 
@@ -109,7 +112,7 @@ $config-use-mix-method: config.$use-mix-method !default;
 /// @param {number(%)} $percent [null]
 ///   Percent by which to be manipulated, can be positive or negative
 /// @param {number(unitless)} $opacity [null]
-///   0-1 inclusive
+///   0-1 inclusive, or percentage 0-100
 /// @param {boolean} $mix [$config-use-mix-method]
 ///   Use color.mix() or color.scale() to calculate new color.
 ///
@@ -118,14 +121,19 @@ $config-use-mix-method: config.$use-mix-method !default;
 /// --------------------------------------------------------------------------
 @function color-scale(
   $color,
-  $percent,
+  $percent: null,
   $opacity: null,
   $mix: $config-use-mix-method
 ) {
-  @if $mix {
-    @return color-mix($color, $percent);
+  $_output: $color;
+  @if $percent {
+    @if $mix { $_output: color-mix($color, $percent); }
+    @else { $_output: color.scale($color, $lightness: $percent); }
   }
-  @return color.scale($color, $lightness: $percent);
+  @if $opacity {
+    @return color-alpha($_output, $opacity);
+  }
+  @return $_output;
 }
 
 // END !SECTION Color Modifications
