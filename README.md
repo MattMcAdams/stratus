@@ -18,19 +18,19 @@ npm install @mattmcadams/stratus --save-dev
 ```
 2. Configure your settings (optional)
 ```scss
-@use 'stratus/src/config' with (
+@use '@mattmcadams/stratus/src/config' with (
   $param: value
 );
 ```
 3. Include in your project
 ```scss
-@use 'stratus';
+@use '@mattmcadams/stratus';
 ```
 
 ## Use
 With the Sass modules syntax, use Stratus in your project like this:
 ```scss
-@use 'stratus';
+@use '@mattmcadams/stratus';
 
 foo: {
   @include stratus.type-set('normal');

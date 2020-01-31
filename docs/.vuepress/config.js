@@ -21,8 +21,27 @@ module.exports = {
         collapsable: false,
         children: [
           '/type/mixins',
-          '/type/configuration',
-          '/type/advanced'
+          '/type/functions',
+          '/type/configuration'
+        ]
+      },
+      {
+        title: 'Structure',
+        path: '/structure/functions',
+        collapsable: false,
+        children: [
+          '/structure/functions',
+          '/structure/configuration'
+        ]
+      },
+      {
+        title: 'Media',
+        path: '/media/mixins',
+        collapsable: false,
+        children: [
+          '/media/mixins',
+          '/media/functions',
+          '/media/configuration'
         ]
       }
     ]

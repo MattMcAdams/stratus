@@ -6,7 +6,7 @@
   $ratio: $config-default-ratio
 ){...}
 ```
-| Argument | Type | Description |
+| Param | Type | Description |
 | --- | --- | --- |
 | `$scale` | map | A typographical scale containing name:step pairs |
 | `$ratio` | number(unitless) | Ratio used to generate font sizes |
@@ -42,7 +42,7 @@ If using dynamic scale, you'll also get
   $map: $config-default-scale
 )
 ```
-| Argument | Type | Description |
+| Param | Type | Description |
 | --- | --- | --- |
 | `$name` | string | A name of a key on `$map`, used to look up the step and name the css variables if they are printed |
 | `$step` | number(unitless) | Step to increase or decrease the font size based on the configured ratio |

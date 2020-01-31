@@ -10,7 +10,9 @@ Minimal, modular, and modest, Stratus offers several powerful Sass tools to get 
 ## Install
 You can install Stratus by either downloading the latest release and including it in your project, or by downloading it with npm.
 
-> **NOTE**<br>If using the package distributed from GitHub, you'll also need to linclude the following line in your `.npmrc` file at the root of your project: `@mattmcadams:registry=https://npm.pkg.github.com`.
+::: tip NOTE
+If using the package distributed from GitHub, you'll also need to linclude the following line in your `.npmrc` file at the root of your project: `@mattmcadams:registry=https://npm.pkg.github.com`.
+:::
 
 1. Install with npm
 ```
@@ -18,19 +20,19 @@ npm install @mattmcadams/stratus --save-dev
 ```
 2. Configure your settings (optional)
 ```scss
-@use 'stratus/src/config' with (
+@use '@mattmcadams/stratus/src/config' with (
   $param: value
 );
 ```
 3. Include in your project
 ```scss
-@use 'stratus';
+@use '@mattmcadams/stratus';
 ```
 
 ## Use
 With the Sass modules syntax, use Stratus in your project like this:
 ```scss
-@use 'stratus';
+@use '@mattmcadams/stratus';
 
 foo: {
   @include stratus.type-set('normal');
@@ -38,8 +40,9 @@ foo: {
 ```
 You can learn more about all of Stratus' functions and mixins in the project's [documentation](https://mattmcadams.github.io/stratus/).
 
-> **NOTE**<br>
-> If you've installed Stratus using npm, you'll also need to include `node-modules` in your build process. The method of achieving this depends on your setup. Look at this project's [package.json](https://github.com/MattMcAdams/stratus/blob/master/package.json) to see a possible solution
+::: tip
+If you've installed Stratus using npm, you'll also need to include `node-modules` in your build process. The method of achieving this depends on your setup. Look at this project's [package.json](https://github.com/MattMcAdams/stratus/blob/master/package.json) to see a possible solution
+:::
 
 ## Requirements
 Because Stratus uses the Sass modules syntax, using it in your project means you must compile using the dart implementation of sass.
