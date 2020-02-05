@@ -18,7 +18,7 @@ npm install @mattmcadams/stratus --save-dev
 ```
 2. Configure your settings (optional)
 ```scss
-@use '@mattmcadams/stratus/src/config' with (
+@use '@mattmcadams/stratus/config' with (
   $param: value
 );
 ```

@@ -5,7 +5,7 @@ Below are all of the global configuration variables that can be set for Stratus.
 To configure Stratus, `@use` the config file in your project and set new values for any variables you'd like to change. You can learn more about how to do this in the [Sass documentation on module configuration](https://sass-lang.com/documentation/at-rules/use#configuring-modules).
 
 ```scss
-@use '@mattmcadams/stratus/src/config' with (
+@use '@mattmcadams/stratus/config' with (
   $line-height: 1.5
 )
 ```
