@@ -7,41 +7,23 @@ module.exports = {
     sidebar: [
       '/',
       {
-        title: 'Color',
-        path: '/color/functions',
+        title: 'Configuration',
+        path: '/config',
         collapsable: false,
         children: [
-          '/color/functions',
-          '/color/configuration'
+          '/config/',
+          '/config/module'
         ]
       },
       {
-        title: 'Typography',
-        path: '/type/mixins',
+        title: 'Modules',
         collapsable: false,
         children: [
-          '/type/mixins',
-          '/type/functions',
-          '/type/configuration'
-        ]
-      },
-      {
-        title: 'Structure',
-        path: '/structure/functions',
-        collapsable: false,
-        children: [
-          '/structure/functions',
-          '/structure/configuration'
-        ]
-      },
-      {
-        title: 'Media',
-        path: '/media/mixins',
-        collapsable: false,
-        children: [
-          '/media/mixins',
-          '/media/functions',
-          '/media/configuration'
+          '/modules/core',
+          '/modules/color',
+          '/modules/type',
+          '/modules/structure',
+          '/modules/media'
         ]
       }
     ]

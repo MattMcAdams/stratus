@@ -1,6 +1,24 @@
-# Mixins
+# Media
 
-## orientation <Badge text="private" type="warning"/>
+## Functions
+
+### get-breakpoint <Badge text="private" type="warning"/>
+```scss
+@function get-breakpoint(
+  $key,
+  $map: $config-breakpoint-map
+) {...}
+```
+| Param | Type | Description |
+| --- | --- | --- |
+| `$key` | number \| key($map) | A width size or a key on either the global breakpoint map or a map passed as an argument for `$map` |
+| `$map` | map | A Sass map with string: number pairs where 'string' is the name of the breakpoint and 'number' is the screen width it is associated with |
+
+Resolves input breakpoint to a number
+
+## Mixins
+
+### orientation <Badge text="private" type="warning"/>
 ```scss
 @mixin orientation(
   $orientation: 'portrait'
@@ -12,7 +30,7 @@
 
 Creates a media query based on screen rotation / orientation
 
-## media
+### media
 ```scss
 @mixin media(
   $breakpoint,

@@ -1,8 +1,8 @@
-# Functions
+# Structure
 
-These functions can be used as a set of custom measurements of space for margins, paddings, etc.
+## Functions
 
-## lh
+### lh
 ```scss
 @function lh(
   $input,
@@ -16,7 +16,7 @@ These functions can be used as a set of custom measurements of space for margins
 
 Use the base line height to calculate measurements.
 
-## sp
+### sp
 ```scss
 @function sp(
   $input,
@@ -30,7 +30,7 @@ Use the base line height to calculate measurements.
 
 Create measurements using the value you set for the size of a space unit in the configuration. If set to auto, it will behave like the `li()` function above.
 
-## ms
+### ms
 ```scss
 @function ms(
   $input,

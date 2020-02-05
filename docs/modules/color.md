@@ -1,7 +1,9 @@
 
-# Functions
----
-## color-index
+# Color
+
+## Functions
+
+### color-index
 ```scss
 @function color-index($number){...}
 ```
@@ -17,7 +19,7 @@ The idea is that 500 is the base color, 100 is an extremely light variant of the
 
 Returns a number(%) using this formula: `(($number - 500) / -5) + 0%`.
 
-## color-mix
+### color-mix
 ```scss
 @function color-mix($color, $percent){...}
 ```
@@ -28,7 +30,7 @@ Returns a number(%) using this formula: `(($number - 500) / -5) + 0%`.
 
 Allows a color to be made darker or lighter by mixing the color with white or black using the Sass `color.mix` function.
 
-## color-alpha
+### color-alpha
 ```scss
 @function color-alpha($color, $opacity){...}
 ```
@@ -39,7 +41,7 @@ Allows a color to be made darker or lighter by mixing the color with white or bl
 
 Changes the input color to the desired opacity. Returns a color in rgba format.
 
-## color-scale
+### color-scale
 ```scss
 @function color-scale(
   $color,

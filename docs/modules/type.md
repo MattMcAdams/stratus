@@ -1,5 +1,44 @@
-# Mixins
-## type-init
+# Typography
+
+## Functions
+
+### color-scale <Badge text="private" type="warning"/>
+```scss
+@function type-scale(
+  $increment,
+  $base: $config-text-size,
+  $ratio: $config-default-ratio
+) {...}
+```
+| Param | Type | Description |
+| --- | --- | --- |
+| `$increment` | number(unitless) | How many steps to increment up or down the scale. |
+| `$base` | number | The base value the scale starts at. |
+| `$ratio` | number(unitless) | The ratio the scale is built on. |
+
+This function is used to find the font-size of text according to it's step on the typographical scale.
+
+### Line Height <Badge text="private" type="warning"/>
+```scss
+@function line-height(
+  $text-size,
+  $line-height: $config-line-height,
+  $base-text-size: $config-text-size,
+  $static-output: $config-use-vertical-rhythm
+) {...}
+```
+| Param | Type | Description |
+| --- | --- | --- |
+| `$text-size` | number | Text size to calculate line height for |
+| `$line-height` | number(unitless) | Line height to use as the base for calculation |
+| `$base-text-size` | number | The standard text size for your project |
+| `$static-output` | boolean | True will output a static line height using the same unit as the input text size. False returns the unitless input lineheight |
+
+Calculate line height based on input text size
+
+## Mixins
+
+### type-init
 ```scss
 @mixin type-init(
   $scale: $config-default-scale,
@@ -12,7 +51,7 @@
 | `$ratio` | number(unitless) | Ratio used to generate font sizes |
 
 This mixin generates a series of css custom properties (variables) that contain text sizes and line heights according to the provided typographical scale. This is useful for generating multiple scales across several media queries.
-### Example
+#### Example
 ```scss
 $test-map: (
   'normal': 0;
@@ -33,7 +72,7 @@ If using dynamic scale, you'll also get
 --medium-lh: <line-height>;
 --large-lh: <line-height>;
 ```
-## type-set
+### type-set
 ```scss
 @mixin type-set(
   $name: 'normal',
@@ -54,7 +93,7 @@ The variables `$step`, `$print-variables`, and `$map` should only be given an ar
 
 This mixin is used to add the `font-size` property to the selector. It can also add the `line-height` property if using vertical rhythm. When configured to print variables, it will output two sets of properties.
 
-### Example
+#### Example
 ```scss
 .foo {
   @include stratus.type-set('normal');
