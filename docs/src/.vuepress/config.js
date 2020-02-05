@@ -1,6 +1,7 @@
 module.exports = {
   title: 'Stratus',
   base: '/stratus/',
+  dest: 'docs',
   themeConfig: {
     nav: [
       {text: 'Home', link: '/'},
