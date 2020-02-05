@@ -26,8 +26,8 @@
   "scripts": {
     "test": "mocha",
     "lint": "stylelint '**/*.scss'",
-    "compile": "sass _index.scss",
-    "build:docs": "sassdoc 'src/**/*.scss' -d docs"
+    "docs:dev": "vuepress dev docs-src",
+    "docs:build": "vuepress build docs-src"
   },
   "dependencies": {},
   "devDependencies": {
@@ -37,6 +37,7 @@
     "sassdoc": "^2.7.1",
     "stylelint": "^12.0.0",
     "stylelint-config-recommended-scss": "^4.1.0",
-    "stylelint-scss": "^3.13.0"
+    "stylelint-scss": "^3.13.0",
+    "vuepress": "^1.2.0"
   }
 }
