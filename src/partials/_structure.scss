@@ -10,7 +10,7 @@
 
 @use '../core/' as stratus;
 @use 'typography' as type;
-@use '../config';
+@use '../../config';
 
 $config-lh-unit: type.line-height(0) !default;
 $config-sp-unit: config.$space-unit-size !default;

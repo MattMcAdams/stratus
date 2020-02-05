@@ -12,7 +12,7 @@
 @use 'sass:math';
 
 @use 'validation' as v;
-@use '../config';
+@use '../../config';
 
 $config-rem-size: config.$rem-size !default;
 $config-type-ratio: config.$default-ratio !default;
