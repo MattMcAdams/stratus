@@ -39,7 +39,7 @@ foo: {
 You can learn more about all of Stratus' functions and mixins in the project's [documentation](https://mattmcadams.github.io/stratus/).
 
 > **NOTE**<br>
-> If you've installed Stratus using npm, you'll also need to include `node-modules` in your build process. The method of achieving this depends on your setup. Look at this project's [package.json](https://github.com/MattMcAdams/stratus/blob/master/package.json) to see a possible solution
+> If you've installed Stratus using npm, you'll also need to include `node-modules` in your build process. The method of achieving this depends on your setup.
 
 ## Requirements
 Because Stratus uses the Sass modules syntax, using it in your project means you must compile using the dart implementation of sass.
