@@ -26,9 +26,8 @@
   "scripts": {
     "test": "mocha",
     "lint": "stylelint '**/*.scss'",
-    "docs:dev": "vuepress dev docs",
-    "docs:build": "vuepress build docs",
-    "docs:eject": "vuepress eject"
+    "docs:dev": "vuepress dev docs/src",
+    "docs:build": "vuepress build docs/src"
   },
   "dependencies": {},
   "devDependencies": {
