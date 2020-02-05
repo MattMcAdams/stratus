@@ -11,7 +11,7 @@
 @use 'sass:map';
 @use '../core/validation' as v;
 @use '../core/error';
-@use '../config';
+@use '../../config';
 
 /// @type boolean
 $config-use-mix-method: config.$use-mix-method !default;

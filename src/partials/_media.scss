@@ -10,7 +10,7 @@
 @use 'sass:meta';
 @use 'sass:map';
 @use 'sass:string';
-@use '../config';
+@use '../../config';
 
 $config-breakpoint-map: config.$breakpoint-map !default;
 
