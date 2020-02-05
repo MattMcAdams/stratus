@@ -1,4 +1,5 @@
 module.exports = {
+  title: '',
   themeConfig: {
     nav: [
       {text: 'Home', link: '/'},
