@@ -1,6 +1,6 @@
 {
   "name": "@mattmcadams/stratus",
-  "version": "1.0.0-6",
+  "version": "1.0.0",
   "description": "Advanced SCSS Typography and Utilities",
   "main": "_index.scss",
   "author": {
