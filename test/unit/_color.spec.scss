@@ -60,7 +60,7 @@
   }
 }
 
-// color-scale($color, $percent, $mix)
+// color-scale( $color, $percent, $opacity, $mix)
 // ===========================================================================
 @include true.test-module('color-scale [function]') {
   @include true.test('call color-mix with $mix: true') {
@@ -93,12 +93,22 @@
     $expected: color.scale(#1273e6, $lightness: 20%);
     @include true.assert-equal(meta.inspect($test), meta.inspect($expected));
   }
+
+  @include true.test('calculate opacity with given input') {
+    $test: stratus.color-scale(#1273e6, $opacity: 20%);
+    $expected: color.change(#1273e6, $alpha: 0.2);
+    @include true.assert-equal(meta.inspect($test), meta.inspect($expected));
+  }
 }
 // color-alpha($color, $opacity)
 // ===========================================================================
 @include true.test-module('color-alpha [function]') {
-  @include true.test('return adjusted opacity') {
+  @include true.test('return adjusted opacity with decimal input') {
     $test: stratus.color-alpha(#1273e6, 0.4);
+    $expected: color.change(#1273e6, $alpha: 0.4);
+  }
+  @include true.test('return adjusted opacity with percent input') {
+    $test: stratus.color-alpha(#1273e6, 40%);
     $expected: color.change(#1273e6, $alpha: 0.4);
   }
 }
