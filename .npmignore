@@ -1,10 +1,10 @@
 .vscode
 node_modules
-sassdoc
+docs
+docs-src
 test
 .gitignore
 .stylelintrc
 .travis.yml
 .DS_Store
-CONTRIBUTING.md
-.github/workflows
+.github
