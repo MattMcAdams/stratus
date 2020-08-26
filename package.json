@@ -1,6 +1,6 @@
 {
   "name": "@mattmcadams/stratus",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Advanced SCSS Typography and Utilities",
   "main": "_index.scss",
   "author": {
@@ -32,12 +32,12 @@
   "dependencies": {},
   "devDependencies": {
     "mocha": "^6.2.3",
-    "sass": "^1.26.3",
+    "sass": "^1.26.10",
     "sass-true": "^5.0.0",
-    "sassdoc": "^2.7.1",
+    "sassdoc": "^2.7.3",
     "stylelint": "^12.0.1",
     "stylelint-config-recommended-scss": "^4.2.0",
-    "stylelint-scss": "^3.17.1",
-    "vuepress": "^1.4.1"
+    "stylelint-scss": "^3.18.0",
+    "vuepress": "^1.5.4"
   }
 }
