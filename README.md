@@ -1,3 +1,5 @@
+> **WARNING: This project is no longer maintained. I'll keep this repo public for a while but plan to eventually decommission it. It is highly advised that you fork this repo or copy it's source code into your own project if you use this as a dependency. Let me know if you need help doing this and I'll do my best to work with you.**
+
 # Stratus
 Minimal, modular, and modest, Stratus offers several powerful Sass tools to get started with a web project. It can help standardize spacing, organize and manipulate color, and generate and maintain a typographical scale.
 
